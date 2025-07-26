@@ -25,7 +25,7 @@ binaries:
 modules:
  - name: map_aave_events
    kind: map
-   initialBlock: 19000000
+   initialBlock: 24000000
    inputs:
    - source: sf.ethereum.type.v2.Block
    output:
