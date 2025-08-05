@@ -199,6 +199,17 @@ export default function Dashboard() {
         status: indexer.status,
         revenueEfficiency,
         image: getIndexerImage(indexer),
+        // Additional comprehensive data
+        allocatedTokens: parseFloat(indexer.allocatedTokens) / 1e18,
+        delegatedTokens: parseFloat(indexer.delegatedTokens) / 1e18,
+        availableStake: parseFloat(indexer.availableStake) / 1e18,
+        tokenCapacity: parseFloat(indexer.tokenCapacity) / 1e18,
+        ownStakeRatio: indexer.ownStakeRatio,
+        delegatedStakeRatio: indexer.delegatedStakeRatio,
+        indexingRewardCut: indexer.indexingRewardCut,
+        queryFeeCut: indexer.queryFeeCut,
+        allocationCount: indexer.allocationCount,
+        forcedClosures: indexer.forcedClosures,
       };
     })
     .sort((a, b) => b.revenueEfficiency - a.revenueEfficiency); // Sort by efficiency descending
@@ -220,6 +231,16 @@ export default function Dashboard() {
         ratio: subgraph.rewardsFeesRatio,
         image: getSubgraphImage(subgraph),
         displayFees: queryFees,
+        // Additional comprehensive data
+        stakedTokens: parseFloat(subgraph.stakedTokens) / 1e18,
+        signalledTokens: parseFloat(subgraph.signalledTokens) / 1e18,
+        signalAmount: parseFloat(subgraph.signalAmount) / 1e18,
+        pricePerShare: subgraph.pricePerShare,
+        reserveRatio: subgraph.reserveRatio,
+        queryFeeRebates: parseFloat(subgraph.queryFeeRebates) / 1e18,
+        curatorFeeRewards: parseFloat(subgraph.curatorFeeRewards) / 1e18,
+        subgraphCount: subgraph.subgraphCount,
+        activeSubgraphCount: subgraph.activeSubgraphCount,
       };
     });
 
@@ -309,6 +330,61 @@ export default function Dashboard() {
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 {networkMetrics.queryFeesPercentage > 5 ? 'Organic revenue dominant' : 'Inflation subsidized'}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Additional Network Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-0 shadow-lg">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-300">Active Indexers</CardTitle>
+              <User className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{networkMetrics.stakedIndexersCount}</div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                of {networkMetrics.indexerCount} total indexers
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-0 shadow-lg">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-300">Active Delegators</CardTitle>
+              <User className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{networkMetrics.activeDelegatorCount}</div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                of {networkMetrics.delegatorCount} total delegators
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-0 shadow-lg">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-300">Active Subgraphs</CardTitle>
+              <BarChart3 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{networkMetrics.activeSubgraphCount}</div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                of {networkMetrics.subgraphCount} total subgraphs
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-0 shadow-lg">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Staked</CardTitle>
+              <Activity className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{formatWeiToGRT(networkMetrics.totalTokensStaked)}</div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {formatWeiToGRT(networkMetrics.totalTokensAllocated)} allocated
               </p>
             </CardContent>
           </Card>
@@ -480,6 +556,9 @@ export default function Dashboard() {
                     </div>
                     <div className="text-xs text-gray-400 dark:text-gray-500">
                       {formatNumber(indexer.stake)} GRT staked
+                    </div>
+                    <div className="text-xs text-gray-400 dark:text-gray-500">
+                      {indexer.allocationCount} allocations
                     </div>
                   </div>
                 </div>

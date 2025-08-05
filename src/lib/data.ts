@@ -4,6 +4,28 @@ export interface NetworkMetrics {
   rewardsToFeesRatio: number;
   indexingRewardsPercentage: number;
   queryFeesPercentage: number;
+  // Additional metrics from the comprehensive subgraph
+  totalIndexerQueryFeesCollected: string;
+  totalIndexerQueryFeeRebates: string;
+  totalDelegatorQueryFeeRebates: string;
+  totalCuratorQueryFees: string;
+  totalTaxedQueryFees: string;
+  totalUnclaimedQueryFeeRebates: string;
+  totalIndexingDelegatorRewards: string;
+  totalIndexingIndexerRewards: string;
+  indexerCount: number;
+  stakedIndexersCount: number;
+  delegatorCount: number;
+  activeDelegatorCount: number;
+  curatorCount: number;
+  activeCuratorCount: number;
+  subgraphCount: number;
+  activeSubgraphCount: number;
+  subgraphDeploymentCount: number;
+  totalTokensStaked: string;
+  totalTokensAllocated: string;
+  totalDelegatedTokens: string;
+  totalTokensSignalled: string;
 }
 
 export interface Indexer {
@@ -15,6 +37,23 @@ export interface Indexer {
   rewardsFeesRatio: number;
   efficiency: number;
   status: string;
+  // Additional fields from comprehensive subgraph
+  allocatedTokens: string;
+  delegatedTokens: string;
+  availableStake: string;
+  tokenCapacity: string;
+  delegatedCapacity: string;
+  ownStakeRatio: number;
+  delegatedStakeRatio: number;
+  indexingRewardCut: number;
+  queryFeeCut: number;
+  indexerIndexingRewards: string;
+  delegatorIndexingRewards: string;
+  queryFeeRebates: string;
+  delegatorQueryFees: string;
+  allocationCount: number;
+  totalAllocationCount: number;
+  forcedClosures: number;
   account?: {
     metadata?: {
       image?: string;
@@ -28,6 +67,18 @@ export interface Subgraph {
   queryFeesAmount: string;
   indexingRewardAmount: string;
   rewardsFeesRatio: number;
+  // Additional fields from comprehensive subgraph
+  stakedTokens: string;
+  signalledTokens: string;
+  signalAmount: string;
+  pricePerShare: number;
+  reserveRatio: number;
+  queryFeeRebates: string;
+  curatorFeeRewards: string;
+  indexingIndexerRewardAmount: string;
+  indexingDelegatorRewardAmount: string;
+  subgraphCount: number;
+  activeSubgraphCount: number;
   metadata?: {
     image?: string;
     nftImage?: string;
@@ -39,14 +90,46 @@ export interface EpochData {
   totalRewards: string;
   totalQueryFees: string;
   ratio: number;
+  // Additional fields from comprehensive subgraph
+  startBlock: number;
+  endBlock: number;
+  signalledTokens: string;
+  stakeDeposited: string;
+  taxedQueryFees: string;
+  queryFeesCollected: string;
+  curatorQueryFees: string;
+  queryFeeRebates: string;
+  totalIndexerRewards: string;
+  totalDelegatorRewards: string;
 }
 
-// GraphQL Queries
+// Improved GraphQL Queries using the comprehensive Graph Network subgraph
 export const NETWORK_METRICS_QUERY = `
   query {
     graphNetworks(first: 1) {
       totalIndexingRewards
       totalQueryFees
+      totalIndexerQueryFeesCollected
+      totalIndexerQueryFeeRebates
+      totalDelegatorQueryFeeRebates
+      totalCuratorQueryFees
+      totalTaxedQueryFees
+      totalUnclaimedQueryFeeRebates
+      totalIndexingDelegatorRewards
+      totalIndexingIndexerRewards
+      indexerCount
+      stakedIndexersCount
+      delegatorCount
+      activeDelegatorCount
+      curatorCount
+      activeCuratorCount
+      subgraphCount
+      activeSubgraphCount
+      subgraphDeploymentCount
+      totalTokensStaked
+      totalTokensAllocated
+      totalDelegatedTokens
+      totalTokensSignalled
     }
   }
 `;
@@ -57,8 +140,24 @@ export const TOP_INDEXERS_QUERY = `
       id
       defaultDisplayName
       stakedTokens
+      allocatedTokens
+      delegatedTokens
+      availableStake
+      tokenCapacity
+      delegatedCapacity
+      ownStakeRatio
+      delegatedStakeRatio
+      indexingRewardCut
+      queryFeeCut
       queryFeesCollected
+      queryFeeRebates
+      delegatorQueryFees
       rewardsEarned
+      indexerIndexingRewards
+      delegatorIndexingRewards
+      allocationCount
+      totalAllocationCount
+      forcedClosures
       account {
         metadata {
           image
@@ -73,32 +172,20 @@ export const TOP_SUBGRAPHS_QUERY = `
     subgraphDeployments(first: 20, orderBy: queryFeesAmount, orderDirection: desc) {
       id
       ipfsHash
+      stakedTokens
+      signalledTokens
+      signalAmount
+      pricePerShare
+      reserveRatio
       queryFeesAmount
+      queryFeeRebates
+      curatorFeeRewards
       indexingRewardAmount
+      indexingIndexerRewardAmount
+      indexingDelegatorRewardAmount
+      subgraphCount
+      activeSubgraphCount
       versions(orderBy: version, orderDirection: desc, first: 1) {
-        version
-        metadata {
-          label
-        }
-        subgraph {
-          metadata {
-            displayName
-            image
-            nftImage
-          }
-        }
-      }
-    }
-  }
-`;
-
-// New query to get subgraph metadata by IPFS hashes
-export const SUBGRAPH_METADATA_QUERY = `
-  query($ids: [String!]) {
-    subgraphDeployments(where: { ipfsHash_in: $ids }) {
-      id
-      ipfsHash
-      versions(orderBy: version, orderDirection: desc) {
         version
         metadata {
           label
@@ -117,10 +204,43 @@ export const SUBGRAPH_METADATA_QUERY = `
 
 export const EPOCH_DATA_QUERY = `
   query {
-    epochs(first: 20, orderBy: id, orderDirection: desc) {
+    epochs(first: 30, orderBy: id, orderDirection: desc) {
       id
-      totalRewards
+      startBlock
+      endBlock
+      signalledTokens
+      stakeDeposited
       totalQueryFees
+      taxedQueryFees
+      queryFeesCollected
+      curatorQueryFees
+      queryFeeRebates
+      totalRewards
+      totalIndexerRewards
+      totalDelegatorRewards
+    }
+  }
+`;
+
+// New query to get subgraph metadata by IPFS hashes
+export const SUBGRAPH_METADATA_QUERY = `
+  query($ids: [String!]) {
+    subgraphDeployments(where: { ipfsHash_in: $ids }) {
+      id
+      ipfsHash
+      versions(orderBy: version, orderDirection: desc, first: 1) {
+        version
+        metadata {
+          label
+        }
+        subgraph {
+          metadata {
+            displayName
+            image
+            nftImage
+          }
+        }
+      }
     }
   }
 `;
@@ -174,17 +294,32 @@ export async function getNetworkMetrics(): Promise<NetworkMetrics> {
       rewardsToFeesRatio: totalRewards / totalFees,
       indexingRewardsPercentage: (totalRewards / totalValue) * 100,
       queryFeesPercentage: (totalFees / totalValue) * 100,
+      // Additional metrics from the comprehensive subgraph
+      totalIndexerQueryFeesCollected: network.totalIndexerQueryFeesCollected || "0",
+      totalIndexerQueryFeeRebates: network.totalIndexerQueryFeeRebates || "0",
+      totalDelegatorQueryFeeRebates: network.totalDelegatorQueryFeeRebates || "0",
+      totalCuratorQueryFees: network.totalCuratorQueryFees || "0",
+      totalTaxedQueryFees: network.totalTaxedQueryFees || "0",
+      totalUnclaimedQueryFeeRebates: network.totalUnclaimedQueryFeeRebates || "0",
+      totalIndexingDelegatorRewards: network.totalIndexingDelegatorRewards || "0",
+      totalIndexingIndexerRewards: network.totalIndexingIndexerRewards || "0",
+      indexerCount: network.indexerCount || 0,
+      stakedIndexersCount: network.stakedIndexersCount || 0,
+      delegatorCount: network.delegatorCount || 0,
+      activeDelegatorCount: network.activeDelegatorCount || 0,
+      curatorCount: network.curatorCount || 0,
+      activeCuratorCount: network.activeCuratorCount || 0,
+      subgraphCount: network.subgraphCount || 0,
+      activeSubgraphCount: network.activeSubgraphCount || 0,
+      subgraphDeploymentCount: network.subgraphDeploymentCount || 0,
+      totalTokensStaked: network.totalTokensStaked || "0",
+      totalTokensAllocated: network.totalTokensAllocated || "0",
+      totalDelegatedTokens: network.totalDelegatedTokens || "0",
+      totalTokensSignalled: network.totalTokensSignalled || "0",
     };
   } catch (error) {
     console.error('Error fetching network metrics:', error);
-    // Fallback data
-    return {
-      totalIndexingRewards: "1000000000000000000000000",
-      totalQueryFees: "50000000000000000000000",
-      rewardsToFeesRatio: 20,
-      indexingRewardsPercentage: 95.2,
-      queryFeesPercentage: 4.8,
-    };
+    throw error;
   }
 }
 
@@ -208,43 +343,28 @@ export async function getTopIndexers(): Promise<Indexer[]> {
         efficiency,
         status: ratio > 100 ? 'Heavily Subsidized' : 'Balanced',
         account: indexer.account,
+        // Additional fields from comprehensive subgraph
+        allocatedTokens: indexer.allocatedTokens || "0",
+        delegatedTokens: indexer.delegatedTokens || "0",
+        availableStake: indexer.availableStake || "0",
+        tokenCapacity: indexer.tokenCapacity || "0",
+        delegatedCapacity: indexer.delegatedCapacity || "0",
+        ownStakeRatio: parseFloat(indexer.ownStakeRatio) || 0,
+        delegatedStakeRatio: parseFloat(indexer.delegatedStakeRatio) || 0,
+        indexingRewardCut: indexer.indexingRewardCut || 0,
+        queryFeeCut: indexer.queryFeeCut || 0,
+        indexerIndexingRewards: indexer.indexerIndexingRewards || "0",
+        delegatorIndexingRewards: indexer.delegatorIndexingRewards || "0",
+        queryFeeRebates: indexer.queryFeeRebates || "0",
+        delegatorQueryFees: indexer.delegatorQueryFees || "0",
+        allocationCount: indexer.allocationCount || 0,
+        totalAllocationCount: indexer.totalAllocationCount || 0,
+        forcedClosures: indexer.forcedClosures || 0,
       };
     });
   } catch (error) {
     console.error('Error fetching indexers:', error);
-    // Fallback data
-    return [
-      {
-        id: "0x1234567890123456789012345678901234567890",
-        defaultDisplayName: "streamingfastindexer.eth",
-        stakedTokens: "1000000000000000000000000",
-        queryFeesCollected: "50000000000000000000000",
-        rewardsEarned: "1000000000000000000000000",
-        rewardsFeesRatio: 20,
-        efficiency: 5,
-        status: "Heavily Subsidized",
-        account: {
-          metadata: {
-            image: "https://picsum.photos/200/200?random=1"
-          }
-        }
-      },
-      {
-        id: "0x2345678901234567890123456789012345678901",
-        defaultDisplayName: "figment.eth",
-        stakedTokens: "800000000000000000000000",
-        queryFeesCollected: "40000000000000000000000",
-        rewardsEarned: "800000000000000000000000",
-        rewardsFeesRatio: 20,
-        efficiency: 5,
-        status: "Heavily Subsidized",
-        account: {
-          metadata: {
-            image: "https://picsum.photos/200/200?random=2"
-          }
-        }
-      }
-    ];
+    throw error;
   }
 }
 
@@ -305,6 +425,18 @@ export async function getTopSubgraphs(): Promise<Subgraph[]> {
         queryFeesAmount: deployment.queryFeesAmount,
         indexingRewardAmount: deployment.indexingRewardAmount,
         rewardsFeesRatio: ratio,
+        // Additional fields from comprehensive subgraph
+        stakedTokens: deployment.stakedTokens || "0",
+        signalledTokens: deployment.signalledTokens || "0",
+        signalAmount: deployment.signalAmount || "0",
+        pricePerShare: parseFloat(deployment.pricePerShare) || 0,
+        reserveRatio: deployment.reserveRatio || 0,
+        queryFeeRebates: deployment.queryFeeRebates || "0",
+        curatorFeeRewards: deployment.curatorFeeRewards || "0",
+        indexingIndexerRewardAmount: deployment.indexingIndexerRewardAmount || "0",
+        indexingDelegatorRewardAmount: deployment.indexingDelegatorRewardAmount || "0",
+        subgraphCount: deployment.subgraphCount || 0,
+        activeSubgraphCount: deployment.activeSubgraphCount || 0,
         metadata: metadata ? {
           image: metadata.image,
           nftImage: metadata.nftImage,
@@ -313,31 +445,7 @@ export async function getTopSubgraphs(): Promise<Subgraph[]> {
     });
   } catch (error) {
     console.error('Error fetching subgraphs:', error);
-    // Fallback data with better names
-    return [
-      {
-        id: "0x1234567890123456789012345678901234567890",
-        displayName: "Uniswap V3",
-        queryFeesAmount: "10000000000000000000000",
-        indexingRewardAmount: "200000000000000000000000",
-        rewardsFeesRatio: 20,
-        metadata: {
-          image: "https://picsum.photos/200/200?random=3",
-          nftImage: "https://picsum.photos/200/200?random=4"
-        }
-      },
-      {
-        id: "0x2345678901234567890123456789012345678901",
-        displayName: "ENS",
-        queryFeesAmount: "8000000000000000000000",
-        indexingRewardAmount: "160000000000000000000000",
-        rewardsFeesRatio: 20,
-        metadata: {
-          image: "https://picsum.photos/200/200?random=5",
-          nftImage: "https://picsum.photos/200/200?random=6"
-        }
-      }
-    ];
+    throw error;
   }
 }
 
@@ -354,17 +462,22 @@ export async function getEpochData(): Promise<EpochData[]> {
         totalRewards: epoch.totalRewards,
         totalQueryFees: epoch.totalQueryFees,
         ratio,
+        // Additional fields from comprehensive subgraph
+        startBlock: epoch.startBlock || 0,
+        endBlock: epoch.endBlock || 0,
+        signalledTokens: epoch.signalledTokens || "0",
+        stakeDeposited: epoch.stakeDeposited || "0",
+        taxedQueryFees: epoch.taxedQueryFees || "0",
+        queryFeesCollected: epoch.queryFeesCollected || "0",
+        curatorQueryFees: epoch.curatorQueryFees || "0",
+        queryFeeRebates: epoch.queryFeeRebates || "0",
+        totalIndexerRewards: epoch.totalIndexerRewards || "0",
+        totalDelegatorRewards: epoch.totalDelegatorRewards || "0",
       };
     });
   } catch (error) {
     console.error('Error fetching epoch data:', error);
-    // Fallback data
-    return Array.from({ length: 20 }, (_, i) => ({
-      id: (1000 - i).toString(),
-      totalRewards: "100000000000000000000000",
-      totalQueryFees: "5000000000000000000000",
-      ratio: 20 + Math.random() * 5,
-    }));
+    throw error;
   }
 }
 
