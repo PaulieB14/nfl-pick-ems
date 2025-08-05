@@ -4,28 +4,13 @@ export interface NetworkMetrics {
   rewardsToFeesRatio: number;
   indexingRewardsPercentage: number;
   queryFeesPercentage: number;
-  // Additional metrics from the comprehensive subgraph
-  totalIndexerQueryFeesCollected: string;
-  totalIndexerQueryFeeRebates: string;
-  totalDelegatorQueryFeeRebates: string;
-  totalCuratorQueryFees: string;
-  totalTaxedQueryFees: string;
-  totalUnclaimedQueryFeeRebates: string;
-  totalIndexingDelegatorRewards: string;
-  totalIndexingIndexerRewards: string;
-  indexerCount: number;
-  stakedIndexersCount: number;
-  delegatorCount: number;
-  activeDelegatorCount: number;
-  curatorCount: number;
-  activeCuratorCount: number;
-  subgraphCount: number;
-  activeSubgraphCount: number;
-  subgraphDeploymentCount: number;
-  totalTokensStaked: string;
-  totalTokensAllocated: string;
-  totalDelegatedTokens: string;
-  totalTokensSignalled: string;
+  // Derived from events data
+  totalAllocations: number;
+  totalStakeDeposited: string;
+  totalStakeDelegated: string;
+  totalRebatesClaimed: string;
+  activeIndexers: number;
+  activeDelegators: number;
 }
 
 export interface Indexer {
@@ -37,28 +22,12 @@ export interface Indexer {
   rewardsFeesRatio: number;
   efficiency: number;
   status: string;
-  // Additional fields from comprehensive subgraph
-  allocatedTokens: string;
-  delegatedTokens: string;
-  availableStake: string;
-  tokenCapacity: string;
-  delegatedCapacity: string;
-  ownStakeRatio: number;
-  delegatedStakeRatio: number;
-  indexingRewardCut: number;
-  queryFeeCut: number;
-  indexerIndexingRewards: string;
-  delegatorIndexingRewards: string;
-  queryFeeRebates: string;
-  delegatorQueryFees: string;
-  allocationCount: number;
-  totalAllocationCount: number;
-  forcedClosures: number;
-  account?: {
-    metadata?: {
-      image?: string;
-    };
-  };
+  // Derived from events
+  totalAllocations: number;
+  totalStakeDeposited: string;
+  totalStakeDelegated: string;
+  totalRebatesClaimed: string;
+  lastActivity: string;
 }
 
 export interface Subgraph {
@@ -67,22 +36,10 @@ export interface Subgraph {
   queryFeesAmount: string;
   indexingRewardAmount: string;
   rewardsFeesRatio: number;
-  // Additional fields from comprehensive subgraph
-  stakedTokens: string;
-  signalledTokens: string;
-  signalAmount: string;
-  pricePerShare: number;
-  reserveRatio: number;
-  queryFeeRebates: string;
-  curatorFeeRewards: string;
-  indexingIndexerRewardAmount: string;
-  indexingDelegatorRewardAmount: string;
-  subgraphCount: number;
-  activeSubgraphCount: number;
-  metadata?: {
-    image?: string;
-    nftImage?: string;
-  };
+  // Derived from allocation events
+  totalAllocations: number;
+  totalTokensAllocated: string;
+  lastAllocation: string;
 }
 
 export interface EpochData {
@@ -90,157 +47,127 @@ export interface EpochData {
   totalRewards: string;
   totalQueryFees: string;
   ratio: number;
-  // Additional fields from comprehensive subgraph
-  startBlock: number;
-  endBlock: number;
-  signalledTokens: string;
-  stakeDeposited: string;
-  taxedQueryFees: string;
-  queryFeesCollected: string;
-  curatorQueryFees: string;
-  queryFeeRebates: string;
-  totalIndexerRewards: string;
-  totalDelegatorRewards: string;
+  // Derived from events
+  totalAllocations: number;
+  totalStakeDeposited: string;
+  totalRebatesClaimed: string;
 }
 
-// Improved GraphQL Queries using the comprehensive Graph Network subgraph
+// GraphQL Queries for events-based subgraph
 export const NETWORK_METRICS_QUERY = `
   query {
-    graphNetworks(first: 1) {
-      totalIndexingRewards
-      totalQueryFees
-      totalIndexerQueryFeesCollected
-      totalIndexerQueryFeeRebates
-      totalDelegatorQueryFeeRebates
-      totalCuratorQueryFees
-      totalTaxedQueryFees
-      totalUnclaimedQueryFeeRebates
-      totalIndexingDelegatorRewards
-      totalIndexingIndexerRewards
-      indexerCount
-      stakedIndexersCount
-      delegatorCount
-      activeDelegatorCount
-      curatorCount
-      activeCuratorCount
-      subgraphCount
-      activeSubgraphCount
-      subgraphDeploymentCount
-      totalTokensStaked
-      totalTokensAllocated
-      totalDelegatedTokens
-      totalTokensSignalled
+    allocationCreateds(first: 1000, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      indexer
+      subgraphDeploymentID
+      tokens
+      blockTimestamp
+    }
+    allocationCollecteds(first: 1000, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      indexer
+      subgraphDeploymentID
+      tokens
+      curationFees
+      rebateFees
+      blockTimestamp
+    }
+    stakeDepositeds(first: 1000, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      indexer
+      tokens
+      blockTimestamp
+    }
+    stakeDelegateds(first: 1000, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      indexer
+      delegator
+      tokens
+      shares
+      blockTimestamp
+    }
+    rebateClaimeds(first: 1000, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      indexer
+      subgraphDeploymentID
+      tokens
+      blockTimestamp
     }
   }
 `;
 
 export const TOP_INDEXERS_QUERY = `
   query {
-    indexers(first: 20, orderBy: queryFeesCollected, orderDirection: desc) {
+    allocationCollecteds(first: 1000, orderBy: blockTimestamp, orderDirection: desc) {
       id
-      defaultDisplayName
-      stakedTokens
-      allocatedTokens
-      delegatedTokens
-      availableStake
-      tokenCapacity
-      delegatedCapacity
-      ownStakeRatio
-      delegatedStakeRatio
-      indexingRewardCut
-      queryFeeCut
-      queryFeesCollected
-      queryFeeRebates
-      delegatorQueryFees
-      rewardsEarned
-      indexerIndexingRewards
-      delegatorIndexingRewards
-      allocationCount
-      totalAllocationCount
-      forcedClosures
-      account {
-        metadata {
-          image
-        }
-      }
+      indexer
+      subgraphDeploymentID
+      tokens
+      curationFees
+      rebateFees
+      blockTimestamp
+    }
+    stakeDepositeds(first: 1000, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      indexer
+      tokens
+      blockTimestamp
+    }
+    stakeDelegateds(first: 1000, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      indexer
+      delegator
+      tokens
+      shares
+      blockTimestamp
     }
   }
 `;
 
 export const TOP_SUBGRAPHS_QUERY = `
   query {
-    subgraphDeployments(first: 20, orderBy: queryFeesAmount, orderDirection: desc) {
+    allocationCreateds(first: 1000, orderBy: blockTimestamp, orderDirection: desc) {
       id
-      ipfsHash
-      stakedTokens
-      signalledTokens
-      signalAmount
-      pricePerShare
-      reserveRatio
-      queryFeesAmount
-      queryFeeRebates
-      curatorFeeRewards
-      indexingRewardAmount
-      indexingIndexerRewardAmount
-      indexingDelegatorRewardAmount
-      subgraphCount
-      activeSubgraphCount
-      versions(orderBy: version, orderDirection: desc, first: 1) {
-        version
-        metadata {
-          label
-        }
-        subgraph {
-          metadata {
-            displayName
-            image
-            nftImage
-          }
-        }
-      }
+      indexer
+      subgraphDeploymentID
+      tokens
+      blockTimestamp
+    }
+    allocationCollecteds(first: 1000, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      indexer
+      subgraphDeploymentID
+      tokens
+      curationFees
+      rebateFees
+      blockTimestamp
     }
   }
 `;
 
 export const EPOCH_DATA_QUERY = `
   query {
-    epochs(first: 30, orderBy: id, orderDirection: desc) {
+    allocationCreateds(first: 1000, orderBy: blockTimestamp, orderDirection: desc) {
       id
-      startBlock
-      endBlock
-      signalledTokens
-      stakeDeposited
-      totalQueryFees
-      taxedQueryFees
-      queryFeesCollected
-      curatorQueryFees
-      queryFeeRebates
-      totalRewards
-      totalIndexerRewards
-      totalDelegatorRewards
+      indexer
+      subgraphDeploymentID
+      tokens
+      blockTimestamp
     }
-  }
-`;
-
-// New query to get subgraph metadata by IPFS hashes
-export const SUBGRAPH_METADATA_QUERY = `
-  query($ids: [String!]) {
-    subgraphDeployments(where: { ipfsHash_in: $ids }) {
+    allocationCollecteds(first: 1000, orderBy: blockTimestamp, orderDirection: desc) {
       id
-      ipfsHash
-      versions(orderBy: version, orderDirection: desc, first: 1) {
-        version
-        metadata {
-          label
-        }
-        subgraph {
-          metadata {
-            displayName
-            image
-            nftImage
-          }
-        }
-      }
+      indexer
+      subgraphDeploymentID
+      tokens
+      curationFees
+      rebateFees
+      blockTimestamp
+    }
+    stakeDepositeds(first: 1000, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      indexer
+      tokens
+      blockTimestamp
     }
   }
 `;
@@ -282,40 +209,49 @@ export async function fetchGraphData(query: string, variables?: any) {
 export async function getNetworkMetrics(): Promise<NetworkMetrics> {
   try {
     const data = await fetchGraphData(NETWORK_METRICS_QUERY);
-    const network = data.graphNetworks[0];
     
-    const totalRewards = parseFloat(network.totalIndexingRewards) / 1e18;
-    const totalFees = parseFloat(network.totalQueryFees) / 1e18;
+    // Calculate metrics from events data
+    const totalAllocations = data.allocationCreateds.length;
+    const totalStakeDeposited = data.stakeDepositeds.reduce((sum: number, event: any) => 
+      sum + parseFloat(event.tokens), 0).toString();
+    const totalStakeDelegated = data.stakeDelegateds.reduce((sum: number, event: any) => 
+      sum + parseFloat(event.tokens), 0).toString();
+    const totalRebatesClaimed = data.rebateClaimeds.reduce((sum: number, event: any) => 
+      sum + parseFloat(event.tokens), 0).toString();
+    
+    // Calculate query fees from allocation collections
+    const totalQueryFees = data.allocationCollecteds.reduce((sum: number, event: any) => 
+      sum + parseFloat(event.curationFees) + parseFloat(event.rebateFees), 0).toString();
+    
+    // Estimate indexing rewards (this would need to be calculated differently)
+    const totalIndexingRewards = "0"; // Would need different data source
+    
+    const totalRewards = parseFloat(totalIndexingRewards) / 1e18;
+    const totalFees = parseFloat(totalQueryFees) / 1e18;
     const totalValue = totalRewards + totalFees;
     
+    // Get unique indexers and delegators
+    const uniqueIndexers = new Set([
+      ...data.allocationCreateds.map((e: any) => e.indexer),
+      ...data.stakeDepositeds.map((e: any) => e.indexer)
+    ]);
+    
+    const uniqueDelegators = new Set(
+      data.stakeDelegateds.map((e: any) => e.delegator)
+    );
+    
     return {
-      totalIndexingRewards: network.totalIndexingRewards,
-      totalQueryFees: network.totalQueryFees,
-      rewardsToFeesRatio: totalRewards / totalFees,
-      indexingRewardsPercentage: (totalRewards / totalValue) * 100,
-      queryFeesPercentage: (totalFees / totalValue) * 100,
-      // Additional metrics from the comprehensive subgraph
-      totalIndexerQueryFeesCollected: network.totalIndexerQueryFeesCollected || "0",
-      totalIndexerQueryFeeRebates: network.totalIndexerQueryFeeRebates || "0",
-      totalDelegatorQueryFeeRebates: network.totalDelegatorQueryFeeRebates || "0",
-      totalCuratorQueryFees: network.totalCuratorQueryFees || "0",
-      totalTaxedQueryFees: network.totalTaxedQueryFees || "0",
-      totalUnclaimedQueryFeeRebates: network.totalUnclaimedQueryFeeRebates || "0",
-      totalIndexingDelegatorRewards: network.totalIndexingDelegatorRewards || "0",
-      totalIndexingIndexerRewards: network.totalIndexingIndexerRewards || "0",
-      indexerCount: network.indexerCount || 0,
-      stakedIndexersCount: network.stakedIndexersCount || 0,
-      delegatorCount: network.delegatorCount || 0,
-      activeDelegatorCount: network.activeDelegatorCount || 0,
-      curatorCount: network.curatorCount || 0,
-      activeCuratorCount: network.activeCuratorCount || 0,
-      subgraphCount: network.subgraphCount || 0,
-      activeSubgraphCount: network.activeSubgraphCount || 0,
-      subgraphDeploymentCount: network.subgraphDeploymentCount || 0,
-      totalTokensStaked: network.totalTokensStaked || "0",
-      totalTokensAllocated: network.totalTokensAllocated || "0",
-      totalDelegatedTokens: network.totalDelegatedTokens || "0",
-      totalTokensSignalled: network.totalTokensSignalled || "0",
+      totalIndexingRewards,
+      totalQueryFees,
+      rewardsToFeesRatio: totalRewards / totalFees || 0,
+      indexingRewardsPercentage: totalValue > 0 ? (totalRewards / totalValue) * 100 : 0,
+      queryFeesPercentage: totalValue > 0 ? (totalFees / totalValue) * 100 : 0,
+      totalAllocations,
+      totalStakeDeposited,
+      totalStakeDelegated,
+      totalRebatesClaimed,
+      activeIndexers: uniqueIndexers.size,
+      activeDelegators: uniqueDelegators.size,
     };
   } catch (error) {
     console.error('Error fetching network metrics:', error);
@@ -326,42 +262,98 @@ export async function getNetworkMetrics(): Promise<NetworkMetrics> {
 export async function getTopIndexers(): Promise<Indexer[]> {
   try {
     const data = await fetchGraphData(TOP_INDEXERS_QUERY);
-    return data.indexers.map((indexer: any) => {
-      const fees = parseFloat(indexer.queryFeesCollected) / 1e18;
-      const rewards = parseFloat(indexer.rewardsEarned) / 1e18;
-      const ratio = rewards / fees;
-      const efficiency = parseFloat(indexer.stakedTokens) > 0 ? 
-        (fees / (parseFloat(indexer.stakedTokens) / 1e18)) * 100 : 0;
+    
+    // Group events by indexer
+    const indexerData = new Map();
+    
+    // Process allocation collections
+    data.allocationCollecteds.forEach((event: any) => {
+      const indexer = event.indexer;
+      if (!indexerData.has(indexer)) {
+        indexerData.set(indexer, {
+          id: indexer,
+          queryFeesCollected: "0",
+          totalAllocations: 0,
+          totalStakeDeposited: "0",
+          totalStakeDelegated: "0",
+          totalRebatesClaimed: "0",
+          lastActivity: "0"
+        });
+      }
       
-      return {
-        id: indexer.id,
-        defaultDisplayName: indexer.defaultDisplayName || indexer.id.slice(0, 8),
-        stakedTokens: indexer.stakedTokens,
-        queryFeesCollected: indexer.queryFeesCollected,
-        rewardsEarned: indexer.rewardsEarned,
-        rewardsFeesRatio: ratio,
-        efficiency,
-        status: ratio > 100 ? 'Heavily Subsidized' : 'Balanced',
-        account: indexer.account,
-        // Additional fields from comprehensive subgraph
-        allocatedTokens: indexer.allocatedTokens || "0",
-        delegatedTokens: indexer.delegatedTokens || "0",
-        availableStake: indexer.availableStake || "0",
-        tokenCapacity: indexer.tokenCapacity || "0",
-        delegatedCapacity: indexer.delegatedCapacity || "0",
-        ownStakeRatio: parseFloat(indexer.ownStakeRatio) || 0,
-        delegatedStakeRatio: parseFloat(indexer.delegatedStakeRatio) || 0,
-        indexingRewardCut: indexer.indexingRewardCut || 0,
-        queryFeeCut: indexer.queryFeeCut || 0,
-        indexerIndexingRewards: indexer.indexerIndexingRewards || "0",
-        delegatorIndexingRewards: indexer.delegatorIndexingRewards || "0",
-        queryFeeRebates: indexer.queryFeeRebates || "0",
-        delegatorQueryFees: indexer.delegatorQueryFees || "0",
-        allocationCount: indexer.allocationCount || 0,
-        totalAllocationCount: indexer.totalAllocationCount || 0,
-        forcedClosures: indexer.forcedClosures || 0,
-      };
+      const indexerInfo = indexerData.get(indexer);
+      indexerInfo.queryFeesCollected = (parseFloat(indexerInfo.queryFeesCollected) + 
+        parseFloat(event.curationFees) + parseFloat(event.rebateFees)).toString();
+      indexerInfo.lastActivity = Math.max(indexerInfo.lastActivity, parseInt(event.blockTimestamp));
     });
+    
+    // Process stake deposits
+    data.stakeDepositeds.forEach((event: any) => {
+      const indexer = event.indexer;
+      if (!indexerData.has(indexer)) {
+        indexerData.set(indexer, {
+          id: indexer,
+          queryFeesCollected: "0",
+          totalAllocations: 0,
+          totalStakeDeposited: "0",
+          totalStakeDelegated: "0",
+          totalRebatesClaimed: "0",
+          lastActivity: "0"
+        });
+      }
+      
+      const indexerInfo = indexerData.get(indexer);
+      indexerInfo.totalStakeDeposited = (parseFloat(indexerInfo.totalStakeDeposited) + 
+        parseFloat(event.tokens)).toString();
+      indexerInfo.lastActivity = Math.max(indexerInfo.lastActivity, parseInt(event.blockTimestamp));
+    });
+    
+    // Process delegations
+    data.stakeDelegateds.forEach((event: any) => {
+      const indexer = event.indexer;
+      if (!indexerData.has(indexer)) {
+        indexerData.set(indexer, {
+          id: indexer,
+          queryFeesCollected: "0",
+          totalAllocations: 0,
+          totalStakeDeposited: "0",
+          totalStakeDelegated: "0",
+          totalRebatesClaimed: "0",
+          lastActivity: "0"
+        });
+      }
+      
+      const indexerInfo = indexerData.get(indexer);
+      indexerInfo.totalStakeDelegated = (parseFloat(indexerInfo.totalStakeDelegated) + 
+        parseFloat(event.tokens)).toString();
+      indexerInfo.lastActivity = Math.max(indexerInfo.lastActivity, parseInt(event.blockTimestamp));
+    });
+    
+    // Convert to array and calculate derived metrics
+    return Array.from(indexerData.values())
+      .map((indexer: any) => {
+        const fees = parseFloat(indexer.queryFeesCollected) / 1e18;
+        const staked = parseFloat(indexer.totalStakeDeposited) / 1e18;
+        const efficiency = staked > 0 ? (fees / staked) * 100 : 0;
+        
+        return {
+          id: indexer.id,
+          defaultDisplayName: indexer.id.slice(0, 8),
+          stakedTokens: indexer.totalStakeDeposited,
+          queryFeesCollected: indexer.queryFeesCollected,
+          rewardsEarned: "0", // Would need different data source
+          rewardsFeesRatio: 0, // Would need different data source
+          efficiency,
+          status: efficiency > 0 ? 'Active' : 'Inactive',
+          totalAllocations: indexer.totalAllocations,
+          totalStakeDeposited: indexer.totalStakeDeposited,
+          totalStakeDelegated: indexer.totalStakeDelegated,
+          totalRebatesClaimed: indexer.totalRebatesClaimed,
+          lastActivity: new Date(parseInt(indexer.lastActivity) * 1000).toISOString(),
+        };
+      })
+      .sort((a, b) => parseFloat(b.queryFeesCollected) - parseFloat(a.queryFeesCollected))
+      .slice(0, 20);
   } catch (error) {
     console.error('Error fetching indexers:', error);
     throw error;
@@ -371,78 +363,62 @@ export async function getTopIndexers(): Promise<Indexer[]> {
 export async function getTopSubgraphs(): Promise<Subgraph[]> {
   try {
     const data = await fetchGraphData(TOP_SUBGRAPHS_QUERY);
-    const deployments = data.subgraphDeployments;
     
-    // Extract IPFS hashes for metadata lookup
-    const ipfsHashes = deployments.map((d: any) => d.ipfsHash);
+    // Group events by subgraph deployment
+    const subgraphData = new Map();
     
-    // Get detailed metadata for these subgraphs
-    let metadataMap = new Map();
-    try {
-      const metadataData = await fetchGraphData(SUBGRAPH_METADATA_QUERY, { ids: ipfsHashes });
-      metadataData.subgraphDeployments.forEach((deployment: any) => {
-        const version = deployment.versions[0];
-        const subgraph = version?.subgraph;
-        const metadata = subgraph?.metadata;
-        metadataMap.set(deployment.ipfsHash, {
-          displayName: metadata?.displayName || version?.metadata?.label || deployment.ipfsHash,
-          image: metadata?.image,
-          nftImage: metadata?.nftImage,
+    // Process allocation creations
+    data.allocationCreateds.forEach((event: any) => {
+      const subgraphId = event.subgraphDeploymentID;
+      if (!subgraphData.has(subgraphId)) {
+        subgraphData.set(subgraphId, {
+          id: subgraphId,
+          totalAllocations: 0,
+          totalTokensAllocated: "0",
+          lastAllocation: "0"
         });
-      });
-    } catch (metadataError) {
-      console.warn('Failed to fetch subgraph metadata:', metadataError);
-    }
-    
-    return deployments.map((deployment: any) => {
-      const metadata = metadataMap.get(deployment.ipfsHash);
-      
-      // Use metadata if available, otherwise fallback
-      let displayName = "Unknown";
-      if (metadata?.displayName) {
-        displayName = metadata.displayName;
-      } else {
-        const version = deployment.versions[0];
-        const subgraph = version?.subgraph;
-        const subgraphMetadata = subgraph?.metadata;
-        
-        if (subgraphMetadata?.displayName) {
-          displayName = subgraphMetadata.displayName;
-        } else if (version?.metadata?.label) {
-          displayName = version.metadata.label;
-        } else {
-          displayName = deployment.ipfsHash;
-        }
       }
-
-      const fees = parseFloat(deployment.queryFeesAmount) / 1e18;
-      const rewards = parseFloat(deployment.indexingRewardAmount) / 1e18;
-      const ratio = rewards / fees;
-
-      return {
-        id: deployment.id,
-        displayName,
-        queryFeesAmount: deployment.queryFeesAmount,
-        indexingRewardAmount: deployment.indexingRewardAmount,
-        rewardsFeesRatio: ratio,
-        // Additional fields from comprehensive subgraph
-        stakedTokens: deployment.stakedTokens || "0",
-        signalledTokens: deployment.signalledTokens || "0",
-        signalAmount: deployment.signalAmount || "0",
-        pricePerShare: parseFloat(deployment.pricePerShare) || 0,
-        reserveRatio: deployment.reserveRatio || 0,
-        queryFeeRebates: deployment.queryFeeRebates || "0",
-        curatorFeeRewards: deployment.curatorFeeRewards || "0",
-        indexingIndexerRewardAmount: deployment.indexingIndexerRewardAmount || "0",
-        indexingDelegatorRewardAmount: deployment.indexingDelegatorRewardAmount || "0",
-        subgraphCount: deployment.subgraphCount || 0,
-        activeSubgraphCount: deployment.activeSubgraphCount || 0,
-        metadata: metadata ? {
-          image: metadata.image,
-          nftImage: metadata.nftImage,
-        } : undefined,
-      };
+      
+      const subgraphInfo = subgraphData.get(subgraphId);
+      subgraphInfo.totalAllocations += 1;
+      subgraphInfo.totalTokensAllocated = (parseFloat(subgraphInfo.totalTokensAllocated) + 
+        parseFloat(event.tokens)).toString();
+      subgraphInfo.lastAllocation = Math.max(subgraphInfo.lastAllocation, parseInt(event.blockTimestamp));
     });
+    
+    // Process allocation collections for query fees
+    data.allocationCollecteds.forEach((event: any) => {
+      const subgraphId = event.subgraphDeploymentID;
+      if (!subgraphData.has(subgraphId)) {
+        subgraphData.set(subgraphId, {
+          id: subgraphId,
+          totalAllocations: 0,
+          totalTokensAllocated: "0",
+          lastAllocation: "0"
+        });
+      }
+      
+      const subgraphInfo = subgraphData.get(subgraphId);
+      subgraphInfo.lastAllocation = Math.max(subgraphInfo.lastAllocation, parseInt(event.blockTimestamp));
+    });
+    
+    return Array.from(subgraphData.values())
+      .map((subgraph: any) => {
+        const fees = parseFloat(subgraph.totalTokensAllocated) / 1e18;
+        
+        return {
+          id: subgraph.id,
+          displayName: subgraph.id.slice(0, 8),
+          queryFeesAmount: subgraph.totalTokensAllocated,
+          indexingRewardAmount: "0", // Would need different data source
+          rewardsFeesRatio: 0, // Would need different data source
+          totalAllocations: subgraph.totalAllocations,
+          totalTokensAllocated: subgraph.totalTokensAllocated,
+          lastAllocation: new Date(parseInt(subgraph.lastAllocation) * 1000).toISOString(),
+        };
+      })
+      .sort((a, b) => parseFloat(b.queryFeesAmount) - parseFloat(a.queryFeesAmount))
+      .slice(0, 20);
   } catch (error) {
     console.error('Error fetching subgraphs:', error);
     throw error;
@@ -452,29 +428,62 @@ export async function getTopSubgraphs(): Promise<Subgraph[]> {
 export async function getEpochData(): Promise<EpochData[]> {
   try {
     const data = await fetchGraphData(EPOCH_DATA_QUERY);
-    return data.epochs.map((epoch: any) => {
-      const rewards = parseFloat(epoch.totalRewards) / 1e18;
-      const fees = parseFloat(epoch.totalQueryFees) / 1e18;
-      const ratio = rewards / fees;
+    
+    // Group events by time periods (simplified epoch calculation)
+    const epochData = new Map();
+    
+    data.allocationCreateds.forEach((event: any) => {
+      const timestamp = parseInt(event.blockTimestamp);
+      const epoch = Math.floor(timestamp / (7 * 24 * 60 * 60)); // Weekly epochs
       
-      return {
-        id: epoch.id,
-        totalRewards: epoch.totalRewards,
-        totalQueryFees: epoch.totalQueryFees,
-        ratio,
-        // Additional fields from comprehensive subgraph
-        startBlock: epoch.startBlock || 0,
-        endBlock: epoch.endBlock || 0,
-        signalledTokens: epoch.signalledTokens || "0",
-        stakeDeposited: epoch.stakeDeposited || "0",
-        taxedQueryFees: epoch.taxedQueryFees || "0",
-        queryFeesCollected: epoch.queryFeesCollected || "0",
-        curatorQueryFees: epoch.curatorQueryFees || "0",
-        queryFeeRebates: epoch.queryFeeRebates || "0",
-        totalIndexerRewards: epoch.totalIndexerRewards || "0",
-        totalDelegatorRewards: epoch.totalDelegatorRewards || "0",
-      };
+      if (!epochData.has(epoch)) {
+        epochData.set(epoch, {
+          id: epoch.toString(),
+          totalAllocations: 0,
+          totalStakeDeposited: "0",
+          totalQueryFees: "0"
+        });
+      }
+      
+      const epochInfo = epochData.get(epoch);
+      epochInfo.totalAllocations += 1;
     });
+    
+    data.stakeDepositeds.forEach((event: any) => {
+      const timestamp = parseInt(event.blockTimestamp);
+      const epoch = Math.floor(timestamp / (7 * 24 * 60 * 60));
+      
+      if (!epochData.has(epoch)) {
+        epochData.set(epoch, {
+          id: epoch.toString(),
+          totalAllocations: 0,
+          totalStakeDeposited: "0",
+          totalQueryFees: "0"
+        });
+      }
+      
+      const epochInfo = epochData.get(epoch);
+      epochInfo.totalStakeDeposited = (parseFloat(epochInfo.totalStakeDeposited) + 
+        parseFloat(event.tokens)).toString();
+    });
+    
+    return Array.from(epochData.values())
+      .map((epoch: any) => {
+        const fees = parseFloat(epoch.totalQueryFees) / 1e18;
+        const rewards = 0; // Would need different data source
+        
+        return {
+          id: epoch.id,
+          totalRewards: "0",
+          totalQueryFees: epoch.totalQueryFees,
+          ratio: fees > 0 ? rewards / fees : 0,
+          totalAllocations: epoch.totalAllocations,
+          totalStakeDeposited: epoch.totalStakeDeposited,
+          totalRebatesClaimed: "0",
+        };
+      })
+      .sort((a, b) => parseInt(b.id) - parseInt(a.id))
+      .slice(0, 30);
   } catch (error) {
     console.error('Error fetching epoch data:', error);
     throw error;
@@ -505,10 +514,10 @@ export function formatPercentage(num: number): string {
 
 export function getStatusColor(status: string): string {
   switch (status) {
-    case 'Heavily Subsidized':
-      return 'text-orange-600';
-    case 'Balanced':
+    case 'Active':
       return 'text-green-600';
+    case 'Inactive':
+      return 'text-gray-600';
     default:
       return 'text-gray-600';
   }
