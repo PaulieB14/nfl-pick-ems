@@ -1,0 +1,169 @@
+specVersion: 1.2.0
+schema:
+  file: ./schema.graphql
+dataSources:
+  # EntryPoint - Core ERC-4337 contract
+  - kind: ethereum
+    name: EntryPoint
+    network: base
+    source:
+      address: "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789"
+      abi: EntryPoint
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      entities:
+        - UserOperation
+        - Account
+        - Factory
+        - Bundler
+        - EntryPoint
+        - AccountCreated
+        - Bundle
+        - Aggregator
+      abis:
+        - name: EntryPoint
+          file: ./abis/EntryPoint.json
+      eventHandlers:
+        - event: UserOperationEvent(indexed bytes32,indexed address,indexed address,uint256,bool,uint256,uint256)
+          handler: handleUserOperationEvent
+        - event: AccountDeployed(indexed bytes32,indexed address,address,uint256)
+          handler: handleAccountDeployed
+        - event: UserOperationRevertReason(indexed bytes32,indexed address,uint256,bytes)
+          handler: handleUserOperationRevertReason
+        - event: SignatureAggregatorChanged(address)
+          handler: handleSignatureAggregatorChanged
+        - event: StakeLocked(indexed address,uint256,uint256)
+          handler: handleStakeLocked
+        - event: StakeUnlocked(indexed address,uint256)
+          handler: handleStakeUnlocked
+        - event: StakeWithdrawn(indexed address,indexed address,uint256)
+          handler: handleStakeWithdrawn
+
+  # VerifyingSingletonPaymaster - Gas-based paymaster
+  - kind: ethereum
+    name: VerifyingSingletonPaymaster
+    network: base
+    source:
+      address: "0x00000f79b7faf42eebadba19acc07cd08af44789"
+      abi: VerifyingSingletonPaymaster
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      entities:
+        - PaymasterFeeData
+        - PaymasterFeeStats
+        - Paymaster
+        - EntryPoint
+      abis:
+        - name: VerifyingSingletonPaymaster
+          file: ./abis/VerifyingSingletonPaymaster.json
+      eventHandlers:
+        - event: GasBalanceDeducted(indexed address,indexed uint256)
+          handler: handleGasBalanceDeducted
+        - event: GasDeposited(indexed address,indexed uint256)
+          handler: handleGasDeposited
+        - event: GasWithdrawn(indexed address,indexed address,indexed uint256)
+          handler: handleGasWithdrawn
+
+  # BiconomyTokenPaymaster - Token-based paymaster
+  - kind: ethereum
+    name: BiconomyTokenPaymaster
+    network: base
+    source:
+      address: "0x00000f7365ca6c59a2c93719ad53d567ed49c14c"
+      abi: BiconomyTokenPaymaster
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      entities:
+        - PaymasterFeeData
+        - PaymasterFeeStats
+        - Paymaster
+        - EntryPoint
+        - TokenTransfer
+      abis:
+        - name: BiconomyTokenPaymaster
+          file: ./abis/BiconomyTokenPaymaster.json
+      eventHandlers:
+        - event: TokenPaymasterOperation(indexed address,indexed address,indexed uint256,address,uint32,bytes32,uint256,uint8)
+          handler: handleTokenPaymasterOperation
+        - event: TokenPaymentDue(indexed address,indexed address,indexed uint256)
+          handler: handleTokenPaymentDue
+
+  # VerifyingSingletonPaymaster2 - Additional gas paymaster
+  - kind: ethereum
+    name: VerifyingSingletonPaymaster2
+    network: base
+    source:
+      address: "0x000000f6faeda8f7bfa1a8589b4b6e2d71c37592"
+      abi: VerifyingSingletonPaymaster
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      entities:
+        - PaymasterFeeData
+        - PaymasterFeeStats
+        - Paymaster
+        - EntryPoint
+      abis:
+        - name: VerifyingSingletonPaymaster
+          file: ./abis/VerifyingSingletonPaymaster.json
+      eventHandlers:
+        - event: GasBalanceDeducted(indexed address,indexed uint256)
+          handler: handleGasBalanceDeducted
+        - event: GasDeposited(indexed address,indexed uint256)
+          handler: handleGasDeposited
+        - event: GasWithdrawn(indexed address,indexed address,indexed uint256)
+          handler: handleGasWithdrawn
+
+  # ERC-20 Token Transfers (for token-based paymasters)
+  - kind: ethereum
+    name: ERC20
+    network: base
+    source:
+      abi: ERC20
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      entities:
+        - TokenTransfer
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleERC20Transfer
+
+  # Account Factory (for account creation tracking)
+  - kind: ethereum
+    name: AccountFactory
+    network: base
+    source:
+      address: "0x0000000000a84d1a9b0063a910315c7ffa9cd248"
+      abi: AccountFactory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      entities:
+        - AccountCreated
+        - Factory
+        - Account
+      abis:
+        - name: AccountFactory
+          file: ./abis/AccountFactory.json
+      eventHandlers:
+        - event: AccountCreated(indexed address,indexed address,uint256)
+          handler: handleAccountCreated 

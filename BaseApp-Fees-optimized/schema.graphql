@@ -1,0 +1,202 @@
+# BaseApp Comprehensive Data Schema
+# Captures ERC-4337 Account Abstraction ecosystem data on Base
+
+# Core User Operation Data
+type UserOperation @entity(timeseries: true, immutable: true) {
+  id: Int8!
+  timestamp: Timestamp!
+  userOpHash: Bytes!
+  sender: Bytes!
+  nonce: BigInt!
+  initCode: Bytes
+  callData: Bytes!
+  callGasLimit: BigInt!
+  verificationGasLimit: BigInt!
+  preVerificationGas: BigInt!
+  maxFeePerGas: BigInt!
+  maxPriorityFeePerGas: BigInt!
+  paymasterAndData: Bytes
+  signature: Bytes!
+  entryPoint: Bytes!
+  bundler: Bytes
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+  success: Boolean!
+  actualGasUsed: BigInt
+  actualGasCost: BigInt
+  paymaster: Bytes
+  factory: Bytes
+  aggregator: Bytes
+}
+
+# Account Management
+type Account @entity {
+  id: Bytes!
+  address: Bytes!
+  factory: Bytes
+  owner: Bytes
+  deployedAt: BigInt!
+  deployedAtTimestamp: BigInt!
+  totalOperations: BigInt!
+  totalGasUsed: BigInt!
+  totalGasCost: BigInt!
+  lastSeen: BigInt!
+  lastSeenTimestamp: BigInt!
+  isActive: Boolean!
+}
+
+# Factory for Account Creation
+type Factory @entity {
+  id: Bytes!
+  address: Bytes!
+  totalAccountsCreated: BigInt!
+  totalGasUsed: BigInt!
+  firstSeen: BigInt!
+  lastSeen: BigInt!
+  firstSeenTimestamp: BigInt!
+  lastSeenTimestamp: BigInt!
+}
+
+# Bundler Operations
+type Bundler @entity {
+  id: Bytes!
+  address: Bytes!
+  totalBundles: BigInt!
+  totalUserOps: BigInt!
+  totalGasUsed: BigInt!
+  totalGasCost: BigInt!
+  firstSeen: BigInt!
+  lastSeen: BigInt!
+  firstSeenTimestamp: BigInt!
+  lastSeenTimestamp: BigInt!
+}
+
+# Paymaster Fee Data (Enhanced)
+type PaymasterFeeData @entity(timeseries: true, immutable: true) {
+  id: Int8!
+  timestamp: Timestamp!
+  paymaster: Bytes!
+  gasUsed: BigInt!
+  gasCost: BigInt!
+  operationType: String!
+  success: Boolean!
+  token: String
+  userOpHash: String
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+  sender: Bytes
+  entryPoint: Bytes!
+  bundler: Bytes
+}
+
+# Paymaster Statistics (Aggregated)
+type PaymasterFeeStats @aggregation(intervals: ["hour", "day"], source: "PaymasterFeeData") {
+  id: Int8!
+  timestamp: Timestamp!
+  paymaster: Bytes!
+  totalGasUsed: BigInt! @aggregate(fn: "sum", arg: "gasUsed")
+  totalGasCost: BigInt! @aggregate(fn: "sum", arg: "gasCost")
+  operationCount: Int! @aggregate(fn: "count", cumulative: true)
+}
+
+# User Operation Statistics
+type UserOperationStats @aggregation(intervals: ["hour", "day"], source: "UserOperation") {
+  id: Int8!
+  timestamp: Timestamp!
+  totalOperations: Int! @aggregate(fn: "count", cumulative: true)
+  totalGasUsed: BigInt! @aggregate(fn: "sum", arg: "actualGasUsed")
+  totalGasCost: BigInt! @aggregate(fn: "sum", arg: "actualGasCost")
+}
+
+# Paymaster Entity (Enhanced)
+type Paymaster @entity {
+  id: Bytes!
+  address: Bytes!
+  totalOperations: BigInt!
+  totalGasCost: BigInt!
+  totalGasUsed: BigInt!
+  firstSeen: BigInt!
+  lastSeen: BigInt!
+  entryPoint: Bytes!
+  firstSeenTimestamp: BigInt!
+  lastSeenTimestamp: BigInt!
+  uniqueUsers: BigInt!
+  successRate: BigDecimal!
+}
+
+# EntryPoint Entity (Enhanced)
+type EntryPoint @entity {
+  id: Bytes!
+  address: Bytes!
+  totalOperations: BigInt!
+  totalGasCost: BigInt!
+  firstSeen: BigInt!
+  lastSeen: BigInt!
+  firstSeenTimestamp: BigInt!
+  lastSeenTimestamp: BigInt!
+  totalAccounts: BigInt!
+  totalBundlers: BigInt!
+  totalPaymasters: BigInt!
+}
+
+# Token Transfers (for token-based paymasters)
+type TokenTransfer @entity(timeseries: true, immutable: true) {
+  id: Int8!
+  timestamp: Timestamp!
+  token: Bytes!
+  from: Bytes!
+  to: Bytes!
+  amount: BigInt!
+  userOpHash: Bytes
+  paymaster: Bytes
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+}
+
+# Account Creation Events
+type AccountCreated @entity(timeseries: true, immutable: true) {
+  id: Int8!
+  timestamp: Timestamp!
+  account: Bytes!
+  owner: Bytes!
+  factory: Bytes!
+  salt: String
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+  userOpHash: Bytes
+}
+
+# Bundle Events
+type Bundle @entity(timeseries: true, immutable: true) {
+  id: Int8!
+  timestamp: Timestamp!
+  bundleHash: Bytes!
+  bundler: Bytes!
+  userOps: [Bytes!]!
+  totalGasUsed: BigInt!
+  totalGasCost: BigInt!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+  success: Boolean!
+}
+
+# Aggregator Events (for signature aggregation)
+type Aggregator @entity {
+  id: Bytes!
+  address: Bytes!
+  totalOperations: BigInt!
+  totalGasUsed: BigInt!
+  firstSeen: BigInt!
+  lastSeen: BigInt!
+  firstSeenTimestamp: BigInt!
+  lastSeenTimestamp: BigInt!
+}
+
+# Daily Summary Statistics
+type DailyStats @aggregation(intervals: ["day"], source: "UserOperation") {
+  id: Int8!
+  timestamp: Timestamp!
+  totalUserOps: Int! @aggregate(fn: "count", cumulative: true)
+  totalGasUsed: BigInt! @aggregate(fn: "sum", arg: "actualGasUsed")
+  totalGasCost: BigInt! @aggregate(fn: "sum", arg: "actualGasCost")
+} 

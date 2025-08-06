@@ -1,0 +1,21 @@
+{
+  "name": "base-app-fees-optimized",
+  "version": "1.0.0",
+  "description": "Optimized Base App Fees subgraph with all Graph best practices",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/",
+    "create-local": "graph create --node http://localhost:8020/ base-app-fees-optimized",
+    "remove-local": "graph remove --node http://localhost:8020/ base-app-fees-optimized",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 base-app-fees-optimized"
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.82.0",
+    "@graphprotocol/graph-ts": "^0.31.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "babel-register": "^6.26.0"
+  }
+} 
