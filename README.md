@@ -1,7 +1,5 @@
 # 🏈 NFL Pick Ems - Full-Stack dApp
 
-![Netlify Status](https://img.shields.io/netlify/YOUR_SITE_ID?style=for-the-badge# 🏈 NFL Pick Ems - Full-Stack dApplogo=netlify# 🏈 NFL Pick Ems - Full-Stack dApplabel=Live%20Demo)
-
 A decentralized NFL pick'em game built on Base chain with a modern Next.js frontend and smart contract backend.
 
 ## 🎯 Overview
