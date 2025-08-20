@@ -8,7 +8,7 @@ A decentralized NFL pick'em game built on Base chain with a modern Next.js front
 
 NFL Pick Ems is a complete dApp that allows players to participate in weekly NFL pick'em contests. Players pay 2 USDC to enter each week and pick exactly 10 games. Winners split the pot based on their performance.
 
-## 🚀 Features
+##  Features
 
 ### Smart Contract
 - **USDC Integration**: Uses USDC on Base chain (6 decimals)
@@ -62,7 +62,7 @@ nfl-pick-ems/
 └── hardhat.config.js   # Hardhat configuration
 ```
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Node.js 18+ 
@@ -115,7 +115,7 @@ npx hardhat test
 npm run test
 ```
 
-## 🚀 Deployment
+##  Deployment
 
 ### Local Development
 ```bash
