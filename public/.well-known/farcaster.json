@@ -1,0 +1,24 @@
+{
+  "app": {
+    "id": "nfl-pick-ems",
+    "name": "NFL Pick Ems",
+    "description": "Weekly NFL football prediction game on Base chain. Pick 10 games and compete for the pot!",
+    "icon": "https://nfl-pick-em.netlify.app/icon-192.png",
+    "splash": "https://nfl-pick-em.netlify.app/splash.png",
+    "url": "https://nfl-pick-em.netlify.app",
+    "domain": "nfl-pick-em.netlify.app",
+    "category": "games",
+    "tags": ["nfl", "football", "predictions", "base", "gaming"]
+  },
+  "permissions": [
+    "ethereum",
+    "notifications"
+  ],
+  "chains": [
+    {
+      "id": "base",
+      "name": "Base",
+      "rpc": "https://mainnet.base.org"
+    }
+  ]
+}
