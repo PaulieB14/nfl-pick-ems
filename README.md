@@ -16,6 +16,13 @@ NFL Pick Ems is a complete dApp that allows players to participate in weekly NFL
 - **Oracle System**: Trusted oracle posts results and finalizes winners
 - **Security**: ReentrancyGuard, Ownable, and proper access controls
 
+### Oracle Service
+- **ESPN API Integration**: Automated NFL score fetching from ESPN API
+- **Real-time Updates**: Monitors games every 5 minutes
+- **Smart Contract Integration**: Direct blockchain interaction for results
+- **Automated Results**: No manual score entry needed
+- **Error Handling**: Robust error recovery and logging
+
 ### Frontend Application
 - **Modern UI**: Built with Next.js 14 and Tailwind CSS
 - **Wallet Integration**: Connect with MetaMask and other Web3 wallets
@@ -47,6 +54,11 @@ nfl-pick-ems/
 │   └── deploy.js      # Contract deployment
 ├── test/               # Smart contract tests
 │   └── NFLPickEms.test.ts
+├── oracle-service/     # Oracle service
+│   ├── index.js       # Main oracle script
+│   ├── test.js        # Oracle tests
+│   ├── package.json   # Oracle dependencies
+│   └── README.md      # Oracle documentation
 ├── app/                # Next.js app directory
 │   ├── page.tsx       # Main page
 │   └── layout.tsx     # Root layout
@@ -101,6 +113,16 @@ nfl-pick-ems/
    npm run dev
    ```
 
+7. **Set up Oracle Service (Optional)**
+   ```bash
+   cd oracle-service
+   npm install
+   cp .env.example .env
+   # Edit .env with your configuration
+   npm test  # Test ESPN API integration
+   npm start # Start the oracle service
+   ```
+
 ## 🧪 Testing
 
 ### Smart Contract Tests
@@ -146,6 +168,7 @@ npx hardhat run scripts/deploy.js --network base-mainnet
 
 - **Smart Contracts**: See `contracts/` directory
 - **Frontend Components**: See `components/` directory
+- **Oracle Service**: See `oracle-service/` directory
 - **Testing**: See `test/` directory
 - **Deployment**: See `scripts/` directory
 
@@ -157,7 +180,7 @@ npx hardhat run scripts/deploy.js --network base-mainnet
 4. Add tests if applicable
 5. Submit a pull request
 
-## �� License
+## License
 
 This project is licensed under the MIT License.
 
