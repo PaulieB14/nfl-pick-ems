@@ -16,6 +16,9 @@ contract NFLPickEms is Ownable, ReentrancyGuard, Pausable {
         uint64 startTime;
         bool started;
         bool availableForPicks;
+        bool finished;
+        uint8 homeScore;
+        uint8 awayScore;
     }
 
     struct Week {
@@ -29,6 +32,7 @@ contract NFLPickEms is Ownable, ReentrancyGuard, Pausable {
         uint256 sharePerWinner;
         uint256 winnerCount;
         uint256 totalEntrants;
+        uint64 lastOracleUpdate;
     }
 
     mapping(uint256 => Week) public weekData;
@@ -41,8 +45,10 @@ contract NFLPickEms is Ownable, ReentrancyGuard, Pausable {
     event OracleSet(address indexed oracle);
     event WeekCreated(uint256 indexed weekId, uint8 gameCount, uint64 lockTime);
     event GameAdded(uint256 indexed weekId, uint8 gameIndex, uint64 startTime);
+    event GameStarted(uint256 indexed weekId, uint8 gameIndex);
+    event GameFinished(uint256 indexed weekId, uint8 gameIndex, uint8 homeScore, uint8 awayScore);
     event Entered(uint256 indexed weekId, address indexed player, uint256 picksMask);
-    event ResultsPosted(uint256 indexed weekId, uint256 winnersMask);
+    event ResultsPosted(uint256 indexed weekId, uint256 winnersMask, uint64 timestamp);
     event WinnersFinalized(uint256 indexed weekId, uint256 winnerCount, uint256 sharePerWinner, uint256 totalPot);
     event Claimed(uint256 indexed weekId, address indexed winner, uint256 amount, uint256 correctPicks);
     event WeekPaused(uint256 indexed weekId);
@@ -145,6 +151,24 @@ contract NFLPickEms is Ownable, ReentrancyGuard, Pausable {
         
         w.games[gameIndex].started = true;
         w.games[gameIndex].availableForPicks = false;
+        
+        emit GameStarted(weekId, gameIndex);
+    }
+
+    function updateGameScore(uint256 weekId, uint8 gameIndex, uint8 homeScore, uint8 awayScore, bool finished) external onlyOracle whenNotPaused {
+        Week storage w = weekData[weekId];
+        require(w.lockTime != 0, "week doesn't exist");
+        require(gameIndex < w.gameCount, "invalid game index");
+        require(w.games[gameIndex].started, "game not started");
+        
+        Game storage game = w.games[gameIndex];
+        game.homeScore = homeScore;
+        game.awayScore = awayScore;
+        game.finished = finished;
+        
+        if (finished) {
+            emit GameFinished(weekId, gameIndex, homeScore, awayScore);
+        }
     }
 
     function postResults(uint256 weekId, uint256 winnersMask) external onlyOracle whenNotPaused {
@@ -156,8 +180,9 @@ contract NFLPickEms is Ownable, ReentrancyGuard, Pausable {
 
         w.winnersMask = winnersMask;
         w.resultsSet = true;
+        w.lastOracleUpdate = uint64(block.timestamp);
 
-        emit ResultsPosted(weekId, winnersMask);
+        emit ResultsPosted(weekId, winnersMask, w.lastOracleUpdate);
     }
 
     function finalizeWinners(uint256 weekId) external onlyOracle whenNotPaused {
@@ -251,21 +276,25 @@ contract NFLPickEms is Ownable, ReentrancyGuard, Pausable {
         bool resultsSet,
         bool finalized,
         uint256 pot,
-        uint256 totalEntrants
+        uint256 totalEntrants,
+        uint64 lastOracleUpdate
     ) {
         Week storage w = weekData[weekId];
-        return (w.gameCount, w.lockTime, w.resultsSet, w.finalized, w.pot, w.totalEntrants);
+        return (w.gameCount, w.lockTime, w.resultsSet, w.finalized, w.pot, w.totalEntrants, w.lastOracleUpdate);
     }
 
     function getGameInfo(uint256 weekId, uint8 gameIndex) external view returns (
         uint64 startTime,
         bool started,
-        bool availableForPicks
+        bool availableForPicks,
+        bool finished,
+        uint8 homeScore,
+        uint8 awayScore
     ) {
         Week storage w = weekData[weekId];
         require(gameIndex < w.gameCount, "invalid game index");
         Game storage game = w.games[gameIndex];
-        return (game.startTime, game.started, game.availableForPicks);
+        return (game.startTime, game.started, game.availableForPicks, game.finished, game.homeScore, game.awayScore);
     }
 
     function getPlayerPicks(uint256 weekId, address player) external view returns (
