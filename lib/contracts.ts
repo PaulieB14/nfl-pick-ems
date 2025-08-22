@@ -453,6 +453,30 @@ export async function testContractConnectivity() {
       // Try to get the contract's ABI from BaseScan
       console.log('🔍 MockUSDC address for BaseScan verification:', usdcAddress)
       console.log('🔍 Check this contract on https://basescan.org/address/' + usdcAddress)
+      
+      // 🚀 QUICK TEST: Try to submit picks with ETH instead of USDC
+      console.log('🚀 QUICK TEST: Trying to submit picks with ETH...')
+      try {
+        const nflAddress = CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`
+        console.log('📝 Testing ETH submission to NFL contract at:', nflAddress)
+        
+        // Try to call the enter function with ETH value
+        const { request } = await publicClient.simulateContract({
+          address: nflAddress,
+          abi: NFL_PICK_EMS_ABI,
+          functionName: 'enter',
+          args: [1, BigInt(0)], // week 1, no picks (just testing)
+          value: BigInt(2000000000000000), // 0.002 ETH
+          account: '0x0000000000000000000000000000000000000000', // dummy address for simulation
+        })
+        
+        console.log('✅ ETH submission simulation successful!')
+        console.log('📊 Gas estimate:', request.gas?.toString())
+        console.log('💰 Value sent:', request.value?.toString())
+        
+      } catch (ethError) {
+        console.error('❌ ETH submission test failed:', ethError instanceof Error ? ethError.message : 'Unknown error')
+      }
     }
     
     // Test NFL Pick Ems contract - try multiple functions
