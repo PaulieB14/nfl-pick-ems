@@ -1,45 +1,23 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { sdk } from '@farcaster/miniapp-sdk';
 
 export default function FarcasterIntegration() {
   const [isFarcaster, setIsFarcaster] = useState(false);
-  const [isReady, setIsReady] = useState(false);
+  const [isReady, setIsReady] = useState(true);
 
   useEffect(() => {
     const initializeFarcaster = async () => {
       try {
         // Check if we're running in a Farcaster client
-        const isInFarcaster = await sdk.isInFarcaster();
+        const isInFarcaster = typeof window !== 'undefined' && 
+          window.location.hostname.includes('farcaster') || 
+          window.location.hostname.includes('warpcast');
+        
         setIsFarcaster(isInFarcaster);
-
-        if (isInFarcaster) {
-          console.log('Running in Farcaster Mini App');
-          
-          // Initialize the SDK
-          await sdk.init();
-          
-          // Hide the splash screen and show your app
-          await sdk.actions.ready();
-          setIsReady(true);
-          
-          // Listen for events
-          sdk.events.on('userAuthenticated', (user) => {
-            console.log('User authenticated:', user);
-          });
-          
-          sdk.events.on('walletConnected', (wallet) => {
-            console.log('Wallet connected:', wallet);
-          });
-          
-        } else {
-          console.log('Running in regular browser');
-          setIsReady(true);
-        }
+        console.log('Farcaster detection:', isInFarcaster ? 'Running in Farcaster' : 'Running in regular browser');
       } catch (error) {
         console.error('Farcaster initialization error:', error);
-        setIsReady(true); // Fallback to regular mode
       }
     };
 
@@ -47,39 +25,23 @@ export default function FarcasterIntegration() {
   }, []);
 
   const handleShare = async () => {
-    if (isFarcaster) {
+    // Fallback for regular browsers
+    if (navigator.share) {
       try {
-        await sdk.actions.share({
-          text: '🏈 Check out NFL Pick \'ems - Weekly NFL prediction game on Base chain!',
-          url: 'https://nfl-pick-ems.vercel.app'
-        });
-      } catch (error) {
-        console.error('Share error:', error);
-      }
-    } else {
-      // Fallback for regular browsers
-      if (navigator.share) {
         await navigator.share({
           title: 'NFL Pick \'ems',
           text: '🏈 Weekly NFL prediction game on Base chain!',
-          url: 'https://nfl-pick-ems.vercel.app'
+          url: 'https://nfl-pick-em.netlify.app'
         });
+      } catch (error) {
+        console.error('Share error:', error);
       }
     }
   };
 
   const handleNotification = async () => {
-    if (isFarcaster) {
-      try {
-        await sdk.actions.sendNotification({
-          title: 'NFL Pick \'ems',
-          body: 'New week is live! Make your picks now.',
-          url: 'https://nfl-pick-ems.vercel.app'
-        });
-      } catch (error) {
-        console.error('Notification error:', error);
-      }
-    }
+    // Placeholder for future Farcaster SDK integration
+    console.log('Notification feature coming soon!');
   };
 
   if (!isReady) {
