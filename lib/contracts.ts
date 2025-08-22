@@ -371,6 +371,22 @@ export async function testContractConnectivity() {
   try {
     console.log('Testing contract connectivity...')
     
+    // Check current network
+    const chain = publicClient.chain
+    console.log('🌐 Current Network:', {
+      id: chain?.id,
+      name: chain?.name,
+      nativeCurrency: chain?.nativeCurrency
+    })
+    
+    // Check if we're on the right network for these contracts
+    const expectedChainId = CONTRACT_ADDRESSES.BASE_CHAIN_ID
+    if (chain?.id !== expectedChainId) {
+      console.warn(`⚠️ Warning: Contracts are deployed on Base (chain ID: ${expectedChainId}), but you're connected to ${chain?.name} (chain ID: ${chain?.id})`)
+    } else {
+      console.log('✅ Connected to correct network (Base)')
+    }
+    
     // Test USDC contract
     const usdcAddress = CONTRACT_ADDRESSES.MOCK_USDC as `0x${string}`
     console.log('Testing USDC contract at:', usdcAddress)
@@ -385,6 +401,9 @@ export async function testContractConnectivity() {
       console.log('✅ USDC contract accessible, symbol:', symbol)
     } catch (error) {
       console.error('❌ USDC contract error:', error)
+      console.error('Error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error'
+      })
     }
     
     // Test NFL Pick Ems contract
@@ -401,6 +420,9 @@ export async function testContractConnectivity() {
       console.log('✅ NFL Pick Ems contract accessible, entry fee:', entryFee.toString())
     } catch (error) {
       console.error('❌ NFL Pick Ems contract error:', error)
+      console.error('Error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error'
+      })
     }
     
   } catch (error) {
