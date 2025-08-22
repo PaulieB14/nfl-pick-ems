@@ -28,6 +28,7 @@ import ClaimWinningsModal from '@/components/ClaimWinningsModal'
 import ShareResultsModal from '@/components/ShareResultsModal'
 import { getGamesByWeek, getCurrentWeek, getWeekStatus } from '@/lib/nflSchedule'
 import { useGameStats } from '@/hooks/useGameStats'
+import FarcasterEmbed from '@/components/FarcasterEmbed'
 
 interface GamePick {
   gameId: string
@@ -101,7 +102,14 @@ export default function HomePage() {
   const canSubmit = selectedPicks.length === 10 && isConnected && weekStatus !== 'completed' && isScheduleComplete
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-nfl-red via-nfl-blue to-nfl-gold">
+    <>
+      <FarcasterEmbed 
+        week={currentWeek}
+        picksCount={selectedPicks.length}
+        totalGames={10}
+        isConnected={isConnected}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-nfl-red via-nfl-blue to-nfl-gold">
       {/* Header */}
       <motion.header 
         initial={{ opacity: 0, y: -20 }}
@@ -380,5 +388,6 @@ export default function HomePage() {
         week={currentWeek}
       />
     </div>
+    </>
   )
 }

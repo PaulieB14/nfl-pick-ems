@@ -13,6 +13,13 @@ export const metadata: Metadata = {
     description: 'Weekly NFL prediction game on Base chain. Pick 10 games, win prizes!',
     images: ['https://nfl-pick-em.netlify.app/og-image.png'],
   },
+  other: {
+    'fc:miniapp': 'https://nfl-pick-em.netlify.app/',
+    'fc:miniapp:version': '1',
+    'fc:miniapp:image': 'https://nfl-pick-em.netlify.app/og-image.png',
+    'fc:miniapp:button': '🏈 Make Picks',
+    'fc:miniapp:action': 'post',
+  },
 }
 
 export default function RootLayout({
