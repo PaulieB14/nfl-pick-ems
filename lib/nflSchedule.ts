@@ -1076,16 +1076,393 @@ export const nflSchedule2025: NFLGame[] = [
     home: "Seattle Seahawks",
     away: "Houston Texans",
     network: "ESPN+"
+  },
+
+  // WEEK 8
+  {
+    id: "week8-thu",
+    week: 8,
+    date: "Oct 23, 2025",
+    time: "8:15 PM ET",
+    home: "Los Angeles Chargers",
+    away: "Minnesota Vikings",
+    network: "Prime Video"
+  },
+  {
+    id: "week8-sun1",
+    week: 8,
+    date: "Oct 26, 2025",
+    time: "1:00 PM ET",
+    home: "Atlanta Falcons",
+    away: "Miami Dolphins",
+    network: "CBS"
+  },
+  {
+    id: "week8-sun2",
+    week: 8,
+    date: "Oct 26, 2025",
+    time: "1:00 PM ET",
+    home: "Baltimore Ravens",
+    away: "Chicago Bears",
+    network: "CBS"
+  },
+  {
+    id: "week8-sun3",
+    week: 8,
+    date: "Oct 26, 2025",
+    time: "1:00 PM ET",
+    home: "Carolina Panthers",
+    away: "Buffalo Bills",
+    network: "FOX"
+  },
+  {
+    id: "week8-sun4",
+    week: 8,
+    date: "Oct 26, 2025",
+    time: "1:00 PM ET",
+    home: "Cincinnati Bengals",
+    away: "New York Jets",
+    network: "CBS"
+  },
+  {
+    id: "week8-sun5",
+    week: 8,
+    date: "Oct 26, 2025",
+    time: "1:00 PM ET",
+    home: "Houston Texans",
+    away: "San Francisco 49ers",
+    network: "FOX"
+  },
+  {
+    id: "week8-sun6",
+    week: 8,
+    date: "Oct 26, 2025",
+    time: "1:00 PM ET",
+    home: "New England Patriots",
+    away: "Cleveland Browns",
+    network: "FOX"
+  },
+  {
+    id: "week8-sun7",
+    week: 8,
+    date: "Oct 26, 2025",
+    time: "1:00 PM ET",
+    home: "Philadelphia Eagles",
+    away: "New York Giants",
+    network: "FOX"
+  },
+  {
+    id: "week8-sun8",
+    week: 8,
+    date: "Oct 26, 2025",
+    time: "4:05 PM ET",
+    home: "New Orleans Saints",
+    away: "Tampa Bay Buccaneers",
+    network: "FOX"
+  },
+  {
+    id: "week8-sun9",
+    week: 8,
+    date: "Oct 26, 2025",
+    time: "4:25 PM ET",
+    home: "Denver Broncos",
+    away: "Dallas Cowboys",
+    network: "CBS"
+  },
+  {
+    id: "week8-sun10",
+    week: 8,
+    date: "Oct 26, 2025",
+    time: "4:25 PM ET",
+    home: "Indianapolis Colts",
+    away: "Tennessee Titans",
+    network: "CBS"
+  },
+  {
+    id: "week8-sun11",
+    week: 8,
+    date: "Oct 26, 2025",
+    time: "8:20 PM ET",
+    home: "Pittsburgh Steelers",
+    away: "Green Bay Packers",
+    network: "NBC"
+  },
+  {
+    id: "week8-mon",
+    week: 8,
+    date: "Oct 27, 2025",
+    time: "8:15 PM ET",
+    home: "Kansas City Chiefs",
+    away: "Washington Commanders",
+    network: "ESPN/ABC"
+  },
+
+  // WEEK 9
+  {
+    id: "week9-thu",
+    week: 9,
+    date: "Oct 30, 2025",
+    time: "8:15 PM ET",
+    home: "Miami Dolphins",
+    away: "Baltimore Ravens",
+    network: "Prime Video"
+  },
+  {
+    id: "week9-sun1",
+    week: 9,
+    date: "Nov 2, 2025",
+    time: "1:00 PM ET",
+    home: "Chicago Bears",
+    away: "Cincinnati Bengals",
+    network: "CBS"
+  },
+  {
+    id: "week9-sun2",
+    week: 9,
+    date: "Nov 2, 2025",
+    time: "1:00 PM ET",
+    home: "Detroit Lions",
+    away: "Minnesota Vikings",
+    network: "FOX"
+  },
+  {
+    id: "week9-sun3",
+    week: 9,
+    date: "Nov 2, 2025",
+    time: "1:00 PM ET",
+    home: "Green Bay Packers",
+    away: "Carolina Panthers",
+    network: "FOX"
+  },
+  {
+    id: "week9-sun4",
+    week: 9,
+    date: "Nov 2, 2025",
+    time: "1:00 PM ET",
+    home: "Houston Texans",
+    away: "Denver Broncos",
+    network: "FOX"
+  },
+  {
+    id: "week9-sun5",
+    week: 9,
+    date: "Nov 2, 2025",
+    time: "1:00 PM ET",
+    home: "New England Patriots",
+    away: "Atlanta Falcons",
+    network: "CBS"
+  },
+  {
+    id: "week9-sun6",
+    week: 9,
+    date: "Nov 2, 2025",
+    time: "1:00 PM ET",
+    home: "New York Giants",
+    away: "San Francisco 49ers",
+    network: "CBS"
+  },
+  {
+    id: "week9-sun7",
+    week: 9,
+    date: "Nov 2, 2025",
+    time: "1:00 PM ET",
+    home: "Pittsburgh Steelers",
+    away: "Indianapolis Colts",
+    network: "CBS"
+  },
+  {
+    id: "week9-sun8",
+    week: 9,
+    date: "Nov 2, 2025",
+    time: "4:05 PM ET",
+    home: "Los Angeles Chargers",
+    away: "Tennessee Titans",
+    network: "CBS"
+  },
+  {
+    id: "week9-sun9",
+    week: 9,
+    date: "Nov 2, 2025",
+    time: "4:05 PM ET",
+    home: "Los Angeles Rams",
+    away: "New Orleans Saints",
+    network: "FOX"
+  },
+  {
+    id: "week9-sun10",
+    week: 9,
+    date: "Nov 2, 2025",
+    time: "4:25 PM ET",
+    home: "Las Vegas Raiders",
+    away: "Jacksonville Jaguars",
+    network: "FOX"
+  },
+  {
+    id: "week9-sun11",
+    week: 9,
+    date: "Nov 2, 2025",
+    time: "4:25 PM ET",
+    home: "Buffalo Bills",
+    away: "Kansas City Chiefs",
+    network: "CBS"
+  },
+  {
+    id: "week9-sun12",
+    week: 9,
+    date: "Nov 2, 2025",
+    time: "8:20 PM ET",
+    home: "Washington Commanders",
+    away: "Seattle Seahawks",
+    network: "NBC"
+  },
+  {
+    id: "week9-mon",
+    week: 9,
+    date: "Nov 3, 2025",
+    time: "8:15 PM ET",
+    home: "Dallas Cowboys",
+    away: "Arizona Cardinals",
+    network: "ESPN/ABC"
+  },
+
+  // WEEK 10
+  {
+    id: "week10-thu",
+    week: 10,
+    date: "Nov 6, 2025",
+    time: "8:15 PM ET",
+    home: "Denver Broncos",
+    away: "Las Vegas Raiders",
+    network: "Prime Video"
+  },
+  {
+    id: "week10-sun1",
+    week: 10,
+    date: "Nov 9, 2025",
+    time: "9:30 AM ET",
+    home: "Indianapolis Colts",
+    away: "Atlanta Falcons",
+    network: "NFLN",
+    isInternational: true,
+    location: "Berlin"
+  },
+  {
+    id: "week10-sun2",
+    week: 10,
+    date: "Nov 9, 2025",
+    time: "1:00 PM ET",
+    home: "Carolina Panthers",
+    away: "New Orleans Saints",
+    network: "FOX"
+  },
+  {
+    id: "week10-sun3",
+    week: 10,
+    date: "Nov 9, 2025",
+    time: "1:00 PM ET",
+    home: "Chicago Bears",
+    away: "New York Giants",
+    network: "FOX"
+  },
+  {
+    id: "week10-sun4",
+    week: 10,
+    date: "Nov 9, 2025",
+    time: "1:00 PM ET",
+    home: "Houston Texans",
+    away: "Jacksonville Jaguars",
+    network: "CBS"
+  },
+  {
+    id: "week10-sun5",
+    week: 10,
+    date: "Nov 9, 2025",
+    time: "1:00 PM ET",
+    home: "Miami Dolphins",
+    away: "Buffalo Bills",
+    network: "CBS"
+  },
+  {
+    id: "week10-sun6",
+    week: 10,
+    date: "Nov 9, 2025",
+    time: "1:00 PM ET",
+    home: "Minnesota Vikings",
+    away: "Baltimore Ravens",
+    network: "FOX"
+  },
+  {
+    id: "week10-sun7",
+    week: 10,
+    date: "Nov 9, 2025",
+    time: "1:00 PM ET",
+    home: "New York Jets",
+    away: "Cleveland Browns",
+    network: "CBS"
+  },
+  {
+    id: "week10-sun8",
+    week: 10,
+    date: "Nov 9, 2025",
+    time: "1:00 PM ET",
+    home: "Tampa Bay Buccaneers",
+    away: "New England Patriots",
+    network: "CBS"
+  },
+  {
+    id: "week10-sun9",
+    week: 10,
+    date: "Nov 9, 2025",
+    time: "4:05 PM ET",
+    home: "Arizona Cardinals",
+    away: "Seattle Seahawks",
+    network: "CBS"
+  },
+  {
+    id: "week10-sun10",
+    week: 10,
+    date: "Nov 9, 2025",
+    time: "4:25 PM ET",
+    home: "San Francisco 49ers",
+    away: "Los Angeles Rams",
+    network: "FOX"
+  },
+  {
+    id: "week10-sun11",
+    week: 10,
+    date: "Nov 9, 2025",
+    time: "4:25 PM ET",
+    home: "Washington Commanders",
+    away: "Detroit Lions",
+    network: "FOX"
+  },
+  {
+    id: "week10-sun12",
+    week: 10,
+    date: "Nov 9, 2025",
+    time: "8:20 PM ET",
+    home: "Los Angeles Chargers",
+    away: "Pittsburgh Steelers",
+    network: "NBC"
+  },
+  {
+    id: "week10-mon",
+    week: 10,
+    date: "Nov 10, 2025",
+    time: "8:15 PM ET",
+    home: "Green Bay Packers",
+    away: "Philadelphia Eagles",
+    network: "ESPN/ABC"
   }
 ]
 
 // Return games for any week (1-18)
 export const getGamesByWeek = (week: number): NFLGame[] => {
-  if (week <= 7) {
+  if (week <= 10) {
     return nflSchedule2025.filter(game => game.week === week)
   }
   
-  // For weeks 8-18, return placeholder games
+  // For weeks 11-18, return placeholder games
   const placeholderGames: NFLGame[] = []
   const gameCount = week === 5 ? 14 : week === 6 || week === 7 ? 15 : week === 8 ? 13 : week === 9 || week === 10 || week === 14 ? 14 : week === 11 || week === 12 || week === 15 ? 15 : 16;
   
