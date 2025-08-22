@@ -2607,6 +2607,14 @@ export const getCurrentWeek = (): number => {
 
 export const getWeekStatus = (week: number): 'upcoming' | 'active' | 'completed' => {
   const currentWeek = getCurrentWeek()
+  const now = new Date()
+  const seasonStart = new Date('2025-09-04')
+  
+  // If we're before the season starts, all weeks are upcoming
+  if (now < seasonStart) {
+    return 'upcoming'
+  }
+  
   if (week < currentWeek) return 'completed'
   if (week === currentWeek) return 'active'
   return 'upcoming'
