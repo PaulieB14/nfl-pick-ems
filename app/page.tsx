@@ -53,6 +53,15 @@ export default function HomePage() {
   const { data: walletClient } = useWalletClient()
   const { address } = useAccount()
 
+  // Debug: Log when component mounts and when selectedPicks changes
+  useEffect(() => {
+    console.log('Component mounted, selectedPicks:', selectedPicks)
+  }, [])
+
+  useEffect(() => {
+    console.log('selectedPicks changed:', selectedPicks)
+  }, [selectedPicks])
+
   const currentWeekGames = getGamesByWeek(currentWeek)
   const weekStatus = getWeekStatus(currentWeek)
   const gameStats = useGameStats(currentWeek)
@@ -153,6 +162,7 @@ export default function HomePage() {
   // Debug logging
   console.log('Submit Debug:', {
     selectedPicks: selectedPicks.length,
+    selectedPicksDetails: selectedPicks,
     isConnected,
     weekStatus,
     isScheduleComplete,
@@ -305,6 +315,21 @@ export default function HomePage() {
               />
               
               <div className="mt-8 flex justify-center space-x-4">
+                {/* Reset Button - Show when picks are made */}
+                {selectedPicks.length > 0 && (
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setSelectedPicks([])}
+                    className="px-6 py-4 rounded-2xl font-bold text-lg bg-gradient-to-r from-red-500 to-red-600 text-white hover:shadow-2xl hover:shadow-red-500/25 cursor-pointer transform hover:-translate-y-1 transition-all duration-300"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <X className="w-5 h-5" />
+                      <span>Reset Picks</span>
+                    </div>
+                  </motion.button>
+                )}
+                
                 {/* Enhanced Submit Button */}
                 <motion.button
                   whileHover={{ scale: canSubmit ? 1.05 : 1 }}
