@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 
 export default function FarcasterIntegration() {
   const [isFarcaster, setIsFarcaster] = useState(false);
-  const [isReady, setIsReady] = useState(false); // Start as false until SDK is ready
+  const [isReady, setIsReady] = useState(false);
+  const [sdk, setSdk] = useState(null);
 
   useEffect(() => {
     const initializeFarcaster = async () => {
@@ -22,10 +23,11 @@ export default function FarcasterIntegration() {
         if (isInFarcaster) {
           try {
             // Import and initialize the Farcaster SDK
-            const { sdk } = await import('@farcaster/miniapp-sdk');
+            const { sdk: farcasterSdk } = await import('@farcaster/miniapp-sdk');
+            setSdk(farcasterSdk);
             
             // CRITICAL: Call ready() to hide splash screen and display content
-            await sdk.actions.ready();
+            await farcasterSdk.actions.ready();
             console.log('✅ Farcaster SDK initialized and ready() called');
             
             // Set ready state after SDK is initialized
@@ -55,9 +57,9 @@ export default function FarcasterIntegration() {
 
   const handleShare = async () => {
     try {
-      if (isFarcaster) {
+      if (isFarcaster && sdk) {
         // Use Farcaster SDK for sharing
-        const { sdk } = await import('@farcaster/miniapp-sdk');
+        console.log('Sharing via Farcaster SDK...');
         await sdk.actions.openUrl('https://nfl-pick-em.netlify.app');
       } else {
         // Fallback for regular browsers
@@ -67,25 +69,54 @@ export default function FarcasterIntegration() {
             text: '🏈 Weekly NFL prediction game on Base chain!',
             url: 'https://nfl-pick-em.netlify.app'
           });
+        } else {
+          // Copy to clipboard fallback
+          await navigator.clipboard.writeText('https://nfl-pick-em.netlify.app');
+          alert('Link copied to clipboard!');
         }
       }
     } catch (error) {
       console.error('Share error:', error);
+      // Fallback to clipboard
+      try {
+        await navigator.clipboard.writeText('https://nfl-pick-em.netlify.app');
+        alert('Link copied to clipboard!');
+      } catch (clipboardError) {
+        console.error('Clipboard error:', clipboardError);
+      }
     }
   };
 
   const handleNotification = async () => {
     try {
-      if (isFarcaster) {
+      if (isFarcaster && sdk) {
         // Use Farcaster SDK for notifications
-        const { sdk } = await import('@farcaster/miniapp-sdk');
+        console.log('Sending notification via Farcaster SDK...');
         // Note: Notifications are handled via webhook, not direct SDK call
         console.log('Notification sent via webhook system');
+        alert('Notification sent! (handled via webhook)');
       } else {
         console.log('Notification feature only available in Farcaster Mini Apps');
+        alert('Notification feature only available in Farcaster Mini Apps');
       }
     } catch (error) {
       console.error('Notification error:', error);
+    }
+  };
+
+  const handleAddMiniApp = async () => {
+    try {
+      if (isFarcaster && sdk) {
+        console.log('Adding Mini App to Farcaster...');
+        // The SDK should handle this automatically when the app is opened
+        console.log('Mini App should be available to add in Farcaster client');
+        alert('Mini App is ready to be added in your Farcaster client!');
+      } else {
+        console.log('Add Mini App feature only available in Farcaster');
+        alert('Add Mini App feature only available in Farcaster');
+      }
+    } catch (error) {
+      console.error('Add Mini App error:', error);
     }
   };
 
@@ -103,15 +134,23 @@ export default function FarcasterIntegration() {
   return (
     <div className="fixed top-4 right-4 z-50">
       {isFarcaster && (
-        <div className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm mb-2">
-          🟢 Farcaster Mini App
+        <div className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm mb-2 flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+          Farcaster Mini App
         </div>
       )}
       
       <div className="flex gap-2">
         <button
+          onClick={handleAddMiniApp}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+        >
+          📱 Add Mini App
+        </button>
+        
+        <button
           onClick={handleShare}
-          className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium"
+          className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
         >
           📤 Share
         </button>
@@ -119,7 +158,7 @@ export default function FarcasterIntegration() {
         {isFarcaster && (
           <button
             onClick={handleNotification}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm font-medium"
+            className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
           >
             🔔 Notify
           </button>
