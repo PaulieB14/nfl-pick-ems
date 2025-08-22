@@ -134,14 +134,14 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
         {/* Wallet Selector Modal */}
         {showWalletSelector && (
           <div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center"
+            className="fixed inset-0 bg-black/70 backdrop-blur-md z-[9999] flex items-center justify-center p-4"
             onClick={() => setShowWalletSelector(false)}
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl max-w-md w-full mx-4"
+              className="bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-xl rounded-2xl p-6 border border-white/30 shadow-2xl max-w-md w-full mx-4 relative"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
@@ -155,7 +155,12 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
               </div>
 
               <div className="space-y-3">
-                {connectors.map((connector) => {
+                {/* Debug info */}
+                <div className="text-xs text-gray-400 mb-2 p-2 bg-gray-800/50 rounded">
+                  Debug: {connectors.length} connectors available
+                </div>
+                
+                {connectors.map((connector, index) => {
                   const isReady = Boolean(connector.ready)
                   const isFarcaster = connector.name === 'Farcaster Mini App'
                   const isGeneric = connector.name === 'Injected'
@@ -178,7 +183,7 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
                   
                   return (
                     <motion.button
-                      key={connector.id}
+                      key={`${connector.id}-${index}`}
                       whileHover={{ scale: isReady ? 1.02 : 1 }}
                       whileTap={{ scale: isReady ? 0.98 : 1 }}
                       onClick={() => {
@@ -196,9 +201,9 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
                       className={`w-full p-4 rounded-xl border-2 transition-all duration-300 flex items-center space-x-3 ${
                         isReady
                           ? isFarcaster
-                            ? 'border-blue-500 bg-gradient-to-r from-blue-500/20 to-blue-600/20 text-blue-300 hover:bg-blue-500/30 cursor-pointer'
-                            : 'border-nfl-gold bg-gradient-to-r from-nfl-gold/20 to-nfl-red/20 text-white hover:bg-nfl-gold/30 cursor-pointer'
-                          : 'border-white/20 bg-white/5 text-white/50 hover:bg-white/10 cursor-pointer'
+                            ? 'border-blue-500 bg-gradient-to-r from-blue-500/30 to-blue-600/30 text-blue-200 hover:bg-blue-500/40 cursor-pointer shadow-lg'
+                            : 'border-nfl-gold bg-gradient-to-r from-nfl-gold/30 to-nfl-red/30 text-white hover:bg-nfl-gold/40 cursor-pointer shadow-lg'
+                          : 'border-gray-600 bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 cursor-pointer'
                       }`}
                     >
                       <div className="w-8 h-8 flex items-center justify-center">
