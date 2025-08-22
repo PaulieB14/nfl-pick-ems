@@ -138,6 +138,18 @@ export default function HomePage() {
     console.log('Picks shared on social media')
   }
 
+  const handleResetPicks = () => {
+    // Clear picks and any stored data
+    setSelectedPicks([])
+    
+    // Clear any localStorage/sessionStorage that might be persisting picks
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('nfl-pick-ems-picks')
+      sessionStorage.removeItem('nfl-pick-ems-picks')
+      console.log('Cleared stored picks data')
+    }
+  }
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'upcoming': return 'text-blue-400'
@@ -320,7 +332,7 @@ export default function HomePage() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setSelectedPicks([])}
+                    onClick={handleResetPicks}
                     className="px-6 py-4 rounded-2xl font-bold text-lg bg-gradient-to-r from-red-500 to-red-600 text-white hover:shadow-2xl hover:shadow-red-500/25 cursor-pointer transform hover:-translate-y-1 transition-all duration-300"
                   >
                     <div className="flex items-center space-x-2">
