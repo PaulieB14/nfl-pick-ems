@@ -22,6 +22,12 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
     onConnect(isConnected)
   }, [isConnected, onConnect])
 
+  // Debug: Log connector status when component mounts
+  useEffect(() => {
+    console.log('WalletConnect mounted, connectors:', connectors)
+    console.log('Connector readiness:', connectors.map(c => ({ name: c.name, ready: c.ready })))
+  }, [connectors])
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -44,6 +50,16 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
         alert('No wallet connectors available. Please install MetaMask or another wallet extension.')
         return
       }
+      
+      // Debug: Log each connector's status
+      connectors.forEach((connector, index) => {
+        console.log(`Connector ${index}:`, {
+          name: connector.name,
+          ready: connector.ready,
+          id: connector.id,
+          type: connector.type
+        })
+      })
       
       // Try to find a ready connector, prioritizing Farcaster Mini App
       let availableConnector = connectors.find(c => c.ready && c.name === 'Farcaster Mini App')

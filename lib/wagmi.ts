@@ -13,8 +13,9 @@ export const config = createConfig({
     miniAppConnector(),
     injected({ target: 'metaMask' }),
     injected({ target: 'coinbaseWallet' }),
+    injected({ target: 'braveWallet' }),
+    injected({ target: 'imToken' }),
     walletConnect({ 
-      projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // Optional: Add your project ID
       showQrModal: true 
     })
   ],
