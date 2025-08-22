@@ -41,14 +41,32 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
       
       if (connectors.length === 0) {
         console.error('No connectors available')
-        alert('No wallet connectors available. Please check your Farcaster client.')
+        alert('No wallet connectors available. Please install MetaMask or another wallet extension.')
         return
       }
       
-      const availableConnector = connectors.find(c => c.ready)
+      // Try to find a ready connector, prioritizing Farcaster Mini App
+      let availableConnector = connectors.find(c => c.ready && c.name === 'Farcaster Mini App')
+      
+      // If no Farcaster connector, try MetaMask
+      if (!availableConnector) {
+        availableConnector = connectors.find(c => c.ready && c.name === 'MetaMask')
+      }
+      
+      // If still no connector, try any ready connector
+      if (!availableConnector) {
+        availableConnector = connectors.find(c => c.ready)
+      }
+      
       if (!availableConnector) {
         console.error('No ready connectors available')
-        alert('Wallet connector not ready. Please wait a moment and try again.')
+        
+        // Provide helpful guidance based on environment
+        if (typeof window !== 'undefined' && window.location.hostname.includes('farcaster')) {
+          alert('Farcaster wallet connector not ready. Please wait a moment and try again.')
+        } else {
+          alert('No wallet connectors ready. Please install MetaMask or refresh the page.')
+        }
         return
       }
       

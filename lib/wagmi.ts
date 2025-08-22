@@ -1,6 +1,7 @@
 import { http, createConfig } from 'wagmi'
 import { base, baseSepolia } from 'wagmi/chains'
 import { farcasterMiniApp as miniAppConnector } from '@farcaster/miniapp-wagmi-connector'
+import { injected, walletConnect } from 'wagmi/connectors'
 
 export const config = createConfig({
   chains: [base, baseSepolia],
@@ -9,7 +10,13 @@ export const config = createConfig({
     [baseSepolia.id]: http(),
   },
   connectors: [
-    miniAppConnector()
+    miniAppConnector(),
+    injected({ target: 'metaMask' }),
+    injected({ target: 'coinbaseWallet' }),
+    walletConnect({ 
+      projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // Optional: Add your project ID
+      showQrModal: true 
+    })
   ],
   // Better error handling and Farcaster compatibility
   ssr: false,

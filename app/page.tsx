@@ -230,6 +230,19 @@ export default function HomePage() {
             Built on Base chain for the Farcaster community.
           </p>
           
+          {/* Environment Notice */}
+          {typeof window !== 'undefined' && !window.location.hostname.includes('farcaster') && (
+            <div className="bg-blue-500/20 border border-blue-400/30 rounded-lg p-4 mb-6 max-w-2xl mx-auto">
+              <div className="flex items-center space-x-2 text-blue-300 mb-2">
+                <span className="text-lg">ℹ️</span>
+                <span className="font-semibold">Running Outside Farcaster</span>
+              </div>
+              <p className="text-blue-200 text-sm">
+                This app works best in Farcaster! For regular browser use, please install MetaMask or another wallet extension to connect your wallet.
+              </p>
+            </div>
+          )}
+          
           {/* Official NFL Schedule Link */}
           <motion.a
             href="https://operations.nfl.com/gameday/nfl-schedule/2025-nfl-schedule/"
