@@ -21,7 +21,7 @@ import {
 import GamePicker from '@/components/GamePicker'
 import WeekSelector from '@/components/WeekSelector'
 import Leaderboard from '@/components/Leaderboard'
-import WalletConnect from '@/components/WalletConnect'
+
 import SocialShare from '@/components/SocialShare'
 import ScheduleNote from '@/components/ScheduleNote'
 import MyPicksModal from '@/components/MyPicksModal'
@@ -31,6 +31,7 @@ import { getGamesByWeek, getCurrentWeek, getWeekStatus } from '@/lib/nflSchedule
 import { useGameStats } from '@/hooks/useGameStats'
 import { getNFLPickEmsContract } from '@/lib/contracts'
 import { useAccount, useWalletClient } from 'wagmi'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 import FarcasterEmbed from '@/components/FarcasterEmbed'
 import Head from 'next/head'
 
@@ -208,7 +209,7 @@ export default function HomePage() {
               </motion.div>
               <h1 className="text-2xl font-bold text-white">NFL Pick Ems</h1>
             </div>
-            <WalletConnect onConnect={setIsConnected} />
+            <ConnectButton />
           </div>
         </div>
       </motion.header>

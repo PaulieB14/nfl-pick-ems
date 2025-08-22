@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import FarcasterIntegration from '../components/FarcasterIntegration'
-import Providers from '../components/Providers'
+import '@rainbow-me/rainbowkit/styles.css'
+import Providers from '@/components/Providers'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -51,7 +51,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <FarcasterIntegration />
           {children}
         </Providers>
       </body>
