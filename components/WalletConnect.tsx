@@ -156,7 +156,7 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
 
               <div className="space-y-3">
                 {connectors.map((connector) => {
-                  const isReady = connector.ready
+                  const isReady = Boolean(connector.ready)
                   const isFarcaster = connector.name === 'Farcaster Mini App'
                   
                   return (
