@@ -188,9 +188,9 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
                           {isReady ? 'Ready to connect' : 'Not available'}
                         </div>
                       </div>
-                      {isReady && (
+                      {isReady ? (
                         <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                      )}
+                      ) : null}
                     </motion.button>
                   )
                 })}
