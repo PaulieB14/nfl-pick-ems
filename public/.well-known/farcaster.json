@@ -1,4 +1,9 @@
 {
+  "accountAssociation": {
+    "header": "eyJmaWQiOjMwMDcwNCwidHlwZSI6ImF1dGgiLCJrZXkiOiIweDMzOTdCYmFiRUIwNWEwOWJCNEYyNzhDMTZlZmEwNTgxM0FBNTEwNzYifQ",
+    "payload": "eyJkb21haW4iOiJuZmwtcGljay1lbS5uZXRsaWZ5LmFwcCJ9",
+    "signature": "XkfzzZ4+EcIf7jwHouQPBqZBJ0Iqo4NHscQtiTUowWA6m1zmEt7LSQ4k90lE3ocusDkAua01SnFMULDclJ4lSBw="
+  },
   "miniapp": {
     "version": "1",
     "name": "NFL Pick 'ems",
