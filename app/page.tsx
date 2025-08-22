@@ -48,6 +48,14 @@ export default function HomePage() {
   const currentWeekGames = getGamesByWeek(currentWeek)
   const weekStatus = getWeekStatus(currentWeek)
   const gameStats = useGameStats(currentWeek)
+  
+  // Debug week status
+  console.log('Week Debug:', {
+    currentWeek,
+    weekStatus,
+    getCurrentWeek: getCurrentWeek(),
+    isScheduleComplete: currentWeek <= 18
+  })
 
   const handlePickSelection = (gameId: string, team: 'home' | 'away') => {
     setSelectedPicks(prev => {
@@ -100,6 +108,15 @@ export default function HomePage() {
 
   const isScheduleComplete = currentWeek <= 18
   const canSubmit = selectedPicks.length === 10 && isConnected && weekStatus !== 'completed' && isScheduleComplete
+  
+  // Debug logging
+  console.log('Submit Debug:', {
+    selectedPicks: selectedPicks.length,
+    isConnected,
+    weekStatus,
+    isScheduleComplete,
+    canSubmit
+  })
 
   return (
     <>
