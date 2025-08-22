@@ -46,7 +46,7 @@ export default function WeekSelector({ currentWeek, onWeekChange }: WeekSelector
         </button>
       </div>
       
-      <div className="grid grid-cols-6 gap-2">
+      <div className="grid grid-cols-9 gap-2">
         {weeks.map((week) => (
           <motion.button
             key={week}
