@@ -9,7 +9,7 @@ export const CONTRACTS = {
     RPC_URL: "https://mainnet.base.org",
     EXPLORER: "https://basescan.org"
   },
-  
+
   // Base Sepolia (Testnet)
   testnet: {
     NFL_PICK_EMS: "0xdaCa068241baF6b7DC2F246304703c9E51B14C42",
@@ -80,4 +80,14 @@ export const NETWORKS = {
       default: { name: 'BaseScan', url: 'https://sepolia.basescan.org' },
     },
   }
+};
+
+// App configuration
+export const APP_CONFIG = {
+  name: "NFL Pick 'ems",
+  description: "Weekly NFL prediction game on Base chain",
+  url: "https://nfl-pick-em.netlify.app",
+  contractAddress: "0x0b07572EcDcb7709b48Ef1DB11a07d9c263C2e06",
+  entryFee: "2 USDC",
+  network: "Base Mainnet"
 };
