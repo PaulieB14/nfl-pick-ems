@@ -15,11 +15,11 @@ export const useGameStats = (week: number) => {
 
   useEffect(() => {
     // TODO: Fetch real stats from smart contract
-    // For now, return placeholder data
+    // For now, return real data (zeros until connected to smart contract)
     setStats({
-      totalPlayers: Math.floor(Math.random() * 50),
-      currentPot: Math.floor(Math.random() * 1000),
-      timeLeft: '2 days'
+      totalPlayers: 0,
+      currentPot: 0,
+      timeLeft: '--'
     })
   }, [week])
 
