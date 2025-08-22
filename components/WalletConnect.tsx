@@ -34,9 +34,19 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const handleConnect = () => {
-    if (connectors[0]) {
-      connect({ connector: connectors[0] })
+  const handleConnect = async () => {
+    try {
+      if (connectors[0]) {
+        console.log('Attempting to connect with connector:', connectors[0])
+        await connect({ connector: connectors[0] })
+        console.log('Wallet connection successful')
+      } else {
+        console.error('No connectors available')
+        alert('No wallet connectors available. Please check your Farcaster client.')
+      }
+    } catch (error) {
+      console.error('Wallet connection error:', error)
+      alert(`Failed to connect wallet: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
