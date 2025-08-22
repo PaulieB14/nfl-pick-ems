@@ -17,9 +17,11 @@ interface GamePickerProps {
   onSubmitPicks: () => void
   isConnected: boolean
   canSubmit: boolean
+  isSubmitting?: boolean
+  transactionHash?: string | null
 }
 
-export default function GamePicker({ games, selectedPicks, onPickSelection, onPickRemoval, onSubmitPicks, isConnected, canSubmit }: GamePickerProps) {
+export default function GamePicker({ games, selectedPicks, onPickSelection, onPickRemoval, onSubmitPicks, isConnected, canSubmit, isSubmitting, transactionHash }: GamePickerProps) {
   const isGameSelected = (gameId: string) => selectedPicks.some(pick => pick.gameId === gameId)
   const getSelectedTeam = (gameId: string) => selectedPicks.find(pick => pick.gameId === gameId)?.selectedTeam
   const canSelect = () => selectedPicks.length < 10
@@ -299,9 +301,9 @@ export default function GamePicker({ games, selectedPicks, onPickSelection, onPi
           >
             <button
               onClick={onSubmitPicks}
-              disabled={!canSubmit}
+              disabled={!canSubmit || isSubmitting}
               className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 ${
-                canSubmit
+                canSubmit && !isSubmitting
                   ? 'bg-gradient-to-r from-nfl-gold to-nfl-red hover:from-nfl-gold/90 hover:to-nfl-red/90 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
                   : 'bg-gray-600 text-gray-300 cursor-not-allowed'
               }`}
@@ -313,8 +315,17 @@ export default function GamePicker({ games, selectedPicks, onPickSelection, onPi
                 </span>
               ) : canSubmit ? (
                 <span className="flex items-center justify-center space-x-2">
-                  <Zap className="w-5 h-5" />
-                  <span>Submit Picks - $2 Entry Fee</span>
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Submitting to Blockchain...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Zap className="w-5 h-5" />
+                      <span>Submit Picks - $2 USDC Entry Fee</span>
+                    </>
+                  )}
                 </span>
               ) : (
                 <span className="flex items-center justify-center space-x-2">
@@ -323,6 +334,26 @@ export default function GamePicker({ games, selectedPicks, onPickSelection, onPi
                 </span>
               )}
             </button>
+
+            {/* Transaction Status */}
+            {transactionHash && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-4 p-4 bg-green-500/20 border border-green-400/30 rounded-xl"
+              >
+                <div className="flex items-center space-x-2 text-green-300">
+                  <div className="w-4 h-4 bg-green-400 rounded-full"></div>
+                  <span className="font-semibold">Transaction Submitted!</span>
+                </div>
+                <div className="mt-2 text-green-200 text-sm">
+                  Hash: {transactionHash.slice(0, 10)}...{transactionHash.slice(-8)}
+                </div>
+                <div className="mt-1 text-green-200/70 text-xs">
+                  Your picks are now locked in on the blockchain!
+                </div>
+              </motion.div>
+            )}
           </motion.div>
         )}
       </motion.div>

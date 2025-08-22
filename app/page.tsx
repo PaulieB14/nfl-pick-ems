@@ -73,7 +73,7 @@ export default function HomePage() {
   // Page-specific Farcaster embeds for social sharing
   const pageEmbeds = {
     title: `Week ${currentWeek} NFL Picks - NFL Pick 'ems`,
-    description: `Make your picks for Week ${currentWeek} NFL games! Pick 10 teams to win and split the pot. Current pot: ${gameStats.currentPot} ETH`,
+    description: `Make your picks for Week ${currentWeek} NFL games! Pick 10 teams to win and split the pot. Current pot: $${gameStats.currentPot} USDC`,
     image: `https://nfl-pick-em.netlify.app/icon-1024.png`,
     button: `🏈 Pick Week ${currentWeek}`,
     action: 'post',
@@ -101,6 +101,9 @@ export default function HomePage() {
     setSelectedPicks(prev => prev.filter(pick => pick.gameId !== gameId))
   }
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [transactionHash, setTransactionHash] = useState<string | null>(null)
+
   const handleSubmitPicks = async () => {
     if (selectedPicks.length !== 10) {
       alert('Please select exactly 10 teams to win')
@@ -117,23 +120,39 @@ export default function HomePage() {
       return
     }
 
+    setIsSubmitting(true)
+    setTransactionHash(null)
+
     try {
-      // For now, show what would be submitted
-      // TODO: Implement actual smart contract call when ready
       const picksForContract = selectedPicks.map(pick => pick.selectedTeam)
       
       console.log('Submitting picks to smart contract:', {
         week: currentWeek,
         picks: picksForContract,
-        entryFee: '0.002 ETH'
+        entryFee: '$2 USDC'
       })
 
-      // TODO: Call the actual smart contract function
-      alert(`Picks prepared for submission! Smart contract integration active.\n\nWeek: ${currentWeek}\nPicks: ${picksForContract.join(', ')}\nEntry Fee: 0.002 ETH`)
+      // Get the real contract instance
+      const contract = getNFLPickEmsContract(walletClient)
+      
+      // Submit picks to the smart contract
+      const result = await contract.submitPicks(currentWeek, picksForContract, '$2 USDC')
+      
+      if (result.success) {
+        setTransactionHash(result.hash)
+        alert(`🎉 Picks submitted successfully!\n\nTransaction Hash: ${result.hash}\n\nYour picks are now locked in for Week ${currentWeek}!`)
+        
+        // Clear picks after successful submission
+        setSelectedPicks([])
+      } else {
+        throw new Error('Contract call failed')
+      }
       
     } catch (error) {
       console.error('Error submitting picks:', error)
-      alert(`Failed to submit picks: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      alert(`❌ Failed to submit picks: ${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease check your wallet and try again.`)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -265,7 +284,7 @@ export default function HomePage() {
               className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-xl p-4 border border-white/20 shadow-lg"
             >
               <DollarSign className="h-8 w-8 text-nfl-gold mx-auto mb-2" />
-              <div className="text-2xl font-bold text-white">$2</div>
+              <div className="text-2xl font-bold text-white">$2 USDC</div>
               <div className="text-white/70 text-sm">Entry Fee</div>
             </motion.div>
             
@@ -283,7 +302,7 @@ export default function HomePage() {
               className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-xl p-4 border border-white/20 shadow-lg"
             >
               <Trophy className="h-8 w-8 text-nfl-gold mx-auto mb-2" />
-              <div className="text-2xl font-bold text-white">${gameStats.currentPot}</div>
+              <div className="text-2xl font-bold text-white">${gameStats.currentPot} USDC</div>
               <div className="text-white/70 text-sm">Current Pot</div>
             </motion.div>
             
@@ -344,6 +363,8 @@ export default function HomePage() {
               onSubmitPicks={handleSubmitPicks}
               isConnected={isWalletConnected}
               canSubmit={canSubmit}
+              isSubmitting={isSubmitting}
+              transactionHash={transactionHash}
             />
               
               <div className="mt-8 flex justify-center space-x-4">
