@@ -397,6 +397,10 @@ export async function testContractConnectivity() {
     console.log('Testing USDC contract at:', usdcAddress)
     
     try {
+      console.log('🔍 Debug: Calling USDC symbol() function...')
+      console.log('🔍 Debug: USDC address:', usdcAddress)
+      console.log('🔍 Debug: Current chain:', publicClient.chain?.id)
+      
       const symbol = await publicClient.readContract({
         address: usdcAddress,
         abi: USDC_ABI,
@@ -489,6 +493,11 @@ export async function testContractConnectivity() {
     
     // Try getEntryFee first
     try {
+      console.log('🔍 Debug: Calling NFL getEntryFee() function...')
+      console.log('🔍 Debug: NFL contract address:', nflAddress)
+      console.log('🔍 Debug: Chain ID:', publicClient.chain?.id)
+      console.log('🔍 Debug: Expected chain ID:', CONTRACT_ADDRESSES.BASE_CHAIN_ID)
+      
       const entryFee = await publicClient.readContract({
         address: nflAddress,
         abi: NFL_PICK_EMS_ABI,
@@ -566,9 +575,11 @@ export async function testContractConnectivity() {
               }
             }
             
-            // Try to get the contract's ABI from BaseScan
-            console.log('🔍 Contract address for BaseScan verification:', nflAddress)
-            console.log('🔍 Check this contract on https://basescan.org/address/' + nflAddress)
+                  // Try to get the contract's ABI from BaseScan
+      console.log('🔍 Contract address for BaseScan verification:', nflAddress)
+      console.log('🔍 Check this contract on https://basescan.org/address/' + nflAddress)
+      console.log('🔧 Debug Tip: Visit BaseScan to see the actual contract ABI and verify function signatures')
+      console.log('🔧 Debug Tip: Check if getEntryFee() function exists or has different parameters')
             
           } else {
             console.log('❌ Contract has no code - address may be wrong')
