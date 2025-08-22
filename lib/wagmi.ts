@@ -9,14 +9,7 @@ export const config = createConfig({
     [baseSepolia.id]: http(),
   },
   connectors: [
-    miniAppConnector({
-      // Better Farcaster Mini App integration
-      chains: [base, baseSepolia],
-      // Enable automatic chain switching
-      switchChainMode: 'mounted',
-      // Add timeout for better reliability
-      timeout: 10000,
-    })
+    miniAppConnector()
   ],
   // Better error handling and Farcaster compatibility
   ssr: false,
