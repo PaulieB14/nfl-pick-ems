@@ -273,12 +273,31 @@ export default function HomePage() {
                           <span className="text-lg">🔧</span>
                           <span className="font-semibold">Debug Contract Connectivity</span>
                         </div>
-                        <button
-                          onClick={() => testContractConnectivity()}
-                          className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
-                        >
-                          Test Contracts
-                        </button>
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => testContractConnectivity()}
+                            className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
+                          >
+                            Test Contracts
+                          </button>
+                          <button
+                            onClick={async () => {
+                              try {
+                                console.log('🚀 Testing ETH submission directly...')
+                                const contract = getNFLPickEmsContract(walletClient)
+                                const result = await contract.submitPicks(1, ['home', 'away', 'home', 'away', 'home', 'away', 'home', 'away', 'home', 'away'])
+                                console.log('✅ ETH submission result:', result)
+                                alert('ETH submission successful! Check console for details.')
+                              } catch (error) {
+                                console.error('❌ ETH submission failed:', error)
+                                alert(`ETH submission failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+                              }
+                            }}
+                            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                          >
+                            Test ETH Submission
+                          </button>
+                        </div>
                       </div>
                       <p className="text-yellow-200 text-sm">
                         Click "Test Contracts" to verify connection to USDC and NFL Pick Ems contracts. Check the console for results.

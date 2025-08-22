@@ -356,7 +356,7 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
 }
 
 // Helper function to get contract instance
-export function getNFLPickEmsContract(walletClient: any): NFLPickEmsContract {
+export function getNFLPickEmsContract(walletClient: any, publicClient?: any): NFLPickEmsContract {
   if (walletClient && publicClient) {
     return new RealNFLPickEmsContract(walletClient, publicClient)
   }
