@@ -44,7 +44,6 @@ interface GamePick {
 
 export default function HomePage() {
   const [currentWeek, setCurrentWeek] = useState(getCurrentWeek())
-  const [isConnected, setIsConnected] = useState(false)
   const [selectedPicks, setSelectedPicks] = useState<GamePick[]>([])
   
   // Modal states
@@ -53,7 +52,10 @@ export default function HomePage() {
   const [showShareResults, setShowShareResults] = useState(false)
 
   const { data: walletClient } = useWalletClient()
-  const { address } = useAccount()
+  const { address, isConnected } = useAccount()
+  
+  // Ensure isConnected is always a boolean
+  const isWalletConnected = Boolean(isConnected)
 
   // Debug: Log when component mounts and when selectedPicks changes
   useEffect(() => {
@@ -105,7 +107,7 @@ export default function HomePage() {
       return
     }
 
-    if (!isConnected) {
+    if (!isWalletConnected) {
       alert('Please connect your wallet first')
       return
     }
@@ -171,13 +173,13 @@ export default function HomePage() {
   }
 
   const isScheduleComplete = currentWeek <= 18
-  const canSubmit = selectedPicks.length === 10 && isConnected && weekStatus !== 'completed' && isScheduleComplete && walletClient;
+  const canSubmit = selectedPicks.length === 10 && isWalletConnected && weekStatus !== 'completed' && isScheduleComplete && Boolean(walletClient);
   
   // Debug logging
   console.log('Submit Debug:', {
     selectedPicks: selectedPicks.length,
     selectedPicksDetails: selectedPicks,
-    isConnected,
+    isConnected: isWalletConnected,
     weekStatus,
     isScheduleComplete,
     canSubmit
@@ -189,7 +191,7 @@ export default function HomePage() {
         week={currentWeek}
         picksCount={selectedPicks.length}
         totalGames={10}
-        isConnected={isConnected}
+        isConnected={isWalletConnected}
       />
       <div className="min-h-screen bg-gradient-to-br from-nfl-red via-nfl-blue to-nfl-gold">
       {/* Header */}
@@ -334,12 +336,15 @@ export default function HomePage() {
                 </div>
               </div>
               
-              <GamePicker 
-                games={currentWeekGames}
-                selectedPicks={selectedPicks}
-                onPickSelection={handlePickSelection}
-                onPickRemoval={handlePickRemoval}
-              />
+                          <GamePicker
+              games={currentWeekGames}
+              selectedPicks={selectedPicks}
+              onPickSelection={handlePickSelection}
+              onPickRemoval={handlePickRemoval}
+              onSubmitPicks={handleSubmitPicks}
+              isConnected={isWalletConnected}
+              canSubmit={canSubmit}
+            />
               
               <div className="mt-8 flex justify-center space-x-4">
                 {/* Reset Button - Show when picks are made */}
@@ -357,67 +362,7 @@ export default function HomePage() {
                   </motion.button>
                 )}
                 
-                {/* Enhanced Submit Button */}
-                <motion.button
-                  whileHover={{ scale: canSubmit ? 1.05 : 1 }}
-                  whileTap={{ scale: canSubmit ? 0.95 : 1 }}
-                  onClick={handleSubmitPicks}
-                  disabled={!canSubmit}
-                  className={`relative px-10 py-4 rounded-2xl font-bold text-lg transition-all duration-300 overflow-hidden ${
-                    canSubmit
-                      ? 'bg-gradient-to-r from-nfl-gold to-nfl-red text-white hover:shadow-2xl hover:shadow-nfl-gold/25 cursor-pointer transform hover:-translate-y-1'
-                      : 'bg-gradient-to-r from-white/20 to-white/10 text-white/50 cursor-not-allowed'
-                  }`}
-                >
-                  {/* Animated background for submit button */}
-                  {canSubmit && (
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-nfl-gold/20 to-nfl-red/20"
-                      animate={{
-                        background: [
-                          "linear-gradient(90deg, rgba(255,182,24,0.2) 0%, rgba(203,12,12,0.2) 100%)",
-                          "linear-gradient(90deg, rgba(203,12,12,0.2) 0%, rgba(255,182,24,0.2) 100%)",
-                          "linear-gradient(90deg, rgba(255,182,24,0.2) 0%, rgba(203,12,12,0.2) 100%)"
-                        ]
-                      }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                  )}
-                  
-                  <div className="relative z-10 flex items-center space-x-3">
-                    {canSubmit ? (
-                      <>
-                        <Target className="w-6 h-6" />
-                        <span>Submit {selectedPicks.length} Picks</span>
-                        <Zap className="w-5 h-5" />
-                      </>
-                    ) : (
-                      <>
-                        {!isScheduleComplete ? (
-                          <>
-                            <Clock className="w-5 h-5" />
-                            <span>Schedule Loading...</span>
-                          </>
-                        ) : weekStatus === 'completed' ? (
-                          <>
-                            <Trophy className="w-5 h-5" />
-                            <span>Week Completed</span>
-                          </>
-                        ) : !isConnected ? (
-                          <>
-                            <Star className="w-5 h-5" />
-                            <span>Connect Wallet</span>
-                          </>
-                        ) : (
-                          <>
-                            <CircleDot className="w-5 h-5" />
-                            <span>Need {10 - selectedPicks.length} More Picks</span>
-                          </>
-                        )}
-                      </>
-                    )}
-                  </div>
-                </motion.button>
+
                 
                 {selectedPicks.length > 0 && isScheduleComplete && (
                   <SocialShare 

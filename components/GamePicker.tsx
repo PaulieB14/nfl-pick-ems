@@ -14,9 +14,12 @@ interface GamePickerProps {
   selectedPicks: GamePick[]
   onPickSelection: (gameId: string, team: 'home' | 'away') => void
   onPickRemoval: (gameId: string) => void
+  onSubmitPicks: () => void
+  isConnected: boolean
+  canSubmit: boolean
 }
 
-export default function GamePicker({ games, selectedPicks, onPickSelection, onPickRemoval }: GamePickerProps) {
+export default function GamePicker({ games, selectedPicks, onPickSelection, onPickRemoval, onSubmitPicks, isConnected, canSubmit }: GamePickerProps) {
   const isGameSelected = (gameId: string) => selectedPicks.some(pick => pick.gameId === gameId)
   const getSelectedTeam = (gameId: string) => selectedPicks.find(pick => pick.gameId === gameId)?.selectedTeam
   const canSelect = () => selectedPicks.length < 10
@@ -285,6 +288,42 @@ export default function GamePicker({ games, selectedPicks, onPickSelection, onPi
             <p className="text-white/70 mb-2">No teams selected yet</p>
             <p className="text-white/50 text-sm">Click on teams above to make your picks!</p>
           </div>
+        )}
+
+        {/* Submit Picks Button */}
+        {selectedPicks.length === 10 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-6"
+          >
+            <button
+              onClick={onSubmitPicks}
+              disabled={!canSubmit}
+              className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 ${
+                canSubmit
+                  ? 'bg-gradient-to-r from-nfl-gold to-nfl-red hover:from-nfl-gold/90 hover:to-nfl-red/90 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
+                  : 'bg-gray-600 text-gray-300 cursor-not-allowed'
+              }`}
+            >
+              {!isConnected ? (
+                <span className="flex items-center justify-center space-x-2">
+                  <Star className="w-5 h-5" />
+                  <span>Connect Wallet to Submit</span>
+                </span>
+              ) : canSubmit ? (
+                <span className="flex items-center justify-center space-x-2">
+                  <Zap className="w-5 h-5" />
+                  <span>Submit Picks - $2 Entry Fee</span>
+                </span>
+              ) : (
+                <span className="flex items-center justify-center space-x-2">
+                  <CircleDot className="w-5 h-5" />
+                  <span>Need {10 - selectedPicks.length} More Picks</span>
+                </span>
+              )}
+            </button>
+          </motion.div>
         )}
       </motion.div>
     </div>
