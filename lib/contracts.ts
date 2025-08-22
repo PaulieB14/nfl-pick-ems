@@ -405,6 +405,54 @@ export async function testContractConnectivity() {
       console.error('Error details:', {
         message: error instanceof Error ? error.message : 'Unknown error'
       })
+      
+      // Try to discover what functions are actually available on MockUSDC
+      console.log('🔍 Attempting to discover available MockUSDC functions...')
+      
+      const usdcCommonFunctions = [
+        'symbol',
+        'name',
+        'decimals',
+        'totalSupply',
+        'balanceOf',
+        'owner',
+        'mint',
+        'burn'
+      ]
+      
+      for (const funcName of usdcCommonFunctions) {
+        try {
+          if (funcName === 'balanceOf') {
+            // balanceOf needs an address parameter
+            const result = await publicClient.readContract({
+              address: usdcAddress,
+              abi: parseAbi([`function ${funcName}(address) external view returns (uint256)`]),
+              functionName: funcName,
+              args: ['0x0000000000000000000000000000000000000000'], // Zero address
+            })
+            console.log(`✅ Found function: ${funcName}(address) = ${result}`)
+          } else if (funcName === 'mint' || funcName === 'burn') {
+            // These are write functions, skip for now
+            console.log(`⏭️ Skipping write function: ${funcName}`)
+          } else {
+            // Try to call the function with no arguments
+            const result = await publicClient.readContract({
+              address: usdcAddress,
+              abi: parseAbi([`function ${funcName}() external view returns (string)`]),
+              functionName: funcName,
+              args: [],
+            })
+            console.log(`✅ Found function: ${funcName}() = ${result}`)
+          }
+        } catch (funcError) {
+          // Function doesn't exist or has different signature - that's expected
+          console.log(`❌ Function ${funcName}() not available or has different signature`)
+        }
+      }
+      
+      // Try to get the contract's ABI from BaseScan
+      console.log('🔍 MockUSDC address for BaseScan verification:', usdcAddress)
+      console.log('🔍 Check this contract on https://basescan.org/address/' + usdcAddress)
     }
     
     // Test NFL Pick Ems contract - try multiple functions
@@ -452,6 +500,48 @@ export async function testContractConnectivity() {
           if (code && code !== '0x') {
             console.log('✅ Contract has code, but functions may have different signatures')
             console.log('🔍 Contract bytecode length:', code.length)
+            
+            // Try to discover what functions are actually available
+            console.log('🔍 Attempting to discover available functions...')
+            
+            // Try common function names that might exist
+            const commonFunctions = [
+              'getEntryFee',
+              'entryFee', 
+              'fee',
+              'getFee',
+              'getWeekInfo',
+              'weekInfo',
+              'getCurrentWeek',
+              'currentWeek',
+              'getPot',
+              'pot',
+              'getTotalPlayers',
+              'totalPlayers',
+              'getPlayerCount',
+              'playerCount'
+            ]
+            
+            for (const funcName of commonFunctions) {
+              try {
+                // Try to call the function with no arguments
+                const result = await publicClient.readContract({
+                  address: nflAddress,
+                  abi: parseAbi([`function ${funcName}() external view returns (uint256)`]),
+                  functionName: funcName,
+                  args: [],
+                })
+                console.log(`✅ Found function: ${funcName}() = ${result}`)
+              } catch (funcError) {
+                // Function doesn't exist or has different signature - that's expected
+                console.log(`❌ Function ${funcName}() not available or has different signature`)
+              }
+            }
+            
+            // Try to get the contract's ABI from BaseScan
+            console.log('🔍 Contract address for BaseScan verification:', nflAddress)
+            console.log('🔍 Check this contract on https://basescan.org/address/' + nflAddress)
+            
           } else {
             console.log('❌ Contract has no code - address may be wrong')
           }
