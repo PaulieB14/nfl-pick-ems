@@ -383,6 +383,7 @@ export async function testContractConnectivity() {
     const expectedChainId = CONTRACT_ADDRESSES.BASE_CHAIN_ID
     if (chain?.id !== expectedChainId) {
       console.warn(`⚠️ Warning: Contracts are deployed on Base (chain ID: ${expectedChainId}), but you're connected to ${chain?.name} (chain ID: ${chain?.id})`)
+      console.warn(`🔧 To fix this: Switch your wallet to Base network (chain ID: ${expectedChainId})`)
     } else {
       console.log('✅ Connected to correct network (Base)')
     }

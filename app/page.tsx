@@ -283,6 +283,48 @@ export default function HomePage() {
                       <p className="text-yellow-200 text-sm">
                         Click "Test Contracts" to verify connection to USDC and NFL Pick Ems contracts. Check the console for results.
                       </p>
+                      <div className="mt-3 p-3 bg-yellow-500/10 rounded-lg">
+                        <p className="text-yellow-200 text-xs">
+                          <strong>Current Issue:</strong> MockUSDC contract not found at address 0xab83D7Da5C2752Bf7AcB5804bF81ac22C7A9034B
+                        </p>
+                        <p className="text-yellow-200 text-xs mt-1">
+                          <strong>Solution:</strong> Switch to Base network (chain ID: 8453) in your wallet
+                        </p>
+                        <div className="mt-2 flex space-x-2">
+                          <button
+                            onClick={() => {
+                              if (typeof window !== 'undefined' && window.ethereum) {
+                                window.ethereum.request({
+                                  method: 'wallet_switchEthereumChain',
+                                  params: [{ chainId: '0x2105' }], // 8453 in hex
+                                }).catch(console.error)
+                              }
+                            }}
+                            className="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 transition-colors"
+                          >
+                            Switch to Base
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (typeof window !== 'undefined' && window.ethereum) {
+                                window.ethereum.request({
+                                  method: 'wallet_addEthereumChain',
+                                  params: [{
+                                    chainId: '0x2105',
+                                    chainName: 'Base',
+                                    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                                    rpcUrls: ['https://mainnet.base.org'],
+                                    blockExplorerUrls: ['https://basescan.org']
+                                  }]
+                                }).catch(console.error)
+                              }
+                            }}
+                            className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors"
+                          >
+                            Add Base Network
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   )}
           
