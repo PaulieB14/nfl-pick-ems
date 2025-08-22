@@ -1453,31 +1453,1149 @@ export const nflSchedule2025: NFLGame[] = [
     home: "Green Bay Packers",
     away: "Philadelphia Eagles",
     network: "ESPN/ABC"
+  },
+
+  // WEEK 11
+  {
+    id: "week11-thu",
+    week: 11,
+    date: "Nov 13, 2025",
+    time: "8:15 PM ET",
+    home: "New England Patriots",
+    away: "New York Jets",
+    network: "Prime Video"
+  },
+  {
+    id: "week11-sun1",
+    week: 11,
+    date: "Nov 16, 2025",
+    time: "9:30 AM ET",
+    home: "Miami Dolphins",
+    away: "Washington Commanders",
+    network: "NFLN",
+    isInternational: true,
+    location: "Madrid"
+  },
+  {
+    id: "week11-sun2",
+    week: 11,
+    date: "Nov 16, 2025",
+    time: "1:00 PM ET",
+    home: "Atlanta Falcons",
+    away: "Carolina Panthers",
+    network: "FOX"
+  },
+  {
+    id: "week11-sun3",
+    week: 11,
+    date: "Nov 16, 2025",
+    time: "1:00 PM ET",
+    home: "Buffalo Bills",
+    away: "Tampa Bay Buccaneers",
+    network: "CBS"
+  },
+  {
+    id: "week11-sun4",
+    week: 11,
+    date: "Nov 16, 2025",
+    time: "1:00 PM ET",
+    home: "Jacksonville Jaguars",
+    away: "Los Angeles Chargers",
+    network: "CBS"
+  },
+  {
+    id: "week11-sun5",
+    week: 11,
+    date: "Nov 16, 2025",
+    time: "1:00 PM ET",
+    home: "Minnesota Vikings",
+    away: "Chicago Bears",
+    network: "FOX"
+  },
+  {
+    id: "week11-sun6",
+    week: 11,
+    date: "Nov 16, 2025",
+    time: "1:00 PM ET",
+    home: "New York Giants",
+    away: "Green Bay Packers",
+    network: "FOX"
+  },
+  {
+    id: "week11-sun7",
+    week: 11,
+    date: "Nov 16, 2025",
+    time: "1:00 PM ET",
+    home: "Pittsburgh Steelers",
+    away: "Cincinnati Bengals",
+    network: "CBS"
+  },
+  {
+    id: "week11-sun8",
+    week: 11,
+    date: "Nov 16, 2025",
+    time: "1:00 PM ET",
+    home: "Tennessee Titans",
+    away: "Houston Texans",
+    network: "FOX"
+  },
+  {
+    id: "week11-sun9",
+    week: 11,
+    date: "Nov 16, 2025",
+    time: "4:05 PM ET",
+    home: "Arizona Cardinals",
+    away: "San Francisco 49ers",
+    network: "FOX"
+  },
+  {
+    id: "week11-sun10",
+    week: 11,
+    date: "Nov 16, 2025",
+    time: "4:05 PM ET",
+    home: "Los Angeles Rams",
+    away: "Seattle Seahawks",
+    network: "FOX"
+  },
+  {
+    id: "week11-sun11",
+    week: 11,
+    date: "Nov 16, 2025",
+    time: "4:25 PM ET",
+    home: "Cleveland Browns",
+    away: "Baltimore Ravens",
+    network: "CBS"
+  },
+  {
+    id: "week11-sun12",
+    week: 11,
+    date: "Nov 16, 2025",
+    time: "4:25 PM ET",
+    home: "Denver Broncos",
+    away: "Kansas City Chiefs",
+    network: "CBS"
+  },
+  {
+    id: "week11-sun13",
+    week: 11,
+    date: "Nov 16, 2025",
+    time: "8:20 PM ET",
+    home: "Philadelphia Eagles",
+    away: "Detroit Lions",
+    network: "NBC"
+  },
+  {
+    id: "week11-mon",
+    week: 11,
+    date: "Nov 17, 2025",
+    time: "8:15 PM ET",
+    home: "Las Vegas Raiders",
+    away: "Dallas Cowboys",
+    network: "ESPN/ABC"
+  },
+
+  // WEEK 12
+  {
+    id: "week12-thu",
+    week: 12,
+    date: "Nov 20, 2025",
+    time: "8:15 PM ET",
+    home: "Houston Texans",
+    away: "Buffalo Bills",
+    network: "Prime Video"
+  },
+  {
+    id: "week12-sun1",
+    week: 12,
+    date: "Nov 23, 2025",
+    time: "1:00 PM ET",
+    home: "Baltimore Ravens",
+    away: "New York Jets",
+    network: "CBS"
+  },
+  {
+    id: "week12-sun2",
+    week: 12,
+    date: "Nov 23, 2025",
+    time: "1:00 PM ET",
+    home: "Chicago Bears",
+    away: "Pittsburgh Steelers",
+    network: "CBS"
+  },
+  {
+    id: "week12-sun3",
+    week: 12,
+    date: "Nov 23, 2025",
+    time: "1:00 PM ET",
+    home: "Cincinnati Bengals",
+    away: "New England Patriots",
+    network: "CBS"
+  },
+  {
+    id: "week12-sun4",
+    week: 12,
+    date: "Nov 23, 2025",
+    time: "1:00 PM ET",
+    home: "Detroit Lions",
+    away: "New York Giants",
+    network: "FOX"
+  },
+  {
+    id: "week12-sun5",
+    week: 12,
+    date: "Nov 23, 2025",
+    time: "1:00 PM ET",
+    home: "Green Bay Packers",
+    away: "Minnesota Vikings",
+    network: "FOX"
+  },
+  {
+    id: "week12-sun6",
+    week: 12,
+    date: "Nov 23, 2025",
+    time: "1:00 PM ET",
+    home: "Kansas City Chiefs",
+    away: "Indianapolis Colts",
+    network: "CBS"
+  },
+  {
+    id: "week12-sun7",
+    week: 12,
+    date: "Nov 23, 2025",
+    time: "1:00 PM ET",
+    home: "Tennessee Titans",
+    away: "Seattle Seahawks",
+    network: "FOX"
+  },
+  {
+    id: "week12-sun8",
+    week: 12,
+    date: "Nov 23, 2025",
+    time: "4:05 PM ET",
+    home: "Arizona Cardinals",
+    away: "Jacksonville Jaguars",
+    network: "CBS"
+  },
+  {
+    id: "week12-sun9",
+    week: 12,
+    date: "Nov 23, 2025",
+    time: "4:05 PM ET",
+    home: "Las Vegas Raiders",
+    away: "Cleveland Browns",
+    network: "CBS"
+  },
+  {
+    id: "week12-sun10",
+    week: 12,
+    date: "Nov 23, 2025",
+    time: "4:25 PM ET",
+    home: "Dallas Cowboys",
+    away: "Philadelphia Eagles",
+    network: "FOX"
+  },
+  {
+    id: "week12-sun11",
+    week: 12,
+    date: "Nov 23, 2025",
+    time: "4:25 PM ET",
+    home: "New Orleans Saints",
+    away: "Atlanta Falcons",
+    network: "FOX"
+  },
+  {
+    id: "week12-sun12",
+    week: 12,
+    date: "Nov 23, 2025",
+    time: "8:20 PM ET",
+    home: "Los Angeles Rams",
+    away: "Tampa Bay Buccaneers",
+    network: "NBC"
+  },
+  {
+    id: "week12-mon",
+    week: 12,
+    date: "Nov 24, 2025",
+    time: "8:15 PM ET",
+    home: "San Francisco 49ers",
+    away: "Carolina Panthers",
+    network: "ESPN"
+  },
+
+  // WEEK 13
+  {
+    id: "week13-thu1",
+    week: 13,
+    date: "Nov 27, 2025",
+    time: "1:00 PM ET",
+    home: "Detroit Lions",
+    away: "Green Bay Packers",
+    network: "FOX",
+    isSpecial: true,
+    specialNote: "Thanksgiving"
+  },
+  {
+    id: "week13-thu2",
+    week: 13,
+    date: "Nov 27, 2025",
+    time: "4:30 PM ET",
+    home: "Dallas Cowboys",
+    away: "Kansas City Chiefs",
+    network: "CBS",
+    isSpecial: true,
+    specialNote: "Thanksgiving"
+  },
+  {
+    id: "week13-thu3",
+    week: 13,
+    date: "Nov 27, 2025",
+    time: "8:20 PM ET",
+    home: "Baltimore Ravens",
+    away: "Cincinnati Bengals",
+    network: "NBC",
+    isSpecial: true,
+    specialNote: "Thanksgiving"
+  },
+  {
+    id: "week13-fri",
+    week: 13,
+    date: "Nov 28, 2025",
+    time: "3:00 PM ET",
+    home: "Philadelphia Eagles",
+    away: "Chicago Bears",
+    network: "Prime Video"
+  },
+  {
+    id: "week13-sun1",
+    week: 13,
+    date: "Nov 30, 2025",
+    time: "1:00 PM ET",
+    home: "Carolina Panthers",
+    away: "Los Angeles Rams",
+    network: "FOX"
+  },
+  {
+    id: "week13-sun2",
+    week: 13,
+    date: "Nov 30, 2025",
+    time: "1:00 PM ET",
+    home: "Cleveland Browns",
+    away: "San Francisco 49ers",
+    network: "CBS"
+  },
+  {
+    id: "week13-sun3",
+    week: 13,
+    date: "Nov 30, 2025",
+    time: "1:00 PM ET",
+    home: "Indianapolis Colts",
+    away: "Houston Texans",
+    network: "CBS"
+  },
+  {
+    id: "week13-sun4",
+    week: 13,
+    date: "Nov 30, 2025",
+    time: "1:00 PM ET",
+    home: "Miami Dolphins",
+    away: "New Orleans Saints",
+    network: "FOX"
+  },
+  {
+    id: "week13-sun5",
+    week: 13,
+    date: "Nov 30, 2025",
+    time: "1:00 PM ET",
+    home: "New York Jets",
+    away: "Atlanta Falcons",
+    network: "FOX"
+  },
+  {
+    id: "week13-sun6",
+    week: 13,
+    date: "Nov 30, 2025",
+    time: "1:00 PM ET",
+    home: "Tampa Bay Buccaneers",
+    away: "Arizona Cardinals",
+    network: "FOX"
+  },
+  {
+    id: "week13-sun7",
+    week: 13,
+    date: "Nov 30, 2025",
+    time: "1:00 PM ET",
+    home: "Tennessee Titans",
+    away: "Jacksonville Jaguars",
+    network: "CBS"
+  },
+  {
+    id: "week13-sun8",
+    week: 13,
+    date: "Nov 30, 2025",
+    time: "4:05 PM ET",
+    home: "Seattle Seahawks",
+    away: "Minnesota Vikings",
+    network: "FOX"
+  },
+  {
+    id: "week13-sun9",
+    week: 13,
+    date: "Nov 30, 2025",
+    time: "4:25 PM ET",
+    home: "Los Angeles Chargers",
+    away: "Las Vegas Raiders",
+    network: "CBS"
+  },
+  {
+    id: "week13-sun10",
+    week: 13,
+    date: "Nov 30, 2025",
+    time: "4:25 PM ET",
+    home: "Pittsburgh Steelers",
+    away: "Buffalo Bills",
+    network: "CBS"
+  },
+  {
+    id: "week13-sun11",
+    week: 13,
+    date: "Nov 30, 2025",
+    time: "8:20 PM ET",
+    home: "Washington Commanders",
+    away: "Denver Broncos",
+    network: "NBC"
+  },
+  {
+    id: "week13-mon",
+    week: 13,
+    date: "Dec 1, 2025",
+    time: "8:15 PM ET",
+    home: "New England Patriots",
+    away: "New York Giants",
+    network: "ESPN"
+  },
+
+  // WEEK 14
+  {
+    id: "week14-thu",
+    week: 14,
+    date: "Dec 4, 2025",
+    time: "8:15 PM ET",
+    home: "Detroit Lions",
+    away: "Dallas Cowboys",
+    network: "Prime Video"
+  },
+  {
+    id: "week14-sun1",
+    week: 14,
+    date: "Dec 7, 2025",
+    time: "1:00 PM ET",
+    home: "Atlanta Falcons",
+    away: "Seattle Seahawks",
+    network: "FOX"
+  },
+  {
+    id: "week14-sun2",
+    week: 14,
+    date: "Dec 7, 2025",
+    time: "1:00 PM ET",
+    home: "Baltimore Ravens",
+    away: "Pittsburgh Steelers",
+    network: "CBS"
+  },
+  {
+    id: "week14-sun3",
+    week: 14,
+    date: "Dec 7, 2025",
+    time: "1:00 PM ET",
+    home: "Cleveland Browns",
+    away: "Tennessee Titans",
+    network: "FOX"
+  },
+  {
+    id: "week14-sun4",
+    week: 14,
+    date: "Dec 7, 2025",
+    time: "1:00 PM ET",
+    home: "Green Bay Packers",
+    away: "Chicago Bears",
+    network: "FOX"
+  },
+  {
+    id: "week14-sun5",
+    week: 14,
+    date: "Dec 7, 2025",
+    time: "1:00 PM ET",
+    home: "Jacksonville Jaguars",
+    away: "Indianapolis Colts",
+    network: "CBS"
+  },
+  {
+    id: "week14-sun6",
+    week: 14,
+    date: "Dec 7, 2025",
+    time: "1:00 PM ET",
+    home: "Minnesota Vikings",
+    away: "Washington Commanders",
+    network: "FOX"
+  },
+  {
+    id: "week14-sun7",
+    week: 14,
+    date: "Dec 7, 2025",
+    time: "1:00 PM ET",
+    home: "New York Jets",
+    away: "Miami Dolphins",
+    network: "CBS"
+  },
+  {
+    id: "week14-sun8",
+    week: 14,
+    date: "Dec 7, 2025",
+    time: "1:00 PM ET",
+    home: "Tampa Bay Buccaneers",
+    away: "New Orleans Saints",
+    network: "CBS"
+  },
+  {
+    id: "week14-sun9",
+    week: 14,
+    date: "Dec 7, 2025",
+    time: "4:05 PM ET",
+    home: "Las Vegas Raiders",
+    away: "Denver Broncos",
+    network: "CBS"
+  },
+  {
+    id: "week14-sun10",
+    week: 14,
+    date: "Dec 7, 2025",
+    time: "4:25 PM ET",
+    home: "Arizona Cardinals",
+    away: "Los Angeles Rams",
+    network: "FOX"
+  },
+  {
+    id: "week14-sun11",
+    week: 14,
+    date: "Dec 7, 2025",
+    time: "4:25 PM ET",
+    home: "Buffalo Bills",
+    away: "Cincinnati Bengals",
+    network: "FOX"
+  },
+  {
+    id: "week14-sun12",
+    week: 14,
+    date: "Dec 7, 2025",
+    time: "8:20 PM ET",
+    home: "Kansas City Chiefs",
+    away: "Houston Texans",
+    network: "NBC"
+  },
+  {
+    id: "week14-mon",
+    week: 14,
+    date: "Dec 8, 2025",
+    time: "8:15 PM ET",
+    home: "Los Angeles Chargers",
+    away: "Philadelphia Eagles",
+    network: "ESPN/ABC"
+  },
+
+  // WEEK 15
+  {
+    id: "week15-thu",
+    week: 15,
+    date: "Dec 11, 2025",
+    time: "8:15 PM ET",
+    home: "Tampa Bay Buccaneers",
+    away: "Atlanta Falcons",
+    network: "Prime Video"
+  },
+  {
+    id: "week15-sun1",
+    week: 15,
+    date: "Dec 14, 2025",
+    time: "1:00 PM ET",
+    home: "Chicago Bears",
+    away: "Cleveland Browns",
+    network: "FOX"
+  },
+  {
+    id: "week15-sun2",
+    week: 15,
+    date: "Dec 14, 2025",
+    time: "1:00 PM ET",
+    home: "Cincinnati Bengals",
+    away: "Baltimore Ravens",
+    network: "CBS"
+  },
+  {
+    id: "week15-sun3",
+    week: 15,
+    date: "Dec 14, 2025",
+    time: "1:00 PM ET",
+    home: "Houston Texans",
+    away: "Arizona Cardinals",
+    network: "FOX"
+  },
+  {
+    id: "week15-sun4",
+    week: 15,
+    date: "Dec 14, 2025",
+    time: "1:00 PM ET",
+    home: "Jacksonville Jaguars",
+    away: "New York Jets",
+    network: "CBS"
+  },
+  {
+    id: "week15-sun5",
+    week: 15,
+    date: "Dec 14, 2025",
+    time: "1:00 PM ET",
+    home: "Kansas City Chiefs",
+    away: "Los Angeles Chargers",
+    network: "CBS"
+  },
+  {
+    id: "week15-sun6",
+    week: 15,
+    date: "Dec 14, 2025",
+    time: "1:00 PM ET",
+    home: "New England Patriots",
+    away: "Buffalo Bills",
+    network: "CBS"
+  },
+  {
+    id: "week15-sun7",
+    week: 15,
+    date: "Dec 14, 2025",
+    time: "1:00 PM ET",
+    home: "New York Giants",
+    away: "Washington Commanders",
+    network: "FOX"
+  },
+  {
+    id: "week15-sun8",
+    week: 15,
+    date: "Dec 14, 2025",
+    time: "1:00 PM ET",
+    home: "Philadelphia Eagles",
+    away: "Las Vegas Raiders",
+    network: "FOX"
+  },
+  {
+    id: "week15-sun9",
+    week: 15,
+    date: "Dec 14, 2025",
+    time: "4:25 PM ET",
+    home: "Denver Broncos",
+    away: "Green Bay Packers",
+    network: "CBS"
+  },
+  {
+    id: "week15-sun10",
+    week: 15,
+    date: "Dec 14, 2025",
+    time: "4:25 PM ET",
+    home: "Los Angeles Rams",
+    away: "Detroit Lions",
+    network: "FOX"
+  },
+  {
+    id: "week15-sun11",
+    week: 15,
+    date: "Dec 14, 2025",
+    time: "4:25 PM ET",
+    home: "New Orleans Saints",
+    away: "Carolina Panthers",
+    network: "FOX"
+  },
+  {
+    id: "week15-sun12",
+    week: 15,
+    date: "Dec 14, 2025",
+    time: "4:25 PM ET",
+    home: "Seattle Seahawks",
+    away: "Indianapolis Colts",
+    network: "CBS"
+  },
+  {
+    id: "week15-sun13",
+    week: 15,
+    date: "Dec 14, 2025",
+    time: "4:25 PM ET",
+    home: "San Francisco 49ers",
+    away: "Tennessee Titans",
+    network: "FOX"
+  },
+  {
+    id: "week15-sun14",
+    week: 15,
+    date: "Dec 14, 2025",
+    time: "8:20 PM ET",
+    home: "Dallas Cowboys",
+    away: "Minnesota Vikings",
+    network: "NBC"
+  },
+  {
+    id: "week15-mon",
+    week: 15,
+    date: "Dec 15, 2025",
+    time: "8:15 PM ET",
+    home: "Pittsburgh Steelers",
+    away: "Miami Dolphins",
+    network: "ESPN/ABC"
+  },
+
+  // WEEK 16
+  {
+    id: "week16-thu",
+    week: 16,
+    date: "Dec 18, 2025",
+    time: "8:15 PM ET",
+    home: "Seattle Seahawks",
+    away: "Los Angeles Rams",
+    network: "Prime Video"
+  },
+  {
+    id: "week16-sat1",
+    week: 16,
+    date: "Dec 20, 2025",
+    time: "TBD",
+    home: "Chicago Bears",
+    away: "Green Bay Packers",
+    network: "FOX"
+  },
+  {
+    id: "week16-sat2",
+    week: 16,
+    date: "Dec 20, 2025",
+    time: "TBD",
+    home: "Washington Commanders",
+    away: "Philadelphia Eagles",
+    network: "FOX"
+  },
+  {
+    id: "week16-sun1",
+    week: 16,
+    date: "Dec 21, 2025",
+    time: "1:00 PM ET",
+    home: "Baltimore Ravens",
+    away: "New England Patriots",
+    network: "CBS"
+  },
+  {
+    id: "week16-sun2",
+    week: 16,
+    date: "Dec 21, 2025",
+    time: "1:00 PM ET",
+    home: "Carolina Panthers",
+    away: "Tampa Bay Buccaneers",
+    network: "FOX"
+  },
+  {
+    id: "week16-sun3",
+    week: 16,
+    date: "Dec 21, 2025",
+    time: "1:00 PM ET",
+    home: "Cleveland Browns",
+    away: "Buffalo Bills",
+    network: "CBS"
+  },
+  {
+    id: "week16-sun4",
+    week: 16,
+    date: "Dec 21, 2025",
+    time: "1:00 PM ET",
+    home: "Dallas Cowboys",
+    away: "Los Angeles Chargers",
+    network: "FOX"
+  },
+  {
+    id: "week16-sun5",
+    week: 16,
+    date: "Dec 21, 2025",
+    time: "1:00 PM ET",
+    home: "New Orleans Saints",
+    away: "New York Jets",
+    network: "CBS"
+  },
+  {
+    id: "week16-sun6",
+    week: 16,
+    date: "Dec 21, 2025",
+    time: "1:00 PM ET",
+    home: "New York Giants",
+    away: "Minnesota Vikings",
+    network: "FOX"
+  },
+  {
+    id: "week16-sun7",
+    week: 16,
+    date: "Dec 21, 2025",
+    time: "1:00 PM ET",
+    home: "Tennessee Titans",
+    away: "Kansas City Chiefs",
+    network: "CBS"
+  },
+  {
+    id: "week16-sun8",
+    week: 16,
+    date: "Dec 21, 2025",
+    time: "4:05 PM ET",
+    home: "Arizona Cardinals",
+    away: "Atlanta Falcons",
+    network: "FOX"
+  },
+  {
+    id: "week16-sun9",
+    week: 16,
+    date: "Dec 21, 2025",
+    time: "4:05 PM ET",
+    home: "Denver Broncos",
+    away: "Jacksonville Jaguars",
+    network: "FOX"
+  },
+  {
+    id: "week16-sun10",
+    week: 16,
+    date: "Dec 21, 2025",
+    time: "4:25 PM ET",
+    home: "Detroit Lions",
+    away: "Pittsburgh Steelers",
+    network: "CBS"
+  },
+  {
+    id: "week16-sun11",
+    week: 16,
+    date: "Dec 21, 2025",
+    time: "4:25 PM ET",
+    home: "Houston Texans",
+    away: "Las Vegas Raiders",
+    network: "CBS"
+  },
+  {
+    id: "week16-sun12",
+    week: 16,
+    date: "Dec 21, 2025",
+    time: "8:20 PM ET",
+    home: "Miami Dolphins",
+    away: "Cincinnati Bengals",
+    network: "NBC"
+  },
+  {
+    id: "week16-mon",
+    week: 16,
+    date: "Dec 22, 2025",
+    time: "8:15 PM ET",
+    home: "Indianapolis Colts",
+    away: "San Francisco 49ers",
+    network: "ESPN"
+  },
+
+  // WEEK 17
+  {
+    id: "week17-thu1",
+    week: 17,
+    date: "Dec 25, 2025",
+    time: "1:00 PM ET",
+    home: "Washington Commanders",
+    away: "Dallas Cowboys",
+    network: "NETFLIX",
+    isSpecial: true,
+    specialNote: "Christmas"
+  },
+  {
+    id: "week17-thu2",
+    week: 17,
+    date: "Dec 25, 2025",
+    time: "4:30 PM ET",
+    home: "Minnesota Vikings",
+    away: "Detroit Lions",
+    network: "NETFLIX",
+    isSpecial: true,
+    specialNote: "Christmas"
+  },
+  {
+    id: "week17-thu3",
+    week: 17,
+    date: "Dec 25, 2025",
+    time: "8:15 PM ET",
+    home: "Kansas City Chiefs",
+    away: "Denver Broncos",
+    network: "Prime Video",
+    isSpecial: true,
+    specialNote: "Christmas"
+  },
+  {
+    id: "week17-sat1",
+    week: 17,
+    date: "Dec 27, 2025",
+    time: "TBD",
+    home: "Carolina Panthers",
+    away: "Seattle Seahawks",
+    network: "TBD"
+  },
+  {
+    id: "week17-sat2",
+    week: 17,
+    date: "Dec 27, 2025",
+    time: "TBD",
+    home: "Cincinnati Bengals",
+    away: "Arizona Cardinals",
+    network: "TBD"
+  },
+  {
+    id: "week17-sat3",
+    week: 17,
+    date: "Dec 27, 2025",
+    time: "TBD",
+    home: "Green Bay Packers",
+    away: "Baltimore Ravens",
+    network: "TBD"
+  },
+  {
+    id: "week17-sat4",
+    week: 17,
+    date: "Dec 27, 2025",
+    time: "TBD",
+    home: "Los Angeles Chargers",
+    away: "Houston Texans",
+    network: "TBD"
+  },
+  {
+    id: "week17-sat5",
+    week: 17,
+    date: "Dec 27, 2025",
+    time: "TBD",
+    home: "Las Vegas Raiders",
+    away: "New York Giants",
+    network: "TBD"
+  },
+  {
+    id: "week17-sun1",
+    week: 17,
+    date: "Dec 28, 2025",
+    time: "1:00 PM ET",
+    home: "Cleveland Browns",
+    away: "Pittsburgh Steelers",
+    network: "CBS"
+  },
+  {
+    id: "week17-sun2",
+    week: 17,
+    date: "Dec 28, 2025",
+    time: "1:00 PM ET",
+    home: "Indianapolis Colts",
+    away: "Jacksonville Jaguars",
+    network: "FOX"
+  },
+  {
+    id: "week17-sun3",
+    week: 17,
+    date: "Dec 28, 2025",
+    time: "1:00 PM ET",
+    home: "Miami Dolphins",
+    away: "Tampa Bay Buccaneers",
+    network: "FOX"
+  },
+  {
+    id: "week17-sun4",
+    week: 17,
+    date: "Dec 28, 2025",
+    time: "1:00 PM ET",
+    home: "New York Jets",
+    away: "New England Patriots",
+    network: "CBS"
+  },
+  {
+    id: "week17-sun5",
+    week: 17,
+    date: "Dec 28, 2025",
+    time: "1:00 PM ET",
+    home: "Tennessee Titans",
+    away: "New Orleans Saints",
+    network: "CBS"
+  },
+  {
+    id: "week17-sun6",
+    week: 17,
+    date: "Dec 28, 2025",
+    time: "4:25 PM ET",
+    home: "Buffalo Bills",
+    away: "Philadelphia Eagles",
+    network: "FOX"
+  },
+  {
+    id: "week17-sun7",
+    week: 17,
+    date: "Dec 28, 2025",
+    time: "8:20 PM ET",
+    home: "San Francisco 49ers",
+    away: "Chicago Bears",
+    network: "NBC"
+  },
+  {
+    id: "week17-mon",
+    week: 17,
+    date: "Dec 29, 2025",
+    time: "8:15 PM ET",
+    home: "Atlanta Falcons",
+    away: "Los Angeles Rams",
+    network: "ESPN"
+  },
+
+  // WEEK 18
+  {
+    id: "week18-sat1",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "Atlanta Falcons",
+    away: "New Orleans Saints",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat2",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "Buffalo Bills",
+    away: "New York Jets",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat3",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "Chicago Bears",
+    away: "Detroit Lions",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat4",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "Cincinnati Bengals",
+    away: "Cleveland Browns",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat5",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "Denver Broncos",
+    away: "Los Angeles Chargers",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat6",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "Houston Texans",
+    away: "Indianapolis Colts",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat7",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "Jacksonville Jaguars",
+    away: "Tennessee Titans",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat8",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "Los Angeles Rams",
+    away: "Arizona Cardinals",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat9",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "Las Vegas Raiders",
+    away: "Kansas City Chiefs",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat10",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "Minnesota Vikings",
+    away: "Green Bay Packers",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat11",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "New England Patriots",
+    away: "Miami Dolphins",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat12",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "New York Giants",
+    away: "Dallas Cowboys",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat13",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "Philadelphia Eagles",
+    away: "Washington Commanders",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat14",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "Pittsburgh Steelers",
+    away: "Baltimore Ravens",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat15",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "San Francisco 49ers",
+    away: "Seattle Seahawks",
+    network: "TBD"
+  },
+  {
+    id: "week18-sat16",
+    week: 18,
+    date: "Jan 3-4, 2026",
+    time: "TBD",
+    home: "Tampa Bay Buccaneers",
+    away: "Carolina Panthers",
+    network: "TBD"
   }
 ]
 
 // Return games for any week (1-18)
 export const getGamesByWeek = (week: number): NFLGame[] => {
-  if (week <= 10) {
-    return nflSchedule2025.filter(game => game.week === week)
-  }
-  
-  // For weeks 11-18, return placeholder games
-  const placeholderGames: NFLGame[] = []
-  const gameCount = week === 5 ? 14 : week === 6 || week === 7 ? 15 : week === 8 ? 13 : week === 9 || week === 10 || week === 14 ? 14 : week === 11 || week === 12 || week === 15 ? 15 : 16;
-  
-  for (let i = 0; i < gameCount; i++) {
-    placeholderGames.push({
-      id: `week${week}-game${i + 1}`,
-      week,
-      date: `Week ${week} - TBD`,
-      time: "TBD",
-      home: "TBD",
-      away: "TBD",
-      network: "TBD"
-    })
-  }
-  return placeholderGames
+  return nflSchedule2025.filter(game => game.week === week)
 }
 
 export const getCurrentWeek = (): number => {
