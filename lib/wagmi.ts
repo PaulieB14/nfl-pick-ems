@@ -15,9 +15,11 @@ export const config = createConfig({
     injected({ target: 'coinbaseWallet' }),
     injected({ target: 'braveWallet' }),
     injected({ target: 'imToken' }),
-    walletConnect({ 
-      showQrModal: true 
-    })
+    // walletConnect requires a projectId, removing for now to avoid errors
+    // walletConnect({ 
+    //   projectId: 'YOUR_PROJECT_ID',
+    //   showQrModal: true 
+    // })
   ],
   // Better error handling and Farcaster compatibility
   ssr: false,
