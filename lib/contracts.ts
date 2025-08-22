@@ -1,5 +1,3 @@
-import { ethers } from 'ethers'
-
 // Contract addresses (updated with your deployed contract)
 export const CONTRACT_ADDRESSES = {
   NFL_PICK_EMS: '0x0b07572EcDcb7709b48Ef1DB11a07d9c263C2e06', // Your deployed contract address
@@ -14,155 +12,49 @@ export const NFL_PICK_EMS_ABI = [
   'function getWeekStatus(uint8 week) external view returns (uint8)',
   'function getEntryFee() external view returns (uint256)',
   'function getCurrentPot(uint8 week) external view returns (uint256)',
-  'function getTotalPlayers(uint8 week) external view returns (uint256)',
-  'function getGame(uint8 week, uint8 gameIndex) external view returns (address, address, uint8, uint8, uint8)',
-  'function getWeekGameCount(uint8 week) external view returns (uint8)',
-  'function isWeekActive(uint8 week) external view returns (bool)',
-  'function getPlayerBalance(address player) external view returns (uint256)',
-  'function withdraw() external',
-  'function pause() external',
-  'function unpause() external',
-  'function owner() external view returns (address)',
-  'function paused() external view returns (bool)'
-]
+  'function getTotalPlayers(uint8 week) external view returns (uint256)'
+] as const
 
-// Smart contract interaction class
-export class NFLPickEmsContract {
-  private provider: ethers.Provider
-  private signer: ethers.Signer
-  private contract: ethers.Contract
+// Simple contract interface for now
+export interface NFLPickEmsContract {
+  submitPicks(week: number, picks: string[], entryFee: string): Promise<{ success: boolean; hash: string }>
+  getPlayerPicks(playerAddress: string, week: number): Promise<bigint>
+  getCurrentPot(week: number): Promise<bigint>
+  getTotalPlayers(week: number): Promise<bigint>
+  getEntryFee(): Promise<bigint>
+}
 
-  constructor(provider: ethers.Provider, signer: ethers.Signer) {
-    this.provider = provider
-    this.signer = signer
-    this.contract = new ethers.Contract(
-      CONTRACT_ADDRESSES.NFL_PICK_EMS,
-      NFL_PICK_EMS_ABI,
-      signer
-    )
-  }
-
+// Mock implementation for now
+export class MockNFLPickEmsContract implements NFLPickEmsContract {
   async submitPicks(week: number, picks: string[], entryFee: string) {
-    try {
-      // Convert picks to the format needed for smart contract
-      const picksMask = this.convertPicksToMask(picks)
-      
-      console.log(`Submitting picks for week ${week}:`, {
-        picks,
-        picksMask: picksMask.toString(),
-        entryFee
-      })
-
-      // Submit the transaction
-      const tx = await this.contract.submitPicks(week, picksMask, {
-        value: ethers.parseEther(entryFee)
-      })
-
-      console.log('Transaction submitted:', tx.hash)
-      
-      // Wait for confirmation
-      const receipt = await tx.wait()
-      console.log('Transaction confirmed:', receipt.hash)
-      
-      return {
-        success: true,
-        hash: tx.hash,
-        receipt
-      }
-    } catch (error) {
-      console.error('Error submitting picks:', error)
-      throw error
-    }
+    console.log('Mock: Would submit picks:', { week, picks, entryFee })
+    return { success: true, hash: '0x...' }
   }
 
   async getPlayerPicks(playerAddress: string, week: number) {
-    try {
-      const picksMask = await this.contract.getPlayerPicks(playerAddress, week)
-      return this.convertMaskToPicks(picksMask)
-    } catch (error) {
-      console.error('Error getting player picks:', error)
-      throw error
-    }
+    console.log('Mock: Would get player picks:', { playerAddress, week })
+    return BigInt(0)
   }
 
   async getCurrentPot(week: number) {
-    try {
-      const pot = await this.contract.getCurrentPot(week)
-      return ethers.formatEther(pot)
-    } catch (error) {
-      console.error('Error getting current pot:', error)
-      throw error
-    }
+    console.log('Mock: Would get current pot:', { week })
+    return BigInt(0)
   }
 
   async getTotalPlayers(week: number) {
-    try {
-      return await this.contract.getTotalPlayers(week)
-    } catch (error) {
-      console.error('Error getting total players:', error)
-      throw error
-    }
+    console.log('Mock: Would get total players:', { week })
+    return BigInt(0)
   }
 
   async getEntryFee() {
-    try {
-      const fee = await this.contract.getEntryFee()
-      return ethers.formatEther(fee)
-    } catch (error) {
-      console.error('Error getting entry fee:', error)
-      throw error
-    }
-  }
-
-  async getWeekStatus(week: number) {
-    try {
-      const status = await this.contract.getWeekStatus(week)
-      return Number(status)
-    } catch (error) {
-      console.error('Error getting week status:', error)
-      throw error
-    }
-  }
-
-  async isWeekActive(week: number) {
-    try {
-      return await this.contract.isWeekActive(week)
-    } catch (error) {
-      console.error('Error checking if week is active:', error)
-      throw error
-    }
-  }
-
-  // Convert picks array to bit mask for smart contract
-  private convertPicksToMask(picks: string[]): bigint {
-    let mask = BigInt(0)
-    
-    for (let i = 0; i < picks.length; i++) {
-      if (picks[i] === 'home') {
-        mask |= (BigInt(1) << BigInt(i))
-      }
-    }
-    
-    return mask
-  }
-
-  // Convert bit mask from smart contract to picks array
-  private convertMaskToPicks(mask: bigint): string[] {
-    const picks: string[] = []
-    
-    for (let i = 0; i < 10; i++) {
-      if (mask & (BigInt(1) << BigInt(i))) {
-        picks.push('home')
-      } else {
-        picks.push('away')
-      }
-    }
-    
-    return picks
+    console.log('Mock: Would get entry fee')
+    return BigInt(2000000000000000) // 0.002 ETH in wei
   }
 }
 
 // Helper function to get contract instance
-export function getNFLPickEmsContract(provider: ethers.Provider, signer: ethers.Signer): NFLPickEmsContract {
-  return new NFLPickEmsContract(provider, signer)
+export function getNFLPickEmsContract(walletClient: any): NFLPickEmsContract {
+  // For now, return mock implementation
+  // TODO: Implement real contract integration
+  return new MockNFLPickEmsContract()
 }

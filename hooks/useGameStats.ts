@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import { getNFLPickEmsContract } from '@/lib/contracts'
 
 interface GameStats {
@@ -15,12 +15,12 @@ export const useGameStats = (week: number) => {
     timeLeft: '--'
   })
 
-  const { data: signer } = useSigner()
+  const { data: walletClient } = useWalletClient()
   const { isConnected } = useAccount()
 
   useEffect(() => {
     const fetchStats = async () => {
-      if (!isConnected || !signer) {
+      if (!isConnected || !walletClient) {
         setStats({
           totalPlayers: 0,
           currentPot: 0,
@@ -30,18 +30,12 @@ export const useGameStats = (week: number) => {
       }
 
       try {
-        const contract = getNFLPickEmsContract(signer.provider!, signer)
-        
-        // Fetch real data from smart contract
-        const [totalPlayers, currentPot] = await Promise.all([
-          contract.getTotalPlayers(week),
-          contract.getCurrentPot(week)
-        ])
-
+        // TODO: Implement actual smart contract calls when ready
+        // For now, return placeholder data
         setStats({
-          totalPlayers: Number(totalPlayers),
-          currentPot: parseFloat(currentPot),
-          timeLeft: '--' // Could implement countdown logic here
+          totalPlayers: 0,
+          currentPot: 0,
+          timeLeft: '--'
         })
       } catch (error) {
         console.error('Error fetching game stats:', error)
@@ -55,7 +49,7 @@ export const useGameStats = (week: number) => {
     }
 
     fetchStats()
-  }, [week, isConnected, signer])
+  }, [week, isConnected, walletClient])
 
   return stats
 }

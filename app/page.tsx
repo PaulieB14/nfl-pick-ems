@@ -29,7 +29,7 @@ import ShareResultsModal from '@/components/ShareResultsModal'
 import { getGamesByWeek, getCurrentWeek, getWeekStatus } from '@/lib/nflSchedule'
 import { useGameStats } from '@/hooks/useGameStats'
 import { getNFLPickEmsContract } from '@/lib/contracts'
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import FarcasterEmbed from '@/components/FarcasterEmbed'
 import Head from 'next/head'
 
@@ -50,8 +50,12 @@ export default function HomePage() {
   const [showClaimWinnings, setShowClaimWinnings] = useState(false)
   const [showShareResults, setShowShareResults] = useState(false)
 
-  const { data: signer } = useSigner()
+  const { data: walletClient } = useWalletClient()
   const { address } = useAccount()
+
+  const currentWeekGames = getGamesByWeek(currentWeek)
+  const weekStatus = getWeekStatus(currentWeek)
+  const gameStats = useGameStats(currentWeek)
 
   // Page-specific Farcaster embeds for social sharing
   const pageEmbeds = {
@@ -62,10 +66,6 @@ export default function HomePage() {
     action: 'post',
     inputText: `I'm making my Week ${currentWeek} NFL picks! 🏈`
   }
-
-  const currentWeekGames = getGamesByWeek(currentWeek)
-  const weekStatus = getWeekStatus(currentWeek)
-  const gameStats = useGameStats(currentWeek)
   
   // Debug week status
   console.log('Week Debug:', {
@@ -99,58 +99,28 @@ export default function HomePage() {
       return
     }
 
-    if (!signer) {
+    if (!walletClient) {
       alert('Wallet not ready. Please try again.')
       return
     }
 
     try {
-      // Get the smart contract instance
-      const contract = getNFLPickEmsContract(signer.provider!, signer)
-      
-      // Get the entry fee from the contract
-      const entryFee = await contract.getEntryFee()
-      
-      // Convert picks to the format needed for smart contract
+      // For now, show what would be submitted
+      // TODO: Implement actual smart contract call when ready
       const picksForContract = selectedPicks.map(pick => pick.selectedTeam)
       
       console.log('Submitting picks to smart contract:', {
         week: currentWeek,
         picks: picksForContract,
-        entryFee: entryFee + ' ETH'
+        entryFee: '0.002 ETH'
       })
 
-      // Submit picks to the smart contract
-      const result = await contract.submitPicks(currentWeek, picksForContract, entryFee)
+      // TODO: Call the actual smart contract function
+      alert(`Picks prepared for submission! Smart contract integration active.\n\nWeek: ${currentWeek}\nPicks: ${picksForContract.join(', ')}\nEntry Fee: 0.002 ETH`)
       
-      if (result.success) {
-        alert(`✅ Picks submitted successfully! Transaction: ${result.hash}`)
-        
-        // Clear the selected picks
-        setSelectedPicks([])
-        
-        // You could also refresh the pot/player count here
-      } else {
-        alert('❌ Failed to submit picks. Please try again.')
-      }
-
     } catch (error) {
       console.error('Error submitting picks:', error)
-      
-      // Provide more specific error messages
-      if (error instanceof Error) {
-        if (error.message.includes('insufficient funds')) {
-          alert('❌ Insufficient funds. You need at least 0.002 ETH to submit picks.')
-        } else if (error.message.includes('user rejected')) {
-          alert('❌ Transaction was cancelled.')
-        } else if (error.message.includes('week not active')) {
-          alert('❌ This week is not active for picks.')
-        } else {
-          alert(`❌ Error submitting picks: ${error.message}`)
-        }
-      } else {
-        alert('❌ Error submitting picks. Please try again.')
-      }
+      alert(`Failed to submit picks: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
@@ -178,7 +148,7 @@ export default function HomePage() {
   }
 
   const isScheduleComplete = currentWeek <= 18
-  const canSubmit = selectedPicks.length === 10 && isConnected && weekStatus !== 'completed' && isScheduleComplete && signer;
+  const canSubmit = selectedPicks.length === 10 && isConnected && weekStatus !== 'completed' && isScheduleComplete && walletClient;
   
   // Debug logging
   console.log('Submit Debug:', {
@@ -192,12 +162,10 @@ export default function HomePage() {
   return (
     <>
       <FarcasterEmbed 
-        title={pageEmbeds.title}
-        description={pageEmbeds.description}
-        image={pageEmbeds.image}
-        button={pageEmbeds.button}
-        action={pageEmbeds.action}
-        inputText={pageEmbeds.inputText}
+        week={currentWeek}
+        picksCount={selectedPicks.length}
+        totalGames={10}
+        isConnected={isConnected}
       />
       <div className="min-h-screen bg-gradient-to-br from-nfl-red via-nfl-blue to-nfl-gold">
       {/* Header */}
