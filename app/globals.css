@@ -5,16 +5,19 @@
 /* Farcaster Mini App specific styles */
 .farcaster-mini-app {
   /* Ensure proper viewport handling in Farcaster */
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  /* Allow scrolling on mobile */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .farcaster-mini-app-fallback {
   /* Fallback styles for development */
   min-height: 100vh;
+  overflow-y: auto;
 }
 
-/* Hide scrollbars in Farcaster Mini App */
+/* Hide scrollbars but keep scrolling functionality */
 .farcaster-mini-app ::-webkit-scrollbar {
   display: none;
 }
@@ -22,6 +25,27 @@
 .farcaster-mini-app {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Ensure body allows scrolling */
+body {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+/* Mobile-specific fixes */
+@media (max-width: 768px) {
+  body {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .farcaster-mini-app,
+  .farcaster-mini-app-fallback {
+    overflow-y: auto !important;
+    height: auto !important;
+    min-height: 100vh;
+  }
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
