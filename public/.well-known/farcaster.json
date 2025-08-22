@@ -37,6 +37,8 @@
     "requiredCapabilities": [
       "wallet.getEthereumProvider",
       "actions.signIn"
-    ]
+    ],
+    "webhookUrl": "https://nfl-pick-em.netlify.app/api/webhook",
+    "canonicalDomain": "nfl-pick-em.netlify.app"
   }
 }

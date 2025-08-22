@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     'fc:miniapp:image': 'https://nfl-pick-em.netlify.app/og-image.png',
     'fc:miniapp:button': '🏈 Make Picks',
     'fc:miniapp:action': 'post',
+    'fc:miniapp:input:text': 'Share your NFL picks!',
   },
 }
 
