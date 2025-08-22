@@ -97,7 +97,7 @@ export default function HomePage() {
     }
   }
 
-  const isScheduleComplete = currentWeek <= 6
+  const isScheduleComplete = currentWeek <= 18
   const canSubmit = selectedPicks.length === 10 && isConnected && weekStatus !== 'completed' && isScheduleComplete
 
   return (
