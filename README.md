@@ -1,14 +1,12 @@
 # 🏈 NFL Pick Ems - Full-Stack dApp
 
-![Netlify Status](https://img.shields.io/netlify/YOUR_SITE_ID?style=for-the-badge# 🏈 NFL Pick Ems - Full-Stack dApplogo=netlify# 🏈 NFL Pick Ems - Full-Stack dApplabel=Live%20Demo)
-
 A decentralized NFL pick'em game built on Base chain with a modern Next.js frontend and smart contract backend.
 
 ## 🎯 Overview
 
 NFL Pick Ems is a complete dApp that allows players to participate in weekly NFL pick'em contests. Players pay 2 USDC to enter each week and pick exactly 10 games. Winners split the pot based on their performance.
 
-## 🚀 Features
+##  Features
 
 ### Smart Contract
 - **USDC Integration**: Uses USDC on Base chain (6 decimals)
@@ -17,6 +15,13 @@ NFL Pick Ems is a complete dApp that allows players to participate in weekly NFL
 - **Automated Payouts**: Winners automatically receive their share of the pot
 - **Oracle System**: Trusted oracle posts results and finalizes winners
 - **Security**: ReentrancyGuard, Ownable, and proper access controls
+
+### Oracle Service
+- **ESPN API Integration**: Automated NFL score fetching from ESPN API
+- **Real-time Updates**: Monitors games every 5 minutes
+- **Smart Contract Integration**: Direct blockchain interaction for results
+- **Automated Results**: No manual score entry needed
+- **Error Handling**: Robust error recovery and logging
 
 ### Frontend Application
 - **Modern UI**: Built with Next.js 14 and Tailwind CSS
@@ -49,6 +54,11 @@ nfl-pick-ems/
 │   └── deploy.js      # Contract deployment
 ├── test/               # Smart contract tests
 │   └── NFLPickEms.test.ts
+├── oracle-service/     # Oracle service
+│   ├── index.js       # Main oracle script
+│   ├── test.js        # Oracle tests
+│   ├── package.json   # Oracle dependencies
+│   └── README.md      # Oracle documentation
 ├── app/                # Next.js app directory
 │   ├── page.tsx       # Main page
 │   └── layout.tsx     # Root layout
@@ -62,7 +72,7 @@ nfl-pick-ems/
 └── hardhat.config.js   # Hardhat configuration
 ```
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Node.js 18+ 
@@ -103,6 +113,16 @@ nfl-pick-ems/
    npm run dev
    ```
 
+7. **Set up Oracle Service (Optional)**
+   ```bash
+   cd oracle-service
+   npm install
+   cp .env.example .env
+   # Edit .env with your configuration
+   npm test  # Test ESPN API integration
+   npm start # Start the oracle service
+   ```
+
 ## 🧪 Testing
 
 ### Smart Contract Tests
@@ -115,7 +135,7 @@ npx hardhat test
 npm run test
 ```
 
-## 🚀 Deployment
+##  Deployment
 
 ### Local Development
 ```bash
@@ -148,6 +168,7 @@ npx hardhat run scripts/deploy.js --network base-mainnet
 
 - **Smart Contracts**: See `contracts/` directory
 - **Frontend Components**: See `components/` directory
+- **Oracle Service**: See `oracle-service/` directory
 - **Testing**: See `test/` directory
 - **Deployment**: See `scripts/` directory
 
