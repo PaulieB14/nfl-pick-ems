@@ -360,9 +360,13 @@ export function getNFLPickEmsContract(walletClient: any, publicClient?: any): NF
   if (walletClient) {
     // Use provided publicClient or fall back to imported one
     const clientToUse = publicClient || publicClient
-    // Since we have walletClient, we can always use the real contract
-    console.log('✅ Using real contract with wallet client and public client')
-    return new RealNFLPickEmsContract(walletClient, clientToUse)
+    if (clientToUse) {
+      console.log('✅ Using real contract with wallet client and public client')
+      return new RealNFLPickEmsContract(walletClient, clientToUse)
+    } else {
+      console.warn('⚠️ Wallet client available but no public client, using mock contract')
+      return new MockNFLPickEmsContract()
+    }
   }
   
   // Fallback to mock if no wallet client
