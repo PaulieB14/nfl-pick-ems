@@ -2,6 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Farcaster Mini App specific styles */
+.farcaster-mini-app {
+  /* Ensure proper viewport handling in Farcaster */
+  height: 100vh;
+  overflow: hidden;
+}
+
+.farcaster-mini-app-fallback {
+  /* Fallback styles for development */
+  min-height: 100vh;
+}
+
+/* Hide scrollbars in Farcaster Mini App */
+.farcaster-mini-app ::-webkit-scrollbar {
+  display: none;
+}
+
+.farcaster-mini-app {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @layer base {
