@@ -29,7 +29,7 @@ import ClaimWinningsModal from '@/components/ClaimWinningsModal'
 import ShareResultsModal from '@/components/ShareResultsModal'
 import { getGamesByWeek, getCurrentWeek, getWeekStatus } from '@/lib/nflSchedule'
 import { useGameStats } from '@/hooks/useGameStats'
-import { getNFLPickEmsContract } from '@/lib/contracts'
+import { getNFLPickEmsContract, testContractConnectivity } from '@/lib/contracts'
 import { useAccount, useWalletClient } from 'wagmi'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import FarcasterEmbed from '@/components/FarcasterEmbed'
@@ -252,18 +252,39 @@ export default function HomePage() {
             Built on Base chain for the Farcaster community.
           </p>
           
-          {/* Environment Notice */}
-          {typeof window !== 'undefined' && !window.location.hostname.includes('farcaster') && (
-            <div className="bg-blue-500/20 border border-blue-400/30 rounded-lg p-4 mb-6 max-w-2xl mx-auto">
-              <div className="flex items-center space-x-2 text-blue-300 mb-2">
-                <span className="text-lg">ℹ️</span>
-                <span className="font-semibold">Running Outside Farcaster</span>
-              </div>
-              <p className="text-blue-200 text-sm">
-                This app works best in Farcaster! For regular browser use, please install MetaMask or another wallet extension to connect your wallet.
-              </p>
-            </div>
-          )}
+                            {/* Environment Notice */}
+                  {typeof window !== 'undefined' && !window.location.hostname.includes('farcaster') && (
+                    <div className="bg-blue-500/20 border border-blue-400/30 rounded-lg p-4 mb-6 max-w-2xl mx-auto">
+                      <div className="flex items-center space-x-2 text-blue-300 mb-2">
+                        <span className="text-lg">ℹ️</span>
+                        <span className="font-semibold">Running Outside Farcaster</span>
+                      </div>
+                      <p className="text-blue-200 text-sm">
+                        This app works best in Farcaster! For regular browser use, please install MetaMask or another wallet extension to connect your wallet.
+                      </p>
+                    </div>
+                  )}
+                  
+                  {/* Debug Contract Connectivity Button */}
+                  {isWalletConnected && (
+                    <div className="bg-yellow-500/20 border border-yellow-400/30 rounded-lg p-4 mb-6 max-w-2xl mx-auto">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2 text-yellow-300 mb-2">
+                          <span className="text-lg">🔧</span>
+                          <span className="font-semibold">Debug Contract Connectivity</span>
+                        </div>
+                        <button
+                          onClick={() => testContractConnectivity()}
+                          className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
+                        >
+                          Test Contracts
+                        </button>
+                      </div>
+                      <p className="text-yellow-200 text-sm">
+                        Click "Test Contracts" to verify connection to USDC and NFL Pick Ems contracts. Check the console for results.
+                      </p>
+                    </div>
+                  )}
           
           {/* Official NFL Schedule Link */}
           <motion.a

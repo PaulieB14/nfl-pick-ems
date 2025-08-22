@@ -21,7 +21,7 @@ export const USDC_ABI = parseAbi([
 
 // Contract ABIs - these are the actual functions from your smart contract
 export const NFL_PICK_EMS_ABI = parseAbi([
-  'function enter(uint8 week, uint256 mask) external',
+  'function enter(uint8 week, uint256 mask) external payable',
   'function getPlayerPicks(uint8 week, address player) external view returns (uint256 playerPicksMask, uint256 playerCorrectPicks, bool playerIsWinner, bool playerClaimed)',
   'function getWeekInfo(uint8 week) external view returns (uint8 gameCount, uint64 lockTime, bool resultsSet, bool finalized, uint256 pot, uint256 totalEntrants, uint64 lastOracleUpdate)',
   'function getEntryFee() external view returns (uint256)',
@@ -75,16 +75,76 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
       const entryFee = BigInt(2000000) // $2 USDC (6 decimals)
       
       console.log('Checking USDC balance and allowance...')
+      console.log('USDC Contract Address:', usdcAddress)
+      console.log('User Wallet Address:', this.walletClient.account.address)
+      
+      // First, validate the USDC contract exists and has the right functions
+      try {
+        const usdcSymbol = await this.publicClient.readContract({
+          address: usdcAddress,
+          abi: USDC_ABI,
+          functionName: 'symbol',
+          args: [],
+        }) as string
+        
+        console.log('USDC Contract Symbol:', usdcSymbol)
+        
+        if (usdcSymbol !== 'USDC') {
+          throw new Error(`Contract at ${usdcAddress} is not USDC. Got symbol: ${usdcSymbol}`)
+        }
+      } catch (symbolError) {
+        console.error('Error reading USDC symbol:', symbolError)
+        throw new Error(`Failed to validate USDC contract at ${usdcAddress}. Please check if the contract address is correct and the contract is deployed.`)
+      }
       
       // Check USDC balance
-      const usdcBalance = await this.publicClient.readContract({
-        address: usdcAddress,
-        abi: USDC_ABI,
-        functionName: 'balanceOf',
-        args: [this.walletClient.account.address],
-      }) as bigint
-      
-      console.log('USDC Balance:', usdcBalance.toString(), 'wei (', Number(usdcBalance) / 1e6, 'USDC)')
+      let usdcBalance: bigint
+      try {
+        usdcBalance = await this.publicClient.readContract({
+          address: usdcAddress,
+          abi: USDC_ABI,
+          functionName: 'balanceOf',
+          args: [this.walletClient.account.address],
+        }) as bigint
+        
+        console.log('USDC Balance:', usdcBalance.toString(), 'wei (', Number(usdcBalance) / 1e6, 'USDC)')
+      } catch (balanceError) {
+        console.error('Error reading USDC balance:', balanceError)
+        console.log('USDC contract call failed, falling back to ETH entry fee...')
+        
+        // Fallback to ETH entry fee
+        const ethEntryFee = BigInt(2000000000000000) // 0.002 ETH in wei
+        console.log('Using ETH entry fee:', ethEntryFee.toString(), 'wei (0.002 ETH)')
+        
+        // Call the smart contract's enter function with ETH value
+        console.log('Submitting picks to NFL Pick Ems contract with ETH...')
+        
+        try {
+          const { request } = await this.publicClient.simulateContract({
+            address: CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`,
+            abi: NFL_PICK_EMS_ABI,
+            functionName: 'enter',
+            args: [week, picksBitmask],
+            account: this.walletClient.account.address,
+            value: ethEntryFee,
+          })
+
+          console.log('Contract simulation successful, submitting transaction...')
+          const hash = await this.walletClient.writeContract(request)
+          
+          console.log('Transaction submitted successfully:', hash)
+          
+          // Wait for transaction to be mined
+          console.log('Waiting for transaction to be mined...')
+          const receipt = await this.publicClient.waitForTransactionReceipt({ hash })
+          console.log('Transaction mined successfully:', receipt)
+          
+          return { success: true, hash }
+        } catch (contractError) {
+          console.error('Error in contract call with ETH:', contractError)
+          throw new Error(`Failed to submit picks with ETH fallback: ${contractError instanceof Error ? contractError.message : 'Unknown error'}`)
+        }
+      }
       
       if (usdcBalance < entryFee) {
         console.log('Insufficient USDC balance, attempting to mint tokens...')
@@ -304,6 +364,48 @@ export function getNFLPickEmsContract(walletClient: any): NFLPickEmsContract {
   // Fallback to mock if no wallet client
   console.warn('No wallet client available, using mock contract')
   return new MockNFLPickEmsContract()
+}
+
+// Test function to verify contract connectivity
+export async function testContractConnectivity() {
+  try {
+    console.log('Testing contract connectivity...')
+    
+    // Test USDC contract
+    const usdcAddress = CONTRACT_ADDRESSES.MOCK_USDC as `0x${string}`
+    console.log('Testing USDC contract at:', usdcAddress)
+    
+    try {
+      const symbol = await publicClient.readContract({
+        address: usdcAddress,
+        abi: USDC_ABI,
+        functionName: 'symbol',
+        args: [],
+      })
+      console.log('✅ USDC contract accessible, symbol:', symbol)
+    } catch (error) {
+      console.error('❌ USDC contract error:', error)
+    }
+    
+    // Test NFL Pick Ems contract
+    const nflAddress = CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`
+    console.log('Testing NFL Pick Ems contract at:', nflAddress)
+    
+    try {
+      const entryFee = await publicClient.readContract({
+        address: nflAddress,
+        abi: NFL_PICK_EMS_ABI,
+        functionName: 'getEntryFee',
+        args: [],
+      })
+      console.log('✅ NFL Pick Ems contract accessible, entry fee:', entryFee.toString())
+    } catch (error) {
+      console.error('❌ NFL Pick Ems contract error:', error)
+    }
+    
+  } catch (error) {
+    console.error('Contract connectivity test failed:', error)
+  }
 }
 
 // Keep mock implementation for fallback
