@@ -76,11 +76,31 @@ export default function HomePage() {
       return
     }
     
-    // TODO: Submit picks to smart contract
-    console.log('Submitting picks:', selectedPicks)
+    if (!isConnected) {
+      alert('Please connect your wallet first')
+      return
+    }
     
-    // Show success message
-    alert('Picks submitted successfully! Good luck!')
+    try {
+      // TODO: Integrate with smart contract
+      // For now, just show what would be submitted
+      console.log('Submitting picks:', selectedPicks)
+      
+      // Convert picks to the format needed for smart contract
+      const picksForContract = selectedPicks.map(pick => ({
+        gameId: pick.gameId,
+        selectedTeam: pick.selectedTeam
+      }))
+      
+      console.log('Picks formatted for contract:', picksForContract)
+      
+      // Show success message (replace with actual contract call)
+      alert('Picks prepared for submission! Smart contract integration coming soon.')
+      
+    } catch (error) {
+      console.error('Error submitting picks:', error)
+      alert('Error submitting picks. Please try again.')
+    }
   }
 
   const handleShare = () => {

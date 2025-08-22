@@ -132,7 +132,7 @@ export default function FarcasterIntegration() {
   }
 
   return (
-    <div className="fixed top-4 right-4 z-50">
+    <div className="fixed top-4 left-4 z-40">
       {isFarcaster && (
         <div className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm mb-2 flex items-center gap-2">
           <div className="w-2 h-2 bg-green-400 rounded-full"></div>
