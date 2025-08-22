@@ -158,6 +158,8 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
                 {/* Debug info */}
                 <div className="text-xs text-gray-400 mb-2 p-2 bg-gray-800/50 rounded">
                   Debug: {connectors.length} connectors available
+                  <br />
+                  {connectors.map((c, i) => `${c.name}: ${c.ready ? '✅' : '❌'}`).join(' | ')}
                 </div>
                 
                 {connectors.map((connector, index) => {
@@ -187,23 +189,27 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
                       whileHover={{ scale: isReady ? 1.02 : 1 }}
                       whileTap={{ scale: isReady ? 0.98 : 1 }}
                       onClick={() => {
+                        console.log('Wallet clicked:', connector.name, 'Ready:', isReady)
+                        
                         if (isReady) {
+                          console.log('Connecting to wallet:', connector.name)
                           connect({ connector })
                           setShowWalletSelector(false)
                         } else if (isFarcaster) {
+                          console.log('Farcaster wallet clicked outside Farcaster')
                           alert('Please open this app in Farcaster for the best experience!')
                         } else {
+                          console.log('Opening wallet installation guide for:', connector.name)
                           // Open wallet installation guide
                           window.open('https://ethereum.org/en/wallets/find-wallet/', '_blank')
                         }
                       }}
-                      disabled={!isReady}
-                      className={`w-full p-4 rounded-xl border-2 transition-all duration-300 flex items-center space-x-3 ${
+                      className={`w-full p-4 rounded-xl border-2 transition-all duration-300 flex items-center space-x-3 cursor-pointer ${
                         isReady
                           ? isFarcaster
-                            ? 'border-blue-500 bg-gradient-to-r from-blue-500/30 to-blue-600/30 text-blue-200 hover:bg-blue-500/40 cursor-pointer shadow-lg'
-                            : 'border-nfl-gold bg-gradient-to-r from-nfl-gold/30 to-nfl-red/30 text-white hover:bg-nfl-gold/40 cursor-pointer shadow-lg'
-                          : 'border-gray-600 bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 cursor-pointer'
+                            ? 'border-blue-500 bg-gradient-to-r from-blue-500/30 to-blue-600/30 text-blue-200 hover:bg-blue-500/40 shadow-lg'
+                            : 'border-nfl-gold bg-gradient-to-r from-nfl-gold/30 to-nfl-red/30 text-white hover:bg-nfl-gold/40 shadow-lg'
+                          : 'border-gray-600 bg-gray-700/50 text-gray-300 hover:bg-gray-600/50 hover:bg-gray-600/60'
                       }`}
                     >
                       <div className="w-8 h-8 flex items-center justify-center">
@@ -229,6 +235,17 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
               </div>
 
               <div className="mt-6 text-center">
+                {/* Test button to verify clicks work */}
+                <button
+                  onClick={() => {
+                    console.log('Test button clicked!')
+                    alert('Test button works! Modal is functional.')
+                  }}
+                  className="mb-3 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm"
+                >
+                  🧪 Test Click (Debug)
+                </button>
+                
                 <p className="text-white/60 text-sm mb-3">
                   {typeof window !== 'undefined' && window.location.hostname.includes('farcaster') 
                     ? 'Farcaster Mini App recommended for best experience'
