@@ -52,14 +52,15 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
       // Convert picks array to bitmask format
       const picksBitmask = this.convertPicksToBitmask(picks)
       
-      // Convert entry fee to wei (assuming $2 USDC = 0.002 ETH for now)
-      const entryFeeWei = BigInt(2000000000000000) // 0.002 ETH in wei
-
+      // Get the actual entry fee from the smart contract
+      const actualEntryFee = await this.getEntryFee()
+      
       console.log('Submitting picks with real contract call:', {
         week,
         picks,
         picksBitmask: picksBitmask.toString(),
-        entryFeeWei: entryFeeWei.toString()
+        actualEntryFee: actualEntryFee.toString(),
+        entryFeeFromContract: actualEntryFee.toString()
       })
 
       // Call the smart contract
@@ -68,9 +69,23 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
         abi: NFL_PICK_EMS_ABI,
         functionName: 'submitPicks',
         args: [week, picksBitmask],
-        value: entryFeeWei,
+        value: actualEntryFee,
         account: this.walletClient.account.address,
       })
+
+      // Estimate gas before submitting
+      const gasEstimate = await this.publicClient.estimateContractGas({
+        address: CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`,
+        abi: NFL_PICK_EMS_ABI,
+        functionName: 'submitPicks',
+        args: [week, picksBitmask],
+        value: actualEntryFee,
+        account: this.walletClient.account.address,
+      })
+
+      console.log('Gas estimate:', gasEstimate.toString())
+      console.log('Entry fee (wei):', actualEntryFee.toString())
+      console.log('Total cost estimate:', (gasEstimate * BigInt(20000000000)).toString(), 'wei') // Assuming 20 gwei gas price
 
       const hash = await this.walletClient.writeContract(request)
       
@@ -193,6 +208,6 @@ export class MockNFLPickEmsContract implements NFLPickEmsContract {
 
   async getEntryFee() {
     console.log('Mock: Would get entry fee')
-    return BigInt(2000000000000000) // 0.002 ETH in wei
+    return BigInt(2000000) // $2 USDC (6 decimals) - much more reasonable
   }
 }
