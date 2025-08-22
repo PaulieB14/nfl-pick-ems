@@ -59,7 +59,7 @@ function WalletDebug() {
 
   return (
     <div className="fixed bottom-4 right-4 bg-black/80 text-white p-4 rounded-lg max-w-md text-xs z-50">
-      <h3 className="font-bold mb-2>Page Debug Info</h3>
+      <h3 className="font-bold mb-2">Page Debug Info</h3>
       <div className="space-y-1">
         <div><strong>Farcaster:</strong> {debugInfo.farcasterDetection ? '✅' : '❌'}</div>
         <div><strong>Ethereum:</strong> {debugInfo.ethereum}</div>
