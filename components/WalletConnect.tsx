@@ -11,8 +11,9 @@ interface WalletConnectProps {
 
 export default function WalletConnect({ onConnect }: WalletConnectProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [showWalletSelector, setShowWalletSelector] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  
+
   const { isConnected, address } = useAccount()
   const { connect, connectors, isPending } = useConnect()
   const { disconnect } = useDisconnect()
@@ -36,8 +37,19 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
       }
     }
 
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowWalletSelector(false)
+      }
+    }
+
     document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleEscape)
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleEscape)
+    }
   }, [])
 
   const handleConnect = async () => {
@@ -107,16 +119,95 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
 
   if (!isConnected) {
     return (
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={handleConnect}
-        disabled={isPending}
-        className="bg-nfl-gold text-nfl-red px-6 py-2 rounded-full font-semibold hover:bg-nfl-gold/90 transition-colors flex items-center space-x-2 disabled:opacity-50"
-      >
-        <Wallet className="w-5 h-5" />
-        <span>{isPending ? 'Connecting...' : 'Connect Wallet'}</span>
-      </motion.button>
+      <>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowWalletSelector(true)}
+          disabled={isPending}
+          className="bg-nfl-gold text-nfl-red px-6 py-2 rounded-full font-semibold hover:bg-nfl-gold/90 transition-colors flex items-center space-x-2 disabled:opacity-50"
+        >
+          <Wallet className="w-5 h-5" />
+          <span>{isPending ? 'Connecting...' : 'Connect Wallet'}</span>
+        </motion.button>
+
+        {/* Wallet Selector Modal */}
+        {showWalletSelector && (
+          <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center"
+            onClick={() => setShowWalletSelector(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl max-w-md w-full mx-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-white">Choose Your Wallet</h3>
+                <button
+                  onClick={() => setShowWalletSelector(false)}
+                  className="text-white/70 hover:text-white transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                {connectors.map((connector) => {
+                  const isReady = connector.ready
+                  const isFarcaster = connector.name === 'Farcaster Mini App'
+                  
+                  return (
+                    <motion.button
+                      key={connector.id}
+                      whileHover={{ scale: isReady ? 1.02 : 1 }}
+                      whileTap={{ scale: isReady ? 0.98 : 1 }}
+                      onClick={() => {
+                        if (isReady) {
+                          connect({ connector })
+                          setShowWalletSelector(false)
+                        }
+                      }}
+                      disabled={!isReady}
+                      className={`w-full p-4 rounded-xl border-2 transition-all duration-300 flex items-center space-x-3 ${
+                        isReady
+                          ? isFarcaster
+                            ? 'border-blue-500 bg-gradient-to-r from-blue-500/20 to-blue-600/20 text-blue-300 hover:bg-blue-500/30 cursor-pointer'
+                            : 'border-nfl-gold bg-gradient-to-r from-nfl-gold/20 to-nfl-red/20 text-white hover:bg-nfl-gold/30 cursor-pointer'
+                          : 'border-white/20 bg-white/5 text-white/50 cursor-not-allowed'
+                      }`}
+                    >
+                      <div className="w-8 h-8 flex items-center justify-center">
+                        {isFarcaster ? '📱' : '🔗'}
+                      </div>
+                      <div className="flex-1 text-left">
+                        <div className="font-semibold">{connector.name}</div>
+                        <div className="text-sm opacity-70">
+                          {isReady ? 'Ready to connect' : 'Not available'}
+                        </div>
+                      </div>
+                      {isReady && (
+                        <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                      )}
+                    </motion.button>
+                  )
+                })}
+              </div>
+
+              <div className="mt-6 text-center">
+                <p className="text-white/60 text-sm">
+                  {typeof window !== 'undefined' && window.location.hostname.includes('farcaster') 
+                    ? 'Farcaster Mini App recommended for best experience'
+                    : 'Install MetaMask or another wallet extension for browser use'
+                  }
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </>
     )
   }
 
