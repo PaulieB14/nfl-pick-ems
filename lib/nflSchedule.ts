@@ -937,16 +937,155 @@ export const nflSchedule2025: NFLGame[] = [
     home: "New York Jets",
     away: "Buffalo Bills",
     network: "ESPN/ABC"
+  },
+
+  // WEEK 7 - Real Schedule Data
+  {
+    id: "week7-thu",
+    week: 7,
+    date: "Oct 16, 2025",
+    time: "8:15 PM ET",
+    home: "Cincinnati Bengals",
+    away: "Pittsburgh Steelers",
+    network: "Prime Video"
+  },
+  {
+    id: "week7-sun1",
+    week: 7,
+    date: "Oct 19, 2025",
+    time: "9:30 AM ET",
+    home: "Jacksonville Jaguars",
+    away: "Los Angeles Rams",
+    network: "NFLN",
+    isInternational: true,
+    location: "London"
+  },
+  {
+    id: "week7-sun2",
+    week: 7,
+    date: "Oct 19, 2025",
+    time: "1:00 PM ET",
+    home: "Chicago Bears",
+    away: "New Orleans Saints",
+    network: "FOX"
+  },
+  {
+    id: "week7-sun3",
+    week: 7,
+    date: "Oct 19, 2025",
+    time: "1:00 PM ET",
+    home: "Cleveland Browns",
+    away: "Miami Dolphins",
+    network: "CBS"
+  },
+  {
+    id: "week7-sun4",
+    week: 7,
+    date: "Oct 19, 2025",
+    time: "1:00 PM ET",
+    home: "Kansas City Chiefs",
+    away: "Las Vegas Raiders",
+    network: "CBS"
+  },
+  {
+    id: "week7-sun5",
+    week: 7,
+    date: "Oct 19, 2025",
+    time: "1:00 PM ET",
+    home: "Minnesota Vikings",
+    away: "Philadelphia Eagles",
+    network: "FOX"
+  },
+  {
+    id: "week7-sun6",
+    week: 7,
+    date: "Oct 19, 2025",
+    time: "1:00 PM ET",
+    home: "New York Jets",
+    away: "Carolina Panthers",
+    network: "FOX"
+  },
+  {
+    id: "week7-sun7",
+    week: 7,
+    date: "Oct 19, 2025",
+    time: "1:00 PM ET",
+    home: "Tennessee Titans",
+    away: "New England Patriots",
+    network: "CBS"
+  },
+  {
+    id: "week7-sun8",
+    week: 7,
+    date: "Oct 19, 2025",
+    time: "4:05 PM ET",
+    home: "Denver Broncos",
+    away: "New York Giants",
+    network: "CBS"
+  },
+  {
+    id: "week7-sun9",
+    week: 7,
+    date: "Oct 19, 2025",
+    time: "4:05 PM ET",
+    home: "Los Angeles Chargers",
+    away: "Arizona Cardinals",
+    network: "CBS"
+  },
+  {
+    id: "week7-sun10",
+    week: 7,
+    date: "Oct 19, 2025",
+    time: "4:25 PM ET",
+    home: "Dallas Cowboys",
+    away: "Green Bay Packers",
+    network: "FOX"
+  },
+  {
+    id: "week7-sun11",
+    week: 7,
+    date: "Oct 19, 2025",
+    time: "4:25 PM ET",
+    home: "San Francisco 49ers",
+    away: "Washington Commanders",
+    network: "FOX"
+  },
+  {
+    id: "week7-sun12",
+    week: 7,
+    date: "Oct 19, 2025",
+    time: "8:20 PM ET",
+    home: "Atlanta Falcons",
+    away: "Seattle Seahawks",
+    network: "NBC"
+  },
+  {
+    id: "week7-mon1",
+    week: 7,
+    date: "Oct 20, 2025",
+    time: "7:00 PM ET",
+    home: "Detroit Lions",
+    away: "Tampa Bay Buccaneers",
+    network: "ESPN/ABC"
+  },
+  {
+    id: "week7-mon2",
+    week: 7,
+    date: "Oct 20, 2025",
+    time: "10:00 PM ET",
+    home: "Seattle Seahawks",
+    away: "Houston Texans",
+    network: "ESPN+"
   }
 ]
 
 // Return games for any week (1-18)
 export const getGamesByWeek = (week: number): NFLGame[] => {
-  if (week <= 6) {
+  if (week <= 7) {
     return nflSchedule2025.filter(game => game.week === week)
   }
   
-  // For weeks 7-18, return placeholder games
+  // For weeks 8-18, return placeholder games
   const placeholderGames: NFLGame[] = []
   const gameCount = week === 5 ? 14 : week === 6 || week === 7 ? 15 : week === 8 ? 13 : week === 9 || week === 10 || week === 14 ? 14 : week === 11 || week === 12 || week === 15 ? 15 : 16;
   
