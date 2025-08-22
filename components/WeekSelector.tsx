@@ -46,16 +46,35 @@ export default function WeekSelector({ currentWeek, onWeekChange }: WeekSelector
         </button>
       </div>
       
-      <div className="grid grid-cols-9 gap-2">
-        {weeks.map((week) => (
+      <div className="grid grid-cols-6 gap-3 mb-4">
+        {weeks.slice(0, 12).map((week) => (
           <motion.button
             key={week}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => onWeekChange(week)}
-            className={`p-2 rounded-lg text-sm font-medium transition-all ${
+            className={`p-3 rounded-lg text-sm font-bold transition-all ${
               week === currentWeek
-                ? 'bg-nfl-gold text-nfl-red'
+                ? 'bg-nfl-gold text-nfl-red shadow-lg'
+                : 'bg-white/10 text-white hover:bg-white/20'
+            }`}
+            title={`Week ${week}`}
+          >
+            {week}
+          </motion.button>
+        ))}
+      </div>
+      
+      <div className="grid grid-cols-6 gap-3">
+        {weeks.slice(12).map((week) => (
+          <motion.button
+            key={week}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => onWeekChange(week)}
+            className={`p-3 rounded-lg text-sm font-bold transition-all ${
+              week === currentWeek
+                ? 'bg-nfl-gold text-nfl-red shadow-lg'
                 : 'bg-white/10 text-white hover:bg-white/20'
             }`}
             title={`Week ${week}`}
