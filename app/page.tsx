@@ -273,6 +273,13 @@ export default function HomePage() {
                           <span className="text-lg">🔧</span>
                           <span className="font-semibold">Debug Contract Connectivity</span>
                         </div>
+                        
+                        {/* Wallet Status Display */}
+                        <div className="text-xs text-yellow-200 bg-yellow-500/20 px-2 py-1 rounded">
+                          <div>Wallet: {walletClient ? '✅ Connected' : '❌ Not Available'}</div>
+                          <div>Account: {walletClient?.account?.address ? `${walletClient.account.address.slice(0, 6)}...${walletClient.account.address.slice(-4)}` : 'None'}</div>
+                          <div>Chain: {walletClient?.chain?.name || 'Unknown'}</div>
+                        </div>
                         <div className="flex space-x-2">
                           <button
                             onClick={() => testContractConnectivity()}
@@ -284,6 +291,18 @@ export default function HomePage() {
                             onClick={async () => {
                               try {
                                 console.log('🚀 Testing ETH submission directly...')
+                                console.log('🔍 Wallet Client Status:', {
+                                  walletClient: !!walletClient,
+                                  walletClientType: walletClient ? typeof walletClient : 'undefined',
+                                  account: walletClient?.account,
+                                  chain: walletClient?.chain
+                                })
+                                
+                                if (!walletClient) {
+                                  alert('❌ No wallet client available. Please connect your wallet first.')
+                                  return
+                                }
+                                
                                 const contract = getNFLPickEmsContract(walletClient)
                                 const result = await contract.submitPicks(1, ['home', 'away', 'home', 'away', 'home', 'away', 'home', 'away', 'home', 'away'])
                                 console.log('✅ ETH submission result:', result)
