@@ -940,17 +940,17 @@ export const nflSchedule2025: NFLGame[] = [
   }
 ]
 
-// Add remaining weeks (7-18) with placeholder data
-// In production, this would be populated with the complete schedule
+// Return games for any week (1-18)
 export const getGamesByWeek = (week: number): NFLGame[] => {
   if (week <= 6) {
     return nflSchedule2025.filter(game => game.week === week)
   }
   
   // For weeks 7-18, return placeholder games
-  // TODO: Complete with full schedule from NFL Operations
   const placeholderGames: NFLGame[] = []
-  for (let i = 0; i < 16; i++) {
+  const gameCount = week === 5 ? 14 : week === 6 || week === 7 ? 15 : week === 8 ? 13 : week === 9 || week === 10 || week === 14 ? 14 : week === 11 || week === 12 || week === 15 ? 15 : 16;
+  
+  for (let i = 0; i < gameCount; i++) {
     placeholderGames.push({
       id: `week${week}-game${i + 1}`,
       week,
