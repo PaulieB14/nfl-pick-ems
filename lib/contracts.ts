@@ -4,15 +4,25 @@ import { base, baseSepolia } from 'wagmi/chains'
 // Contract addresses (updated with your deployed contract)
 export const CONTRACT_ADDRESSES = {
   NFL_PICK_EMS: '0x0b07572EcDcb7709b48Ef1DB11a07d9c263C2e06', // Your deployed contract address
+  MOCK_USDC: '0xab83D7Da5C2752Bf7AcB5804bF81ac22C7A9034B', // Your deployed MockUSDC address
   BASE_CHAIN_ID: 8453,
   BASE_SEPOLIA_CHAIN_ID: 84532
 }
 
+// USDC Token ABI (ERC20)
+export const USDC_ABI = parseAbi([
+  'function approve(address spender, uint256 amount) external returns (bool)',
+  'function allowance(address owner, address spender) external view returns (uint256)',
+  'function balanceOf(address account) external view returns (uint256)',
+  'function decimals() external view returns (uint8)',
+  'function symbol() external view returns (string)'
+])
+
 // Contract ABIs - these are the actual functions from your smart contract
 export const NFL_PICK_EMS_ABI = parseAbi([
-  'function submitPicks(uint8 week, uint256 picks) external payable',
-  'function getPlayerPicks(address player, uint8 week) external view returns (uint256)',
-  'function getWeekStatus(uint8 week) external view returns (uint8)',
+  'function enter(uint8 week, uint256 mask) external',
+  'function getPlayerPicks(uint8 week, address player) external view returns (uint256 playerPicksMask, uint256 playerCorrectPicks, bool playerIsWinner, bool playerClaimed)',
+  'function getWeekInfo(uint8 week) external view returns (uint8 gameCount, uint64 lockTime, bool resultsSet, bool finalized, uint256 pot, uint256 totalEntrants, uint64 lastOracleUpdate)',
   'function getEntryFee() external view returns (uint256)',
   'function getCurrentPot(uint8 week) external view returns (uint256)',
   'function getTotalPlayers(uint8 week) external view returns (uint256)'
@@ -26,8 +36,8 @@ export const publicClient = createPublicClient({
 
 // Contract interface for now
 export interface NFLPickEmsContract {
-  submitPicks(week: number, picks: string[], entryFee: string): Promise<{ success: boolean; hash: string }>
-  getPlayerPicks(playerAddress: string, week: number): Promise<bigint>
+  submitPicks(week: number, picks: string[]): Promise<{ success: boolean; hash: string }>
+  getPlayerPicks(playerAddress: string, week: number): Promise<{ picksMask: bigint; correctPicks: bigint; isWinner: boolean; claimed: boolean }>
   getCurrentPot(week: number): Promise<bigint>
   getTotalPlayers(week: number): Promise<bigint>
   getEntryFee(): Promise<bigint>
@@ -43,7 +53,7 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
     this.publicClient = publicClient
   }
 
-  async submitPicks(week: number, picks: string[], entryFee: string): Promise<{ success: boolean; hash: string }> {
+  async submitPicks(week: number, picks: string[]): Promise<{ success: boolean; hash: string }> {
     try {
       if (!this.walletClient) {
         throw new Error('Wallet client not available')
@@ -52,40 +62,48 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
       // Convert picks array to bitmask format
       const picksBitmask = this.convertPicksToBitmask(picks)
       
-      // Get the actual entry fee from the smart contract
-      const actualEntryFee = await this.getEntryFee()
-      
-      console.log('Submitting picks with real contract call:', {
+      console.log('Submitting picks with USDC entry fee:', {
         week,
         picks,
         picksBitmask: picksBitmask.toString(),
-        actualEntryFee: actualEntryFee.toString(),
-        entryFeeFromContract: actualEntryFee.toString()
+        entryFeeInUSDC: '$2 USDC'
       })
 
-      // Call the smart contract
+      // First, approve USDC spending
+      const usdcAddress = CONTRACT_ADDRESSES.MOCK_USDC as `0x${string}`
+      const entryFee = BigInt(2000000) // $2 USDC (6 decimals)
+      
+      // Check current allowance
+      const currentAllowance = await this.publicClient.readContract({
+        address: usdcAddress,
+        abi: USDC_ABI,
+        functionName: 'allowance',
+        args: [this.walletClient.account.address, CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`],
+      }) as bigint
+
+      // If allowance is insufficient, approve
+      if (currentAllowance < entryFee) {
+        console.log('Approving USDC spending...')
+        const approveRequest = await this.publicClient.simulateContract({
+          address: usdcAddress,
+          abi: USDC_ABI,
+          functionName: 'approve',
+          args: [CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`, entryFee],
+          account: this.walletClient.account.address,
+        })
+
+        await this.walletClient.writeContract(approveRequest.request)
+        console.log('USDC approval successful')
+      }
+
+      // Now call the smart contract's enter function
       const { request } = await this.publicClient.simulateContract({
         address: CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`,
         abi: NFL_PICK_EMS_ABI,
-        functionName: 'submitPicks',
+        functionName: 'enter',
         args: [week, picksBitmask],
-        value: actualEntryFee,
         account: this.walletClient.account.address,
       })
-
-      // Estimate gas before submitting
-      const gasEstimate = await this.publicClient.estimateContractGas({
-        address: CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`,
-        abi: NFL_PICK_EMS_ABI,
-        functionName: 'submitPicks',
-        args: [week, picksBitmask],
-        value: actualEntryFee,
-        account: this.walletClient.account.address,
-      })
-
-      console.log('Gas estimate:', gasEstimate.toString())
-      console.log('Entry fee (wei):', actualEntryFee.toString())
-      console.log('Total cost estimate:', (gasEstimate * BigInt(20000000000)).toString(), 'wei') // Assuming 20 gwei gas price
 
       const hash = await this.walletClient.writeContract(request)
       
@@ -112,18 +130,29 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
     return bitmask
   }
 
-  async getPlayerPicks(playerAddress: string, week: number): Promise<bigint> {
+  async getPlayerPicks(playerAddress: string, week: number): Promise<{ picksMask: bigint; correctPicks: bigint; isWinner: boolean; claimed: boolean }> {
     try {
       const result = await this.publicClient.readContract({
         address: CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`,
         abi: NFL_PICK_EMS_ABI,
         functionName: 'getPlayerPicks',
-        args: [playerAddress, week],
-      })
-      return result as bigint
+        args: [week, playerAddress],
+      }) as [bigint, bigint, boolean, boolean]
+      
+      return {
+        picksMask: result[0],
+        correctPicks: result[1],
+        isWinner: result[2],
+        claimed: result[3]
+      }
     } catch (error) {
       console.error('Error getting player picks:', error)
-      return BigInt(0)
+      return {
+        picksMask: BigInt(0),
+        correctPicks: BigInt(0),
+        isWinner: false,
+        claimed: false
+      }
     }
   }
 
@@ -132,10 +161,11 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
       const result = await this.publicClient.readContract({
         address: CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`,
         abi: NFL_PICK_EMS_ABI,
-        functionName: 'getCurrentPot',
+        functionName: 'getWeekInfo',
         args: [week],
-      })
-      return result as bigint
+      }) as [bigint, bigint, boolean, boolean, bigint, bigint, bigint]
+      
+      return result[4] // pot is the 5th element
     } catch (error) {
       console.error('Error getting current pot:', error)
       return BigInt(0)
@@ -147,10 +177,11 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
       const result = await this.publicClient.readContract({
         address: CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`,
         abi: NFL_PICK_EMS_ABI,
-        functionName: 'getTotalPlayers',
+        functionName: 'getWeekInfo',
         args: [week],
-      })
-      return result as bigint
+      }) as [bigint, bigint, boolean, boolean, bigint, bigint, bigint]
+      
+      return result[5] // totalEntrants is the 6th element
     } catch (error) {
       console.error('Error getting total players:', error)
       return BigInt(0)
@@ -168,7 +199,7 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
       return result as bigint
     } catch (error) {
       console.error('Error getting entry fee:', error)
-      return BigInt(2000000000000000) // 0.002 ETH in wei as fallback
+      return BigInt(2000000) // $2 USDC (6 decimals) as fallback
     }
   }
 }
@@ -186,14 +217,19 @@ export function getNFLPickEmsContract(walletClient: any): NFLPickEmsContract {
 
 // Keep mock implementation for fallback
 export class MockNFLPickEmsContract implements NFLPickEmsContract {
-  async submitPicks(week: number, picks: string[], entryFee: string) {
-    console.log('Mock: Would submit picks:', { week, picks, entryFee })
+  async submitPicks(week: number, picks: string[]) {
+    console.log('Mock: Would submit picks:', { week, picks })
     return { success: true, hash: '0x...' }
   }
 
   async getPlayerPicks(playerAddress: string, week: number) {
     console.log('Mock: Would get player picks:', { playerAddress, week })
-    return BigInt(0)
+    return {
+      picksMask: BigInt(0),
+      correctPicks: BigInt(0),
+      isWinner: false,
+      claimed: false
+    }
   }
 
   async getCurrentPot(week: number) {
@@ -208,6 +244,6 @@ export class MockNFLPickEmsContract implements NFLPickEmsContract {
 
   async getEntryFee() {
     console.log('Mock: Would get entry fee')
-    return BigInt(2000000) // $2 USDC (6 decimals) - much more reasonable
+    return BigInt(2000000) // $2 USDC (6 decimals)
   }
 }

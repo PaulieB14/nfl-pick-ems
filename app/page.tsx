@@ -126,21 +126,21 @@ export default function HomePage() {
     try {
       const picksForContract = selectedPicks.map(pick => pick.selectedTeam)
       
-      console.log('Submitting picks to smart contract:', {
-        week: currentWeek,
-        picks: picksForContract,
-        entryFee: '$2 USDC'
-      })
+                    console.log('Submitting picks to smart contract:', {
+                week: currentWeek,
+                picks: picksForContract,
+                entryFee: '$2 USDC'
+              })
 
       // Get the real contract instance
       const contract = getNFLPickEmsContract(walletClient)
       
-      // Submit picks to the smart contract
-      const result = await contract.submitPicks(currentWeek, picksForContract, '$2 USDC')
+                    // Submit picks to the smart contract
+              const result = await contract.submitPicks(currentWeek, picksForContract)
       
       if (result.success) {
         setTransactionHash(result.hash)
-        alert(`🎉 Picks submitted successfully!\n\nTransaction Hash: ${result.hash}\n\nYour picks are now locked in for Week ${currentWeek}!`)
+        alert(`🎉 Picks submitted successfully!\n\nTransaction Hash: ${result.hash}\n\nEntry Fee: $2 USDC\nYour picks are now locked in for Week ${currentWeek}!`)
         
         // Clear picks after successful submission
         setSelectedPicks([])
@@ -284,7 +284,7 @@ export default function HomePage() {
               className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-xl p-4 border border-white/20 shadow-lg"
             >
               <DollarSign className="h-8 w-8 text-nfl-gold mx-auto mb-2" />
-              <div className="text-2xl font-bold text-white">$2 USDC</div>
+                                    <div className="text-2xl font-bold text-white">$2 USDC</div>
               <div className="text-white/70 text-sm">Entry Fee</div>
             </motion.div>
             
