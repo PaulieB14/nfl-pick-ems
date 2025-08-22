@@ -1,24 +1,37 @@
 {
-  "app": {
-    "id": "nfl-pick-ems",
-    "name": "NFL Pick Ems",
-    "description": "Weekly NFL football prediction game on Base chain. Pick 10 games and compete for the pot!",
-    "icon": "https://nfl-pick-em.netlify.app/icon-192.png",
-    "splash": "https://nfl-pick-em.netlify.app/splash.png",
-    "url": "https://nfl-pick-em.netlify.app",
-    "domain": "nfl-pick-em.netlify.app",
-    "category": "games",
-    "tags": ["nfl", "football", "predictions", "base", "gaming"]
-  },
-  "permissions": [
-    "ethereum",
-    "notifications"
-  ],
-  "chains": [
-    {
-      "id": "base",
-      "name": "Base",
-      "rpc": "https://mainnet.base.org"
-    }
-  ]
+  "miniapp": {
+    "version": "1",
+    "name": "NFL Pick 'ems",
+    "iconUrl": "https://nfl-pick-em.netlify.app/icon-1024.png",
+    "homeUrl": "https://nfl-pick-em.netlify.app/",
+    "splashImageUrl": "https://nfl-pick-em.netlify.app/icon-200.png",
+    "splashBackgroundColor": "#1a365d",
+    "subtitle": "Pick NFL games, win prizes",
+    "description": "Make your picks for every NFL game and compete for prizes on Base network. Complete 2025 season schedule with real team matchups.",
+    "screenshotUrls": [
+      "https://nfl-pick-em.netlify.app/screenshot1.png",
+      "https://nfl-pick-em.netlify.app/screenshot2.png",
+      "https://nfl-pick-em.netlify.app/screenshot3.png"
+    ],
+    "primaryCategory": "games",
+    "tags": [
+      "nfl",
+      "football",
+      "picks",
+      "gambling",
+      "base"
+    ],
+    "heroImageUrl": "https://nfl-pick-em.netlify.app/og-image.png",
+    "tagline": "Pick NFL games, win prizes",
+    "ogTitle": "NFL Pick 'ems",
+    "ogDescription": "Make your picks for every NFL game and compete for prizes on Base network",
+    "ogImageUrl": "https://nfl-pick-em.netlify.app/og-image.png",
+    "requiredChains": [
+      "eip155:8453"
+    ],
+    "requiredCapabilities": [
+      "wallet.getEthereumProvider",
+      "actions.signIn"
+    ]
+  }
 }

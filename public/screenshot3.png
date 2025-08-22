@@ -1,0 +1,28 @@
+<svg width="1284" height="2778" viewBox="0 0 1284 2778" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a365d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d5a87;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1284" height="2778" fill="url(#bg3)"/>
+  <rect x="50" y="100" width="1184" height="200" rx="20" fill="#ffffff" opacity="0.1"/>
+  <text x="642" y="180" font-family="Arial, sans-serif" font-size="36" font-weight="bold" text-anchor="middle" fill="#ffffff">NFL Pick 'ems</text>
+  <text x="642" y="220" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" fill="#e2e8f0">Screenshot 3</text>
+  <rect x="50" y="350" width="1184" height="400" rx="20" fill="#ffffff" opacity="0.1"/>
+  <text x="642" y="450" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#ffffff">Week Selector</text>
+  <text x="642" y="490" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#e2e8f0">Choose from 18 weeks</text>
+  <text x="642" y="520" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#e2e8f0">Complete 2025 season</text>
+  <rect x="50" y="800" width="1184" height="600" rx="20" fill="#ffffff" opacity="0.1"/>
+  <text x="642" y="900" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#ffffff">Game Picks</text>
+  <text x="642" y="940" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#e2e8f0">Real NFL matchups</text>
+  <text x="642" y="970" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#e2e8f0">Pick winners for prizes</text>
+  <rect x="50" y="1450" width="1184" height="300" rx="20" fill="#ffffff" opacity="0.1"/>
+  <text x="642" y="1550" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#ffffff">Wallet Connection</text>
+  <text x="642" y="1590" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#e2e8f0">Connect to Base network</text>
+  <text x="642" y="1620" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#e2e8f0">Submit picks on-chain</text>
+  <rect x="50" y="1800" width="1184" height="200" rx="20" fill="#ffffff" opacity="0.1"/>
+  <text x="642" y="1900" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#ffffff">Leaderboard</text>
+  <text x="642" y="1940" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#e2e8f0">Compete for prizes</text>
+  <text x="642" y="1970" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#e2e8f0">Weekly and season winners</text>
+</svg>
