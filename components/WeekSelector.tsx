@@ -10,6 +10,9 @@ interface WeekSelectorProps {
 
 export default function WeekSelector({ currentWeek, onWeekChange }: WeekSelectorProps) {
   const weeks = Array.from({ length: 18 }, (_, i) => i + 1) // NFL regular season
+  
+  // Debug log
+  console.log('WeekSelector: Available weeks:', weeks)
 
   return (
     <motion.div 
@@ -55,6 +58,7 @@ export default function WeekSelector({ currentWeek, onWeekChange }: WeekSelector
                 ? 'bg-nfl-gold text-nfl-red'
                 : 'bg-white/10 text-white hover:bg-white/20'
             }`}
+            title={`Week ${week}`}
           >
             {week}
           </motion.button>
