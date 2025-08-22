@@ -180,7 +180,7 @@ npx hardhat run scripts/deploy.js --network base-mainnet
 4. Add tests if applicable
 5. Submit a pull request
 
-## �� License
+## License
 
 This project is licensed under the MIT License.
 
