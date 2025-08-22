@@ -48,7 +48,7 @@ function WalletDebug() {
         window.location.hostname.includes('farcaster') || 
         window.location.hostname.includes('warpcast')
       ),
-      ethereum: typeof window !== 'undefined' && window.ethereum ? 'Available' : 'Not Available'
+      ethereum: typeof window !== 'undefined' && (window as any).ethereum ? 'Available' : 'Not Available'
     }
     
     setDebugInfo(info)
