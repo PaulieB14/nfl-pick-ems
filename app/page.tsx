@@ -35,39 +35,7 @@ interface GamePick {
   selectedTeam: 'home' | 'away'
 }
 
-// Debug component for wallet issues
-function WalletDebug() {
-  const [debugInfo, setDebugInfo] = useState<any>({})
-  
-  useEffect(() => {
-    const info = {
-      timestamp: new Date().toISOString(),
-      userAgent: typeof window !== 'undefined' ? navigator.userAgent : 'SSR',
-      location: typeof window !== 'undefined' ? window.location.href : 'SSR',
-      farcasterDetection: typeof window !== 'undefined' && (
-        window.location.hostname.includes('farcaster') || 
-        window.location.hostname.includes('warpcast')
-      ),
-      ethereum: typeof window !== 'undefined' && (window as any).ethereum ? 'Available' : 'Not Available'
-    }
-    
-    setDebugInfo(info)
-    console.log('Page Debug Info:', info)
-  }, [])
 
-  if (!debugInfo.timestamp) return null
-
-  return (
-    <div className="fixed bottom-4 right-4 bg-black/80 text-white p-4 rounded-lg max-w-md text-xs z-50">
-      <h3 className="font-bold mb-2">Page Debug Info</h3>
-      <div className="space-y-1">
-        <div><strong>Farcaster:</strong> {debugInfo.farcasterDetection ? '✅' : '❌'}</div>
-        <div><strong>Ethereum:</strong> {debugInfo.ethereum}</div>
-        <div><strong>Location:</strong> {debugInfo.location}</div>
-      </div>
-    </div>
-  )
-}
 
 export default function HomePage() {
   const [currentWeek, setCurrentWeek] = useState(getCurrentWeek())
@@ -459,8 +427,7 @@ export default function HomePage() {
         week={currentWeek}
       />
       
-      {/* Debug component for wallet issues */}
-      <WalletDebug />
+      {/* Debug component removed - was too distracting */}
     </div>
     </>
   )

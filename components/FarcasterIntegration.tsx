@@ -11,10 +11,20 @@ export default function FarcasterIntegration() {
     const initializeFarcaster = async () => {
       try {
         // Check if we're running in a Farcaster Mini App environment
+        // Also check for Farcaster-specific URL patterns and user agents
         const isInFarcaster = typeof window !== 'undefined' && (
           window.location.hostname.includes('farcaster') || 
           window.location.hostname.includes('warpcast') ||
-          window.location.hostname.includes('nfl-pick-em.netlify.app')
+          window.location.hostname.includes('nfl-pick-em.netlify.app') ||
+          window.location.search.includes('farcaster') ||
+          window.location.search.includes('warpcast') ||
+          navigator.userAgent.includes('Farcaster') ||
+          navigator.userAgent.includes('Warpcast') ||
+          // Check if we're in an iframe (common for Mini Apps)
+          window.self !== window.top ||
+          // Check for Farcaster-specific environment variables
+          (window as any).__FARCASTER__ ||
+          (window as any).__WARPCAST__
         );
         
         setIsFarcaster(isInFarcaster);
@@ -132,7 +142,7 @@ export default function FarcasterIntegration() {
   }
 
   return (
-    <div className="fixed top-4 left-4 z-40">
+    <div className="fixed top-4 left-4 z-30">
       {isFarcaster && (
         <div className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm mb-2 flex items-center gap-2">
           <div className="w-2 h-2 bg-green-400 rounded-full"></div>
@@ -140,7 +150,7 @@ export default function FarcasterIntegration() {
         </div>
       )}
       
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-2">
         <button
           onClick={handleAddMiniApp}
           className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
