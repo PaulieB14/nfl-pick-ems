@@ -158,6 +158,23 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
                 {connectors.map((connector) => {
                   const isReady = Boolean(connector.ready)
                   const isFarcaster = connector.name === 'Farcaster Mini App'
+                  const isGeneric = connector.name === 'Injected'
+                  
+                  // Get helpful status message
+                  const getStatusMessage = () => {
+                    if (isReady) return 'Ready to connect'
+                    if (isFarcaster) return 'Only available in Farcaster'
+                    if (isGeneric) return 'Install any wallet extension'
+                    return 'Install wallet extension'
+                  }
+                  
+                  // Get helpful action message
+                  const getActionMessage = () => {
+                    if (isReady) return 'Click to connect'
+                    if (isFarcaster) return 'Open in Farcaster app'
+                    if (isGeneric) return 'Install MetaMask, Coinbase, etc.'
+                    return 'Install wallet extension first'
+                  }
                   
                   return (
                     <motion.button
@@ -168,6 +185,11 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
                         if (isReady) {
                           connect({ connector })
                           setShowWalletSelector(false)
+                        } else if (isFarcaster) {
+                          alert('Please open this app in Farcaster for the best experience!')
+                        } else {
+                          // Open wallet installation guide
+                          window.open('https://ethereum.org/en/wallets/find-wallet/', '_blank')
                         }
                       }}
                       disabled={!isReady}
@@ -176,7 +198,7 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
                           ? isFarcaster
                             ? 'border-blue-500 bg-gradient-to-r from-blue-500/20 to-blue-600/20 text-blue-300 hover:bg-blue-500/30 cursor-pointer'
                             : 'border-nfl-gold bg-gradient-to-r from-nfl-gold/20 to-nfl-red/20 text-white hover:bg-nfl-gold/30 cursor-pointer'
-                          : 'border-white/20 bg-white/5 text-white/50 cursor-not-allowed'
+                          : 'border-white/20 bg-white/5 text-white/50 hover:bg-white/10 cursor-pointer'
                       }`}
                     >
                       <div className="w-8 h-8 flex items-center justify-center">
@@ -185,24 +207,43 @@ export default function WalletConnect({ onConnect }: WalletConnectProps) {
                       <div className="flex-1 text-left">
                         <div className="font-semibold">{connector.name}</div>
                         <div className="text-sm opacity-70">
-                          {isReady ? 'Ready to connect' : 'Not available'}
+                          {getStatusMessage()}
+                        </div>
+                        <div className="text-xs opacity-50 mt-1">
+                          {getActionMessage()}
                         </div>
                       </div>
                       {isReady ? (
                         <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                      ) : null}
+                      ) : (
+                        <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                      )}
                     </motion.button>
                   )
                 })}
               </div>
 
               <div className="mt-6 text-center">
-                <p className="text-white/60 text-sm">
+                <p className="text-white/60 text-sm mb-3">
                   {typeof window !== 'undefined' && window.location.hostname.includes('farcaster') 
                     ? 'Farcaster Mini App recommended for best experience'
                     : 'Install MetaMask or another wallet extension for browser use'
                   }
                 </p>
+                
+                {typeof window !== 'undefined' && !window.location.hostname.includes('farcaster') && (
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => window.open('https://metamask.io/download/', '_blank')}
+                      className="text-nfl-gold hover:text-nfl-gold/80 text-sm underline"
+                    >
+                      Download MetaMask
+                    </button>
+                    <div className="text-white/40 text-xs">
+                      • Most popular wallet • Easy to use • Free
+                    </div>
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>
