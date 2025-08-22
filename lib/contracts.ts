@@ -15,7 +15,8 @@ export const USDC_ABI = parseAbi([
   'function allowance(address owner, address spender) external view returns (uint256)',
   'function balanceOf(address account) external view returns (uint256)',
   'function decimals() external view returns (uint8)',
-  'function symbol() external view returns (string)'
+  'function symbol() external view returns (string)',
+  'function mint(address to, uint256 amount) external'
 ])
 
 // Contract ABIs - these are the actual functions from your smart contract
@@ -69,9 +70,61 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
         entryFeeInUSDC: '$2 USDC'
       })
 
-      // First, approve USDC spending
+      // First, check USDC balance
       const usdcAddress = CONTRACT_ADDRESSES.MOCK_USDC as `0x${string}`
       const entryFee = BigInt(2000000) // $2 USDC (6 decimals)
+      
+      console.log('Checking USDC balance and allowance...')
+      
+      // Check USDC balance
+      const usdcBalance = await this.publicClient.readContract({
+        address: usdcAddress,
+        abi: USDC_ABI,
+        functionName: 'balanceOf',
+        args: [this.walletClient.account.address],
+      }) as bigint
+      
+      console.log('USDC Balance:', usdcBalance.toString(), 'wei (', Number(usdcBalance) / 1e6, 'USDC)')
+      
+      if (usdcBalance < entryFee) {
+        console.log('Insufficient USDC balance, attempting to mint tokens...')
+        
+        try {
+          // Try to mint some USDC (this will only work if the user is the contract owner)
+          const mintAmount = BigInt(10000000) // 10 USDC
+          const mintRequest = await this.publicClient.simulateContract({
+            address: usdcAddress,
+            abi: USDC_ABI,
+            functionName: 'mint',
+            args: [this.walletClient.account.address, mintAmount],
+            account: this.walletClient.account.address,
+          })
+          
+          const mintHash = await this.walletClient.writeContract(mintRequest.request)
+          console.log('Minting USDC tokens:', mintHash)
+          
+          // Wait for mint transaction to be mined
+          await this.publicClient.waitForTransactionReceipt({ hash: mintHash })
+          console.log('USDC minting successful')
+          
+          // Update balance
+          const newBalance = await this.publicClient.readContract({
+            address: usdcAddress,
+            abi: USDC_ABI,
+            functionName: 'balanceOf',
+            args: [this.walletClient.account.address],
+          }) as bigint
+          
+          console.log('New USDC Balance:', newBalance.toString(), 'wei (', Number(newBalance) / 1e6, 'USDC)')
+          
+          if (newBalance < entryFee) {
+            throw new Error(`Still insufficient USDC balance after minting. You have ${Number(newBalance) / 1e6} USDC, but need 2 USDC to enter.`)
+          }
+        } catch (mintError) {
+          console.error('Failed to mint USDC:', mintError)
+          throw new Error(`Insufficient USDC balance. You have ${Number(usdcBalance) / 1e6} USDC, but need 2 USDC to enter. Please contact the contract owner to get some MockUSDC tokens.`)
+        }
+      }
       
       // Check current allowance
       const currentAllowance = await this.publicClient.readContract({
@@ -80,6 +133,8 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
         functionName: 'allowance',
         args: [this.walletClient.account.address, CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`],
       }) as bigint
+
+      console.log('Current USDC Allowance:', currentAllowance.toString(), 'wei (', Number(currentAllowance) / 1e6, 'USDC)')
 
       // If allowance is insufficient, approve
       if (currentAllowance < entryFee) {
@@ -92,24 +147,60 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
           account: this.walletClient.account.address,
         })
 
-        await this.walletClient.writeContract(approveRequest.request)
-        console.log('USDC approval successful')
+        const approveHash = await this.walletClient.writeContract(approveRequest.request)
+        console.log('USDC approval transaction submitted:', approveHash)
+        
+        // Wait for approval to be mined
+        console.log('Waiting for approval transaction to be mined...')
+        await this.publicClient.waitForTransactionReceipt({ hash: approveHash })
+        console.log('USDC approval successful and mined')
+      } else {
+        console.log('USDC allowance already sufficient')
       }
 
       // Now call the smart contract's enter function
-      const { request } = await this.publicClient.simulateContract({
-        address: CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`,
-        abi: NFL_PICK_EMS_ABI,
-        functionName: 'enter',
-        args: [week, picksBitmask],
-        account: this.walletClient.account.address,
-      })
+      console.log('Submitting picks to NFL Pick Ems contract...')
+      
+      try {
+        const { request } = await this.publicClient.simulateContract({
+          address: CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`,
+          abi: NFL_PICK_EMS_ABI,
+          functionName: 'enter',
+          args: [week, picksBitmask],
+          account: this.walletClient.account.address,
+        })
 
-      const hash = await this.walletClient.writeContract(request)
-      
-      console.log('Transaction submitted successfully:', hash)
-      
-      return { success: true, hash }
+        console.log('Contract simulation successful, submitting transaction...')
+        const hash = await this.walletClient.writeContract(request)
+        
+        console.log('Transaction submitted successfully:', hash)
+        
+        // Wait for transaction to be mined
+        console.log('Waiting for transaction to be mined...')
+        const receipt = await this.publicClient.waitForTransactionReceipt({ hash })
+        console.log('Transaction mined successfully:', receipt)
+        
+        return { success: true, hash }
+      } catch (contractError) {
+        console.error('Error in contract call:', contractError)
+        
+        // Check if it's a specific contract error
+        if (contractError instanceof Error) {
+          if (contractError.message.includes('transferFrom failed')) {
+            throw new Error('USDC transfer failed. Please check your balance and try again.')
+          } else if (contractError.message.includes('already entered')) {
+            throw new Error('You have already submitted picks for this week.')
+          } else if (contractError.message.includes('entries closed')) {
+            throw new Error('Entries are closed for this week.')
+          } else if (contractError.message.includes('must pick exactly 10')) {
+            throw new Error('You must pick exactly 10 teams.')
+          } else {
+            throw new Error(`Contract error: ${contractError.message}`)
+          }
+        }
+        
+        throw contractError
+      }
     } catch (error) {
       console.error('Error submitting picks to contract:', error)
       throw error
