@@ -31,6 +31,7 @@ import { useGameStats } from '@/hooks/useGameStats'
 import { getNFLPickEmsContract } from '@/lib/contracts'
 import { useAccount, useSigner } from 'wagmi'
 import FarcasterEmbed from '@/components/FarcasterEmbed'
+import Head from 'next/head'
 
 interface GamePick {
   gameId: string
@@ -51,6 +52,16 @@ export default function HomePage() {
 
   const { data: signer } = useSigner()
   const { address } = useAccount()
+
+  // Page-specific Farcaster embeds for social sharing
+  const pageEmbeds = {
+    title: `Week ${currentWeek} NFL Picks - NFL Pick 'ems`,
+    description: `Make your picks for Week ${currentWeek} NFL games! Pick 10 teams to win and split the pot. Current pot: ${gameStats.currentPot} ETH`,
+    image: `https://nfl-pick-em.netlify.app/icon-1024.png`,
+    button: `🏈 Pick Week ${currentWeek}`,
+    action: 'post',
+    inputText: `I'm making my Week ${currentWeek} NFL picks! 🏈`
+  }
 
   const currentWeekGames = getGamesByWeek(currentWeek)
   const weekStatus = getWeekStatus(currentWeek)
@@ -167,7 +178,7 @@ export default function HomePage() {
   }
 
   const isScheduleComplete = currentWeek <= 18
-  const canSubmit = selectedPicks.length === 10 && isConnected && weekStatus !== 'completed' && isScheduleComplete
+  const canSubmit = selectedPicks.length === 10 && isConnected && weekStatus !== 'completed' && isScheduleComplete && signer;
   
   // Debug logging
   console.log('Submit Debug:', {
@@ -181,10 +192,12 @@ export default function HomePage() {
   return (
     <>
       <FarcasterEmbed 
-        week={currentWeek}
-        picksCount={selectedPicks.length}
-        totalGames={10}
-        isConnected={isConnected}
+        title={pageEmbeds.title}
+        description={pageEmbeds.description}
+        image={pageEmbeds.image}
+        button={pageEmbeds.button}
+        action={pageEmbeds.action}
+        inputText={pageEmbeds.inputText}
       />
       <div className="min-h-screen bg-gradient-to-br from-nfl-red via-nfl-blue to-nfl-gold">
       {/* Header */}
