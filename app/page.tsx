@@ -15,7 +15,8 @@ import {
   Share2,
   CircleDot,
   Zap,
-  Target
+  Target,
+  X
 } from 'lucide-react'
 import GamePicker from '@/components/GamePicker'
 import WeekSelector from '@/components/WeekSelector'
