@@ -407,10 +407,11 @@ export async function testContractConnectivity() {
       })
     }
     
-    // Test NFL Pick Ems contract
+    // Test NFL Pick Ems contract - try multiple functions
     const nflAddress = CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`
     console.log('Testing NFL Pick Ems contract at:', nflAddress)
     
+    // Try getEntryFee first
     try {
       const entryFee = await publicClient.readContract({
         address: nflAddress,
@@ -418,12 +419,46 @@ export async function testContractConnectivity() {
         functionName: 'getEntryFee',
         args: [],
       })
-      console.log('✅ NFL Pick Ems contract accessible, entry fee:', entryFee.toString())
+      console.log('✅ getEntryFee() works, entry fee:', entryFee.toString())
     } catch (error) {
-      console.error('❌ NFL Pick Ems contract error:', error)
-      console.error('Error details:', {
-        message: error instanceof Error ? error.message : 'Unknown error'
-      })
+      console.error('❌ getEntryFee() failed:', error instanceof Error ? error.message : 'Unknown error')
+      
+      // Try getWeekInfo instead
+      try {
+        console.log('🔄 Trying getWeekInfo(1) as alternative...')
+        const weekInfo = await publicClient.readContract({
+          address: nflAddress,
+          abi: NFL_PICK_EMS_ABI,
+          functionName: 'getWeekInfo',
+          args: [1],
+        })
+        console.log('✅ getWeekInfo(1) works:', weekInfo)
+        console.log('📊 Week 1 Info:', {
+          gameCount: weekInfo[0],
+          lockTime: weekInfo[1],
+          resultsSet: weekInfo[2],
+          finalized: weekInfo[3],
+          pot: weekInfo[4],
+          totalEntrants: weekInfo[5],
+          lastOracleUpdate: weekInfo[6]
+        })
+      } catch (weekError) {
+        console.error('❌ getWeekInfo(1) also failed:', weekError instanceof Error ? weekError.message : 'Unknown error')
+        
+        // Try to get contract code to see if it exists
+        try {
+          console.log('🔄 Checking if contract has code...')
+          const code = await publicClient.getBytecode({ address: nflAddress })
+          if (code && code !== '0x') {
+            console.log('✅ Contract has code, but functions may have different signatures')
+            console.log('🔍 Contract bytecode length:', code.length)
+          } else {
+            console.log('❌ Contract has no code - address may be wrong')
+          }
+        } catch (codeError) {
+          console.error('❌ Could not check contract code:', codeError instanceof Error ? codeError.message : 'Unknown error')
+        }
+      }
     }
     
   } catch (error) {
