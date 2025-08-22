@@ -28,6 +28,8 @@ import ClaimWinningsModal from '@/components/ClaimWinningsModal'
 import ShareResultsModal from '@/components/ShareResultsModal'
 import { getGamesByWeek, getCurrentWeek, getWeekStatus } from '@/lib/nflSchedule'
 import { useGameStats } from '@/hooks/useGameStats'
+import { getNFLPickEmsContract } from '@/lib/contracts'
+import { useAccount, useSigner } from 'wagmi'
 import FarcasterEmbed from '@/components/FarcasterEmbed'
 
 interface GamePick {
@@ -46,6 +48,9 @@ export default function HomePage() {
   const [showMyPicks, setShowMyPicks] = useState(false)
   const [showClaimWinnings, setShowClaimWinnings] = useState(false)
   const [showShareResults, setShowShareResults] = useState(false)
+
+  const { data: signer } = useSigner()
+  const { address } = useAccount()
 
   const currentWeekGames = getGamesByWeek(currentWeek)
   const weekStatus = getWeekStatus(currentWeek)
@@ -77,31 +82,64 @@ export default function HomePage() {
       alert('Please select exactly 10 teams to win')
       return
     }
-    
+
     if (!isConnected) {
       alert('Please connect your wallet first')
       return
     }
-    
+
+    if (!signer) {
+      alert('Wallet not ready. Please try again.')
+      return
+    }
+
     try {
-      // TODO: Integrate with smart contract
-      // For now, just show what would be submitted
-      console.log('Submitting picks:', selectedPicks)
+      // Get the smart contract instance
+      const contract = getNFLPickEmsContract(signer.provider!, signer)
+      
+      // Get the entry fee from the contract
+      const entryFee = await contract.getEntryFee()
       
       // Convert picks to the format needed for smart contract
-      const picksForContract = selectedPicks.map(pick => ({
-        gameId: pick.gameId,
-        selectedTeam: pick.selectedTeam
-      }))
+      const picksForContract = selectedPicks.map(pick => pick.selectedTeam)
       
-      console.log('Picks formatted for contract:', picksForContract)
+      console.log('Submitting picks to smart contract:', {
+        week: currentWeek,
+        picks: picksForContract,
+        entryFee: entryFee + ' ETH'
+      })
+
+      // Submit picks to the smart contract
+      const result = await contract.submitPicks(currentWeek, picksForContract, entryFee)
       
-      // Show success message (replace with actual contract call)
-      alert('Picks prepared for submission! Smart contract integration coming soon.')
-      
+      if (result.success) {
+        alert(`✅ Picks submitted successfully! Transaction: ${result.hash}`)
+        
+        // Clear the selected picks
+        setSelectedPicks([])
+        
+        // You could also refresh the pot/player count here
+      } else {
+        alert('❌ Failed to submit picks. Please try again.')
+      }
+
     } catch (error) {
       console.error('Error submitting picks:', error)
-      alert('Error submitting picks. Please try again.')
+      
+      // Provide more specific error messages
+      if (error instanceof Error) {
+        if (error.message.includes('insufficient funds')) {
+          alert('❌ Insufficient funds. You need at least 0.002 ETH to submit picks.')
+        } else if (error.message.includes('user rejected')) {
+          alert('❌ Transaction was cancelled.')
+        } else if (error.message.includes('week not active')) {
+          alert('❌ This week is not active for picks.')
+        } else {
+          alert(`❌ Error submitting picks: ${error.message}`)
+        }
+      } else {
+        alert('❌ Error submitting picks. Please try again.')
+      }
     }
   }
 
