@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 export default function FarcasterIntegration() {
   const [isFarcaster, setIsFarcaster] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  const [sdk, setSdk] = useState(null);
+  const [sdk, setSdk] = useState<any>(null);
 
   useEffect(() => {
     const initializeFarcaster = async () => {
