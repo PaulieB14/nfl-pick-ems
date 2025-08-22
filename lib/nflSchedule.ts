@@ -2601,8 +2601,26 @@ export const getGamesByWeek = (week: number): NFLGame[] => {
 export const getCurrentWeek = (): number => {
   const now = new Date()
   const seasonStart = new Date('2025-09-04')
+  
+  console.log('Week calculation debug:', {
+    now: now.toISOString(),
+    seasonStart: seasonStart.toISOString(),
+    nowTime: now.getTime(),
+    seasonStartTime: seasonStart.getTime(),
+    timeDiff: now.getTime() - seasonStart.getTime(),
+    weeksSinceStart: Math.floor((now.getTime() - seasonStart.getTime()) / (7 * 24 * 60 * 60 * 1000))
+  })
+  
+  // If we're before the season starts, return week 1
+  if (now < seasonStart) {
+    console.log('Before season start, returning week 1')
+    return 1
+  }
+  
   const weeksSinceStart = Math.floor((now.getTime() - seasonStart.getTime()) / (7 * 24 * 60 * 60 * 1000))
-  return Math.max(1, Math.min(18, weeksSinceStart + 1))
+  const result = Math.max(1, Math.min(18, weeksSinceStart + 1))
+  console.log('Calculated week:', result)
+  return result
 }
 
 export const getWeekStatus = (week: number): 'upcoming' | 'active' | 'completed' => {
