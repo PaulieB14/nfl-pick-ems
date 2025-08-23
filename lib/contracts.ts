@@ -31,7 +31,7 @@ export const NFL_PICK_EMS_ABI = parseAbi([
 
 // Create public client for reading from contract
 export const publicClient = createPublicClient({
-  chain: base,
+  chain: baseSepolia, // Use Base Sepolia testnet
   transport: http()
 })
 
@@ -59,6 +59,10 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
       if (!this.walletClient) {
         throw new Error('Wallet client not available')
       }
+      
+      if (!this.publicClient) {
+        throw new Error('Public client not available')
+      }
 
       // Convert picks array to bitmask format
       const picksBitmask = this.convertPicksToBitmask(picks)
@@ -69,6 +73,10 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
         picksBitmask: picksBitmask.toString(),
         entryFeeInUSDC: '$2 USDC'
       })
+      
+      console.log('Debug - Wallet Client:', !!this.walletClient)
+      console.log('Debug - Public Client:', !!this.publicClient)
+      console.log('Debug - Wallet Account:', this.walletClient?.account?.address)
 
       // First, check USDC balance
       const usdcAddress = CONTRACT_ADDRESSES.MOCK_USDC as `0x${string}`
@@ -124,6 +132,10 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
         console.log('Submitting picks to NFL Pick Ems contract with ETH...')
         
         try {
+          if (!this.publicClient) {
+            throw new Error('Public client not available for ETH fallback')
+          }
+          
           const { request } = await this.publicClient.simulateContract({
             address: CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`,
             abi: NFL_PICK_EMS_ABI,
@@ -360,10 +372,10 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
 }
 
 // Helper function to get contract instance
-export function getNFLPickEmsContract(walletClient: any, publicClient?: any): NFLPickEmsContract {
+export function getNFLPickEmsContract(walletClient: any, userPublicClient?: any): NFLPickEmsContract {
   if (walletClient) {
-    // Use provided publicClient or fall back to imported one
-    const clientToUse = publicClient || publicClient
+    // Use provided userPublicClient or fall back to imported publicClient
+    const clientToUse = userPublicClient || publicClient
     // Since we have walletClient, we can always use the real contract
     console.log('✅ Using real contract with wallet client and public client')
     return new RealNFLPickEmsContract(walletClient, clientToUse)
@@ -388,12 +400,12 @@ export async function testContractConnectivity() {
     })
     
     // Check if we're on the right network for these contracts
-    const expectedChainId = CONTRACT_ADDRESSES.BASE_CHAIN_ID
+    const expectedChainId = CONTRACT_ADDRESSES.BASE_SEPOLIA_CHAIN_ID // Use Base Sepolia for testing
     if (chain?.id !== expectedChainId) {
-      console.warn(`⚠️ Warning: Contracts are deployed on Base (chain ID: ${expectedChainId}), but you're connected to ${chain?.name} (chain ID: ${chain?.id})`)
-      console.warn(`🔧 To fix this: Switch your wallet to Base network (chain ID: ${expectedChainId})`)
+      console.warn(`⚠️ Warning: Contracts are deployed on Base Sepolia (chain ID: ${expectedChainId}), but you're connected to ${chain?.name} (chain ID: ${chain?.id})`)
+      console.warn(`🔧 To fix this: Switch your wallet to Base Sepolia network (chain ID: ${expectedChainId})`)
     } else {
-      console.log('✅ Connected to correct network (Base)')
+      console.log('✅ Connected to correct network (Base Sepolia)')
     }
     
     // Test USDC contract
