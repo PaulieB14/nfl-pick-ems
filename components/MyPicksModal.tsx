@@ -90,7 +90,7 @@ export default function MyPicksModal({ isOpen, onClose, picks, games, week }: My
                   <div className="text-center py-8">
                     <Clock className="w-16 h-16 text-white/30 mx-auto mb-4" />
                     <p className="text-white/70 mb-2">No picks submitted yet</p>
-                    <p className="text-white/50 text-sm">Go back and select your 10 picks!</p>
+                    <p className="text-white/50 text-sm">Go back and select your 16 picks!</p>
                   </div>
                 ) : (
                   <div className="space-y-3">

@@ -2595,7 +2595,7 @@ export const nflSchedule2025: NFLGame[] = [
 
 // Return games for any week (1-18)
 export const getGamesByWeek = (week: number): NFLGame[] => {
-  return nflSchedule2025.filter(game => game.week === week)
+    return nflSchedule2025.filter(game => game.week === week)
 }
 
 export const getCurrentWeek = (): number => {

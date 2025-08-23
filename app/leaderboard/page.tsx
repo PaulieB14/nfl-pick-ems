@@ -45,7 +45,7 @@ export default function LeaderboardPage() {
                       <span className="text-2xl">🥇</span>
                       <div>
                         <div className="text-white font-semibold">Player 1</div>
-                        <div className="text-white/70 text-sm">9/10 picks correct</div>
+                        <div className="text-white/70 text-sm">9/16 picks correct</div>
                       </div>
                     </div>
                     <div className="text-nfl-gold font-bold">$50</div>
@@ -54,10 +54,10 @@ export default function LeaderboardPage() {
                   <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
                     <div className="flex items-center space-x-3">
                       <span className="text-2xl">🥈</span>
-                      <div>
-                        <div className="text-white font-semibold">Player 2</div>
-                        <div className="text-white/70 text-sm">8/10 picks correct</div>
-                      </div>
+                                              <div>
+                          <div className="text-white font-semibold">Player 2</div>
+                          <div className="text-white/70 text-sm">8/16 picks correct</div>
+                        </div>
                     </div>
                     <div className="text-nfl-gold font-bold">$30</div>
                   </div>
@@ -65,10 +65,10 @@ export default function LeaderboardPage() {
                   <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
                     <div className="flex items-center space-x-3">
                       <span className="text-2xl">🥉</span>
-                      <div>
-                        <div className="text-white font-semibold">Player 3</div>
-                        <div className="text-white/70 text-sm">8/10 picks correct</div>
-                      </div>
+                                              <div>
+                          <div className="text-white font-semibold">Player 3</div>
+                          <div className="text-white/70 text-sm">8/16 picks correct</div>
+                        </div>
                     </div>
                     <div className="text-nfl-gold font-bold">$20</div>
                   </div>

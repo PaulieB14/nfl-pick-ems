@@ -24,7 +24,7 @@ interface GamePickerProps {
 export default function GamePicker({ games, selectedPicks, onPickSelection, onPickRemoval, onSubmitPicks, isConnected, canSubmit, isSubmitting, transactionHash }: GamePickerProps) {
   const isGameSelected = (gameId: string) => selectedPicks.some(pick => pick.gameId === gameId)
   const getSelectedTeam = (gameId: string) => selectedPicks.find(pick => pick.gameId === gameId)?.selectedTeam
-  const canSelect = () => selectedPicks.length < 10
+  const canSelect = () => selectedPicks.length < 16
 
   const handleTeamSelection = (gameId: string, team: 'home' | 'away') => {
     if (isGameSelected(gameId)) {
@@ -237,7 +237,7 @@ export default function GamePicker({ games, selectedPicks, onPickSelection, onPi
             <span className="font-bold text-lg">Your Picks</span>
           </div>
           <div className="text-right">
-            <span className="text-2xl font-bold text-nfl-gold">{selectedPicks.length}/10</span>
+            <span className="text-2xl font-bold text-nfl-gold">{selectedPicks.length}/16</span>
             <div className="text-white/70 text-sm">Teams Selected</div>
           </div>
         </div>
@@ -293,7 +293,7 @@ export default function GamePicker({ games, selectedPicks, onPickSelection, onPi
         )}
 
         {/* Submit Picks Button */}
-        {selectedPicks.length === 10 && (
+        {selectedPicks.length === 16 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -330,7 +330,7 @@ export default function GamePicker({ games, selectedPicks, onPickSelection, onPi
               ) : (
                 <span className="flex items-center justify-center space-x-2">
                   <CircleDot className="w-5 h-5" />
-                  <span>Need {10 - selectedPicks.length} More Picks</span>
+                  <span>Need {16 - selectedPicks.length} More Picks</span>
                 </span>
               )}
             </button>

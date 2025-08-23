@@ -105,8 +105,8 @@ export default function HomePage() {
   const [transactionHash, setTransactionHash] = useState<string | null>(null)
 
   const handleSubmitPicks = async () => {
-    if (selectedPicks.length !== 10) {
-      alert('Please select exactly 10 teams to win')
+          if (selectedPicks.length !== 16) {
+              alert('Please select exactly 16 teams to win')
       return
     }
 
@@ -192,7 +192,7 @@ export default function HomePage() {
   }
 
   const isScheduleComplete = currentWeek <= 18
-  const canSubmit = selectedPicks.length === 10 && isWalletConnected && weekStatus !== 'completed' && isScheduleComplete && Boolean(walletClient);
+      const canSubmit = selectedPicks.length === 16 && isWalletConnected && weekStatus !== 'completed' && isScheduleComplete && Boolean(walletClient);
   
   // Debug logging
   console.log('Submit Debug:', {
@@ -248,7 +248,7 @@ export default function HomePage() {
             <span className="block text-nfl-gold">Win the Pot</span>
           </h2>
           <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
-            Every week, pick 10 NFL teams to win their games. Get the most correct picks and split the pot with other winners. 
+            Every week, pick 16 NFL teams to win their games. Get the most correct picks and split the pot with other winners. 
             Built on Base chain for the Farcaster community.
           </p>
           
@@ -451,7 +451,7 @@ export default function HomePage() {
                 </div>
                 <div className="text-white/70">
                   <div className="bg-gradient-to-r from-nfl-gold to-nfl-red text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
-                    {selectedPicks.length}/10 Picks
+                    {selectedPicks.length}/16 Picks
                   </div>
                 </div>
               </div>
