@@ -492,13 +492,12 @@ export async function testContractConnectivity() {
           abi: NFL_PICK_EMS_ABI,
           functionName: 'enter',
           args: [BigInt(1), BigInt(0)], // week 1, no picks (just testing)
-          value: BigInt(2000000000000000), // 0.002 ETH
           account: '0x0000000000000000000000000000000000000000', // dummy address for simulation
         })
         
         console.log('✅ ETH submission simulation successful!')
         console.log('📊 Gas estimate:', request.gas ? request.gas.toString() : 'Not available')
-        console.log('💰 Value sent:', request.value ? request.value.toString() : 'Not available')
+        console.log('💰 Value sent: Not available (simulation only)')
         
       } catch (ethError) {
         console.error('❌ ETH submission test failed:', ethError instanceof Error ? ethError.message : 'Unknown error')
