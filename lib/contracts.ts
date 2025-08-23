@@ -80,11 +80,12 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
 
       // First, check USDC balance
       const usdcAddress = CONTRACT_ADDRESSES.MOCK_USDC as `0x${string}`
-      const entryFee = BigInt(2000000000000000) // $2 USDC (6 decimals)
+      const entryFee = BigInt(2000000) // $2 USDC (6 decimals) - 2 * 10^6 = 2,000,000 wei
       
       console.log('Checking USDC balance and allowance...')
       console.log('USDC Contract Address:', usdcAddress)
       console.log('User Wallet Address:', this.walletClient.account.address)
+      console.log('Required Entry Fee:', entryFee.toString(), 'wei (', Number(entryFee) / 1e6, 'USDC)')
       
       // First, validate the USDC contract exists and has the right functions
       try {
@@ -125,7 +126,7 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
         console.log('USDC contract call failed, falling back to ETH entry fee...')
         
         // Fallback to ETH entry fee
-        const ethEntryFee = BigInt(2000000000000000) // 0.002 ETH in wei
+        const ethEntryFee = BigInt(2000000000000000) // 0.002 ETH in wei (18 decimals)
         console.log('Using ETH entry fee:', ethEntryFee.toString(), 'wei (0.002 ETH)')
         
         // Call the smart contract's enter function with ETH value
