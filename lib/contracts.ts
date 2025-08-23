@@ -21,12 +21,13 @@ export const USDC_ABI = parseAbi([
 
 // Contract ABIs - these are the actual functions from your smart contract
 export const NFL_PICK_EMS_ABI = parseAbi([
-  'function enter(uint8 week, uint256 mask) external payable',
-  'function getPlayerPicks(uint8 week, address player) external view returns (uint256 playerPicksMask, uint256 playerCorrectPicks, bool playerIsWinner, bool playerClaimed)',
-  'function getWeekInfo(uint8 week) external view returns (uint8 gameCount, uint64 lockTime, bool resultsSet, bool finalized, uint256 pot, uint256 totalEntrants, uint64 lastOracleUpdate)',
-  'function getEntryFee() external view returns (uint256)',
-  'function getCurrentPot(uint8 week) external view returns (uint256)',
-  'function getTotalPlayers(uint8 week) external view returns (uint256)'
+  'function enter(uint256 week, uint256 mask) external',
+  'function getPlayerPicks(uint256 week, address player) external view returns (uint256 playerPicksMask, uint256 playerCorrectPicks, bool playerIsWinner, bool playerClaimed)',
+  'function getWeekInfo(uint256 week) external view returns (uint8 gameCount, uint64 lockTime, bool resultsSet, bool finalized, uint256 pot, uint256 sharePerWinner, uint256 winnerCount, uint256 totalEntrants, uint64 lastOracleUpdate)',
+  'function ENTRY_FEE() external view returns (uint256)',
+  'function getGameInfo(uint256 week, uint8 gameIndex) external view returns (uint64 startTime, bool started, bool availableForPicks, bool finished, uint8 homeScore, uint8 awayScore)',
+  'function oracle() external view returns (address)',
+  'function token() external view returns (address)'
 ])
 
 // Create public client for reading from contract
@@ -137,14 +138,14 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
             throw new Error('Public client not available for ETH fallback')
           }
           
-          const { request } = await this.publicClient.simulateContract({
-            address: CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`,
-            abi: NFL_PICK_EMS_ABI,
-            functionName: 'enter',
-            args: [week, picksBitmask],
-            account: this.walletClient.account.address,
-            value: ethEntryFee,
-          })
+                  const { request } = await this.publicClient.simulateContract({
+          address: CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`,
+          abi: NFL_PICK_EMS_ABI,
+          functionName: 'enter',
+          args: [BigInt(week), picksBitmask],
+          account: this.walletClient.account.address,
+          value: ethEntryFee,
+        })
 
           console.log('Contract simulation successful, submitting transaction...')
           const hash = await this.walletClient.writeContract(request)
@@ -239,13 +240,13 @@ export class RealNFLPickEmsContract implements NFLPickEmsContract {
       console.log('Submitting picks to NFL Pick Ems contract...')
       
       try {
-        const { request } = await this.publicClient.simulateContract({
-          address: CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`,
-          abi: NFL_PICK_EMS_ABI,
-          functionName: 'enter',
-          args: [week, picksBitmask],
-          account: this.walletClient.account.address,
-        })
+              const { request } = await this.publicClient.simulateContract({
+        address: CONTRACT_ADDRESSES.NFL_PICK_EMS as `0x${string}`,
+        abi: NFL_PICK_EMS_ABI,
+        functionName: 'enter',
+        args: [BigInt(week), picksBitmask],
+        account: this.walletClient.account.address,
+      })
 
         console.log('Contract simulation successful, submitting transaction...')
         const hash = await this.walletClient.writeContract(request)
