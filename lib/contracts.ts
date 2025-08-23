@@ -491,14 +491,14 @@ export async function testContractConnectivity() {
           address: nflAddress,
           abi: NFL_PICK_EMS_ABI,
           functionName: 'enter',
-          args: [1, BigInt(0)], // week 1, no picks (just testing)
+          args: [BigInt(1), BigInt(0)], // week 1, no picks (just testing)
           value: BigInt(2000000000000000), // 0.002 ETH
           account: '0x0000000000000000000000000000000000000000', // dummy address for simulation
         })
         
         console.log('✅ ETH submission simulation successful!')
-        console.log('📊 Gas estimate:', request.gas?.toString())
-        console.log('💰 Value sent:', request.value?.toString())
+        console.log('📊 Gas estimate:', request.gas ? request.gas.toString() : 'Not available')
+        console.log('💰 Value sent:', request.value ? request.value.toString() : 'Not available')
         
       } catch (ethError) {
         console.error('❌ ETH submission test failed:', ethError instanceof Error ? ethError.message : 'Unknown error')
@@ -519,7 +519,7 @@ export async function testContractConnectivity() {
       const entryFee = await publicClient.readContract({
         address: nflAddress,
         abi: NFL_PICK_EMS_ABI,
-        functionName: 'getEntryFee',
+        functionName: 'ENTRY_FEE',
         args: [],
       })
       console.log('✅ getEntryFee() works, entry fee:', entryFee.toString())
@@ -533,7 +533,7 @@ export async function testContractConnectivity() {
           address: nflAddress,
           abi: NFL_PICK_EMS_ABI,
           functionName: 'getWeekInfo',
-          args: [1],
+          args: [BigInt(1)],
         })
         console.log('✅ getWeekInfo(1) works:', weekInfo)
         console.log('📊 Week 1 Info:', {
