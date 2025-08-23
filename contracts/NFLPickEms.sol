@@ -2,11 +2,20 @@
 pragma solidity ^0.8.23;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
 
+/**
+ * @title NFLPickEms
+ * @notice NFL Pick'em game where players pick 10 games per week
+ * @dev Bit mapping: bit i = 1 means team A wins game i, bit i = 0 means team B wins game i
+ *      This mapping must be consistent between UI picks and oracle results
+ */
 contract NFLPickEms is Ownable, ReentrancyGuard, Pausable {
+    using SafeERC20 for IERC20;
+    
     IERC20 public immutable token;
     uint256 public constant ENTRY_FEE = 2_000_000; // 2 USDC (6 decimals)
     address public oracle;
@@ -127,11 +136,12 @@ contract NFLPickEms is Ownable, ReentrancyGuard, Pausable {
         // Check that all picked games are still available
         for (uint8 i = 0; i < w.gameCount; i++) {
             if ((mask & (uint256(1) << i)) != 0) {
-                require(w.games[i].availableForPicks, "game already started");
+                require(w.games[i].startTime != 0, "game not configured");
+                require(w.games[i].availableForPicks, "picks closed for game");
             }
         }
 
-        require(token.transferFrom(msg.sender, address(this), ENTRY_FEE), "transferFrom failed");
+        token.safeTransferFrom(msg.sender, address(this), ENTRY_FEE);
 
         w.pot += ENTRY_FEE;
         w.totalEntrants++;
@@ -208,9 +218,10 @@ contract NFLPickEms is Ownable, ReentrancyGuard, Pausable {
         }
         
         // Second pass: identify winners (those with max correct picks)
+        // FIXED: Removed maxCorrectPicks > 0 guard to allow 0-score winners
         for (uint256 i = 0; i < w.totalEntrants; i++) {
             address player = entrants[weekId][i];
-            if (correctPicks[weekId][player] == maxCorrectPicks && maxCorrectPicks > 0) {
+            if (correctPicks[weekId][player] == maxCorrectPicks) {
                 winners[winnerCount] = player;
                 isWinner[weekId][player] = true;
                 winnerCount++;
@@ -233,7 +244,7 @@ contract NFLPickEms is Ownable, ReentrancyGuard, Pausable {
         require(!claimed[weekId][msg.sender], "claimed");
 
         claimed[weekId][msg.sender] = true;
-        require(token.transfer(msg.sender, w.sharePerWinner), "transfer failed");
+        token.safeTransfer(msg.sender, w.sharePerWinner);
         
         emit Claimed(weekId, msg.sender, w.sharePerWinner, correctPicks[weekId][msg.sender]);
     }
@@ -247,7 +258,7 @@ contract NFLPickEms is Ownable, ReentrancyGuard, Pausable {
         
         // Update pot to reflect what was actually paid
         w.pot = paidTotal;
-        require(token.transfer(to, leftover), "transfer failed");
+        token.safeTransfer(to, leftover);
     }
 
     function emergencyPauseWeek(uint256 weekId) external onlyOwner {

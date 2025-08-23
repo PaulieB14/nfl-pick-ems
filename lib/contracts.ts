@@ -3,7 +3,7 @@ import { base, baseSepolia } from 'wagmi/chains'
 
 // Contract addresses (updated with your deployed contract)
 export const CONTRACT_ADDRESSES = {
-  NFL_PICK_EMS: '0x0b07572EcDcb7709b48Ef1DB11a07d9c263C2e06', // Your deployed contract address
+  NFL_PICK_EMS: '0x38312665E365c612A4585F9a8C40E55F4fDb583b', // Your deployed contract address
   MOCK_USDC: '0xab83D7Da5C2752Bf7AcB5804bF81ac22C7A9034B', // Your deployed MockUSDC address
   BASE_CHAIN_ID: 8453,
   BASE_SEPOLIA_CHAIN_ID: 84532
