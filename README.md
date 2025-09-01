@@ -1,196 +1,104 @@
-# Graph Network Analytics Dashboard
+# NFL Pick'ems Smart Contract
 
-A comprehensive real-time dashboard for analyzing The Graph Network's query fees vs indexer rewards with enhanced data from the Graph Network subgraph.
+A blockchain-based NFL prediction game where users pick 10 teams per week, pay a $2 USDC entry fee, and split winnings based on correct predictions.
 
-## 🚀 Recent Improvements
+## 🏈 Overview
 
-### Enhanced Data Sources
-- **Upgraded to Comprehensive Graph Network Subgraph**: Replaced generic subgraph queries with the official Graph Network mainnet subgraph (`graphprotocol/graph-network-mainnet`)
-- **Rich Network Metrics**: Now includes detailed metrics like:
-  - Total indexer query fees collected and rebates
-  - Delegator query fee rebates
-  - Curator query fees
-  - Protocol taxes and unclaimed rebates
-  - Indexer vs delegator indexing rewards breakdown
-  - Active vs total counts for all network participants
-  - Total tokens staked, allocated, delegated, and signalled
+NFL Pick'ems is a decentralized prediction game built on Base blockchain that allows users to:
+- Enter weekly predictions by picking 10 NFL teams
+- Pay a $2 USDC entry fee per entry
+- Win prizes based on having the most correct picks
+- Claim winnings automatically through smart contracts
 
-### Enhanced Indexer Analysis
-- **Comprehensive Indexer Data**: Each indexer now shows:
-  - Allocated and delegated tokens
-  - Available stake and token capacity
-  - Own stake ratio vs delegated stake ratio
-  - Indexing reward cut and query fee cut percentages
-  - Allocation count and forced closures
-  - Query fee rebates and delegator query fees
+## 🚀 Smart Contract Features
 
-### Enhanced Subgraph Analysis
-- **Detailed Subgraph Metrics**: Each subgraph now displays:
-  - Staked and signalled tokens
-  - Signal amount and price per share
-  - Reserve ratio and curation bonding curve data
-  - Query fee rebates and curator fee rewards
-  - Subgraph count and active subgraph count
+- **Secure Entry System**: Players pay $2 USDC and submit 10 team picks via bitmask
+- **Oracle-Controlled Results**: Trusted oracle posts game results and determines winners
+- **Fair Winner Selection**: Winners are determined by most correct picks among all entrants
+- **Automatic Payouts**: Winners can claim their share of the pot directly from the contract
+- **Emergency Controls**: Owner can pause/unpause contract for security
+- **Multi-Week Support**: Handle multiple NFL weeks simultaneously
 
-### Network Health Indicators
-- **Active Participants**: Shows active vs total counts for indexers, delegators, curators, and subgraphs
-- **Staking Metrics**: Total staked, allocated, and delegated tokens
-- **Network Status**: Mature vs growing network indicators based on query fee percentage
+## 📋 Smart Contract Details
 
-## 🛠️ Technical Implementation
+- **Network**: Base Blockchain
+- **Contract Address**: `0x0b07572EcDcb7709b48Ef1DB11a07d9c263C2e06`
+- **USDC Token**: `0xab83D7Da5C2752Bf7AcB5804bF81ac22C7A9034B` (Mock USDC for testing)
+- **Entry Fee**: 2 USDC (2,000,000 wei with 6 decimals)
+- **Pick Requirement**: Exactly 10 teams per entry
 
-### Data Fetching
-The dashboard uses the comprehensive Graph Network subgraph with enhanced GraphQL queries:
+## 🧪 Testing
 
-```typescript
-// Network metrics with 20+ additional fields
-export const NETWORK_METRICS_QUERY = `
-  query {
-    graphNetworks(first: 1) {
-      totalIndexingRewards
-      totalQueryFees
-      totalIndexerQueryFeesCollected
-      totalIndexerQueryFeeRebates
-      totalDelegatorQueryFeeRebates
-      totalCuratorQueryFees
-      totalTaxedQueryFees
-      totalUnclaimedQueryFeeRebates
-      totalIndexingDelegatorRewards
-      totalIndexingIndexerRewards
-      indexerCount
-      stakedIndexersCount
-      delegatorCount
-      activeDelegatorCount
-      curatorCount
-      activeCuratorCount
-      subgraphCount
-      activeSubgraphCount
-      subgraphDeploymentCount
-      totalTokensStaked
-      totalTokensAllocated
-      totalDelegatedTokens
-      totalTokensSignalled
-    }
-  }
-`;
-```
+Comprehensive Foundry test suite with 25+ tests covering:
+- Contract initialization and configuration
+- Week creation and game management
+- Player entry with USDC transfers and pick validation
+- Oracle results posting and winner determination
+- Claim processing and payout distribution
+- Access control and emergency functions
+- Multi-week support and edge case handling
 
-### Environment Configuration
+### Run Tests
 ```bash
-# Graph Network Subgraph Endpoint
-NEXT_PUBLIC_GRAPH_ENDPOINT=https://api.thegraph.com/subgraphs/name/graphprotocol/graph-network-mainnet
+# Install dependencies
+forge install
+
+# Run all tests
+forge test
+
+# Run with verbosity
+forge test -vv
+
+# Run specific test
+forge test --match-contract NFLPickEmsTest
 ```
 
-## 📊 Dashboard Features
+## 🛠 Development
 
-### Key Metrics Cards
-- **Total Indexing Rewards**: Network-wide inflation rewards
-- **Total Query Fees**: Organic revenue from queries
-- **Rewards:Fees Ratio**: Network subsidy level indicator
-- **Network Status**: Mature vs growing network classification
-- **Active Indexers**: Currently staked indexers
-- **Active Delegators**: Currently delegating participants
-- **Active Subgraphs**: Currently active subgraphs
-- **Total Staked**: Total GRT staked in the network
+Built with:
+- **Solidity 0.8.23**: Smart contract development
+- **Foundry**: Testing and deployment framework
+- **OpenZeppelin**: Security and standard contract libraries
+- **Next.js**: Frontend web application
+- **Base**: L2 blockchain for low-cost transactions
 
-### Visualizations
-- **Network Distribution Pie Chart**: Indexing rewards vs query fees breakdown
-- **Historical Trends Area Chart**: Rewards/fees ratio over time
-- **Top Indexers by Efficiency**: Revenue efficiency ranking with profile images
-- **Top Subgraphs Bar Chart**: Query fees vs indexing rewards with images
+### Local Development
+```bash
+# Clone repository
+git clone https://github.com/PaulieB14/nfl-pick-ems.git
+cd nfl-pick-ems
 
-### Enhanced Data Display
-- **ENS Resolution**: Human-readable names for addresses
-- **Profile Images**: Indexer and subgraph profile pictures
-- **Comprehensive Metrics**: Detailed breakdowns for all network participants
-- **Real-time Updates**: Live data from The Graph Network
+# Install dependencies
+npm install
+forge install
 
-## 🔧 Setup and Installation
+# Run tests
+forge test
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd graph-network-dashboard
-   ```
+# Start development server
+npm run dev
+```
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+## 🔐 Security
 
-3. **Configure environment**
-   ```bash
-   cp env.local .env.local
-   # Edit .env.local with your preferred Graph Network subgraph endpoint
-   ```
-
-4. **Run the development server**
-   ```bash
-   npm run dev
-   ```
-
-5. **Open your browser**
-   Navigate to `http://localhost:3000`
-
-## 📈 Data Sources
-
-### Primary Subgraph
-- **Graph Network Mainnet**: `graphprotocol/graph-network-mainnet`
-- **Features**: Comprehensive network data, participant metrics, historical trends
-
-### Alternative Subgraphs
-- **Graph Network Analytics**: `graphprotocol/graph-network-analytics`
-- **Graph Network Activity**: `graphprotocol/graph-network-activity-eth`
-- **Graph Network Arbitrum**: `graphprotocol/graph-network-arbitrum`
-
-## 🎯 Use Cases
-
-### For Indexers
-- Monitor revenue efficiency and performance
-- Compare with other indexers
-- Track allocation strategies and delegation pools
-
-### For Delegators
-- Analyze indexer performance and cuts
-- Monitor delegation returns
-- Track network health and growth
-
-### For Curators
-- Monitor subgraph performance
-- Track curation rewards and bonding curves
-- Analyze network activity trends
-
-### For Developers
-- Monitor subgraph usage and revenue
-- Track network adoption and growth
-- Analyze query fee trends
-
-## 🔍 Network Health Indicators
-
-### Mature Network Criteria
-- Query fees > 5% of total network value
-- High active participant ratios
-- Balanced rewards/fees ratio
-
-### Growing Network Indicators
-- High indexing rewards percentage
-- Increasing active participants
-- Growing total staked amounts
-
-## 📝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+- Uses OpenZeppelin battle-tested contracts for security
+- Implements ReentrancyGuard to prevent reentrancy attacks
+- Oracle-controlled results prevent manipulation
+- Owner controls limited to emergency pause/unpause functions
+- Comprehensive test coverage validates all functionality
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT License - see LICENSE file for details
 
-## 🙏 Acknowledgments
+## 🤝 Contributing
 
-- The Graph Protocol team for the comprehensive subgraph
-- ENS for address resolution
-- The Graph Network community for data and feedback 
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📞 Contact
+
+For questions or support, please open an issue on GitHub.
