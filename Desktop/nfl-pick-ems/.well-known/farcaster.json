@@ -1,0 +1,32 @@
+{
+  "app": {
+    "name": "NFL Pick 'ems",
+    "description": "🏈 Weekly NFL prediction game on Base chain! Pick 10 teams to win and split the pot with other winners. Built for the Farcaster community.",
+    "icon": "https://nfl-pick-em.netlify.app/icon-1024.png",
+    "homeUrl": "https://nfl-pick-em.netlify.app",
+    "launchUrl": "https://nfl-pick-em.netlify.app",
+    "version": "1.0.0"
+  },
+  "verification": {
+    "domain": "nfl-pick-em.netlify.app"
+  },
+  "notifications": {
+    "webhookUrl": "https://nfl-pick-em.netlify.app/api/farcaster/webhook"
+  },
+  "permissions": [
+    "notifications",
+    "openUrl"
+  ],
+  "features": [
+    "picks",
+    "leaderboard",
+    "pot-tracking",
+    "social-sharing"
+  ],
+  "metadata": {
+    "category": "Gaming",
+    "tags": ["nfl", "football", "predictions", "gaming", "base", "ethereum"],
+    "author": "PaulieB14",
+    "repository": "https://github.com/PaulieB14/nfl-pick-ems"
+  }
+}
