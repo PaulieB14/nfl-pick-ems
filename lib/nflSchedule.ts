@@ -12,11 +12,12 @@ export interface NFLGame {
 }
 
 interface ScheduleGame {
-  gameIndex: number
+  index: number
   espnEventId: string
-  homeTeam: { name: string; abbreviation: string; displayName: string }
-  awayTeam: { name: string; abbreviation: string; displayName: string }
+  homeTeam: { name: string; abbreviation: string; displayName: string; score?: number }
+  awayTeam: { name: string; abbreviation: string; displayName: string; score?: number }
   startTime: string
+  status?: { state: string; completed: boolean; description: string }
 }
 
 interface WeekSchedule {
@@ -35,13 +36,17 @@ function mapScheduleToGames(schedule: WeekSchedule): NFLGame[] {
   return schedule.games.map(g => {
     const startTime = new Date(g.startTime)
     let status: 'upcoming' | 'active' | 'completed' = 'upcoming'
-    if (now > new Date(startTime.getTime() + 4 * 60 * 60 * 1000)) {
-      status = 'completed' // ~4 hours after start
+    if (g.status?.completed) {
+      status = 'completed'
+    } else if (g.status?.state === 'in') {
+      status = 'active'
+    } else if (now > new Date(startTime.getTime() + 4 * 60 * 60 * 1000)) {
+      status = 'completed'
     } else if (now >= startTime) {
       status = 'active'
     }
     return {
-      id: `week${schedule.weekId}-game${g.gameIndex}`,
+      id: `week${schedule.weekId}-game${g.index}`,
       homeTeam: g.homeTeam.displayName,
       awayTeam: g.awayTeam.displayName,
       homeAbbrev: g.homeTeam.abbreviation,
@@ -49,6 +54,8 @@ function mapScheduleToGames(schedule: WeekSchedule): NFLGame[] {
       startTime,
       week: schedule.weekId,
       status,
+      homeScore: g.homeTeam.score,
+      awayScore: g.awayTeam.score,
     }
   })
 }

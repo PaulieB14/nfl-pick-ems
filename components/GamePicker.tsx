@@ -57,7 +57,9 @@ export default function GamePicker({
       minute: '2-digit',
     }).format(date)
 
-  const isGamePickable = (game: Game) => game.status === 'upcoming'
+  // Allow picking on upcoming and completed (for testing with historical data).
+  // The smart contract enforces the real lock time on-chain.
+  const isGamePickable = (game: Game) => game.status !== 'active'
 
   const pickCount = selectedPicks.length
   const circumference = 2 * Math.PI * 18
