@@ -3,7 +3,7 @@ import { base } from 'wagmi/chains'
 
 // Contract addresses — update NFL_PICK_EMS after redeployment
 export const CONTRACT_ADDRESSES = {
-  NFL_PICK_EMS: '0x0b07572EcDcb7709b48Ef1DB11a07d9c263C2e06', // TODO: update after redeploy
+  NFL_PICK_EMS: '0x0652Fb04BC3aE381088a5a0A2D1924EfA38D4be7',
   USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // Real Base mainnet USDC
   BASE_CHAIN_ID: 8453,
 }
