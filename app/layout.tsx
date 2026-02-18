@@ -4,6 +4,9 @@ import './globals.css'
 import '@rainbow-me/rainbowkit/styles.css'
 import Providers from '@/components/Providers'
 
+// Force dynamic rendering — RainbowKit/WalletConnect need runtime env vars
+export const dynamic = 'force-dynamic'
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
