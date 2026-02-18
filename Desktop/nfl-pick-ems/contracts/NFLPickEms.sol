@@ -199,7 +199,7 @@ contract NFLPickEms is Ownable, ReentrancyGuard, Pausable {
         for (uint256 i = 0; i < w.totalEntrants; i++) {
             address player = entrants[weekId][i];
             uint256 playerMask = picksMask[weekId][player];
-            uint256 correctPicksCount = _bitCount(playerMask & w.winnersMask);
+            uint256 correctPicksCount = w.gameCount - _bitCount(playerMask ^ w.winnersMask);
             correctPicks[weekId][player] = correctPicksCount;
             
             if (correctPicksCount > maxCorrectPicks) {

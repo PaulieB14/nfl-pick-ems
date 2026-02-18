@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Check, X, Clock, Zap } from 'lucide-react'
+import { Check, X, Zap } from 'lucide-react'
 
 interface Game {
   id: string
@@ -45,248 +45,206 @@ export default function GamePicker({
   isSubmitting,
   transactionHash
 }: GamePickerProps) {
-  const [hoveredGame, setHoveredGame] = useState<string | null>(null)
+  const getPickForGame = (gameId: string) =>
+    selectedPicks.find(pick => pick.gameId === gameId)
 
-  const getPickForGame = (gameId: string) => {
-    return selectedPicks.find(pick => pick.gameId === gameId)
-  }
-
-  const formatGameTime = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
+  const formatGameTime = (date: Date) =>
+    new Intl.DateTimeFormat('en-US', {
       weekday: 'short',
-      month: 'short', 
+      month: 'short',
       day: 'numeric',
       hour: 'numeric',
       minute: '2-digit',
-      timeZoneName: 'short'
     }).format(date)
-  }
 
-  const getGameStatus = (game: Game) => {
-    const now = new Date()
-    const gameTime = new Date(game.startTime)
-    
-    if (game.status === 'completed') return 'Final'
-    if (game.status === 'active') return 'Live'
-    if (gameTime > now) return formatGameTime(gameTime)
-    
-    return 'Starting Soon'
-  }
+  const isGamePickable = (game: Game) => game.status === 'upcoming'
 
-  const getStatusColor = (game: Game) => {
-    switch (game.status) {
-      case 'completed': return 'text-red-400'
-      case 'active': return 'text-green-400'
-      case 'upcoming': return 'text-blue-400'
-      default: return 'text-white/70'
-    }
-  }
-
-  const isGamePickable = (game: Game) => {
-    return game.status === 'upcoming'
-  }
+  const pickCount = selectedPicks.length
+  const circumference = 2 * Math.PI * 18
+  const progress = (pickCount / 10) * circumference
 
   return (
-    <div className="space-y-6">
-      {/* Games Grid */}
-      <div className="grid gap-4">
+    <div className="space-y-5">
+      {/* Floating Pick Counter */}
+      <div className="flex items-center justify-center gap-4 mb-2">
+        <div className="relative w-14 h-14">
+          <svg className="w-14 h-14 -rotate-90" viewBox="0 0 40 40">
+            <circle cx="20" cy="20" r="18" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="3" />
+            <circle
+              cx="20" cy="20" r="18" fill="none"
+              stroke={pickCount === 10 ? '#22c55e' : '#FFB612'}
+              strokeWidth="3"
+              strokeDasharray={circumference}
+              strokeDashoffset={circumference - progress}
+              strokeLinecap="round"
+              className="transition-all duration-500"
+            />
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className={`text-lg font-black ${pickCount === 10 ? 'text-green-400' : 'text-nfl-gold'}`}>
+              {pickCount}
+            </span>
+          </div>
+        </div>
+        <div>
+          <div className="text-white font-bold text-lg">{pickCount}/10 Picks</div>
+          <div className="text-white/50 text-sm">
+            {pickCount === 10 ? 'Ready to submit!' : `${10 - pickCount} more needed`}
+          </div>
+        </div>
+      </div>
+
+      {/* Matchup Cards */}
+      <div className="space-y-3">
         {games.map((game, index) => {
           const pick = getPickForGame(game.id)
-          const isPickable = isGamePickable(game)
-          
+          const pickable = isGamePickable(game)
+
           return (
             <motion.div
               key={game.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-              className={`relative bg-gradient-to-r from-white/5 to-white/10 backdrop-blur-sm rounded-xl border ${
-                pick ? 'border-nfl-gold shadow-lg shadow-nfl-gold/20' : 'border-white/20'
-              } overflow-hidden ${!isPickable ? 'opacity-60' : ''}`}
-              onMouseEnter={() => setHoveredGame(game.id)}
-              onMouseLeave={() => setHoveredGame(null)}
+              transition={{ delay: index * 0.04, duration: 0.3 }}
+              className={`relative rounded-xl overflow-hidden transition-all duration-300 ${
+                pick
+                  ? 'ring-2 ring-nfl-gold/60 shadow-lg shadow-nfl-gold/10'
+                  : 'ring-1 ring-white/[0.08]'
+              } ${!pickable ? 'opacity-50' : ''}`}
             >
-              {/* Game Header */}
-              <div className="p-4 border-b border-white/10">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm font-medium text-white/70">Game {index + 1}</span>
-                    {pick && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="flex items-center space-x-1 bg-nfl-gold/20 text-nfl-gold px-2 py-1 rounded-full text-xs"
-                      >
-                        <Check className="w-3 h-3" />
-                        <span>Picked</span>
-                      </motion.div>
-                    )}
-                  </div>
-                  <div className={`text-sm ${getStatusColor(game)}`}>
-                    {getGameStatus(game)}
-                  </div>
-                </div>
+              {/* Game time bar */}
+              <div className="flex items-center justify-between px-4 py-2 bg-white/[0.03]">
+                <span className="text-xs font-medium text-white/40 uppercase tracking-wider">
+                  Game {index + 1}
+                </span>
+                <span className={`text-xs font-semibold ${
+                  game.status === 'active' ? 'text-green-400' :
+                  game.status === 'completed' ? 'text-white/40' :
+                  'text-white/50'
+                }`}>
+                  {game.status === 'active' ? 'LIVE' :
+                   game.status === 'completed' ? 'FINAL' :
+                   formatGameTime(game.startTime)}
+                </span>
               </div>
 
-              {/* Teams Selection */}
-              <div className="p-4">
-                <div className="grid grid-cols-2 gap-4">
-                  {/* Away Team */}
-                  <motion.button
-                    whileHover={isPickable ? { scale: 1.02 } : {}}
-                    whileTap={isPickable ? { scale: 0.98 } : {}}
-                    onClick={() => {
-                      if (!isPickable) return
-                      if (pick?.selectedTeam === 'away') {
-                        onPickRemoval(game.id)
-                      } else {
-                        onPickSelection(game.id, 'away')
-                      }
-                    }}
-                    disabled={!isPickable}
-                    className={`relative p-4 rounded-lg border-2 transition-all ${
-                      pick?.selectedTeam === 'away'
-                        ? 'border-nfl-gold bg-nfl-gold/20 text-white'
-                        : 'border-white/20 bg-white/5 text-white/90 hover:border-white/40 hover:bg-white/10'
-                    } ${!isPickable ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                  >
-                    <div className="flex flex-col items-center space-y-2">
-                      <div className="text-2xl font-bold">{game.awayAbbrev}</div>
-                      <div className="text-sm font-medium">{game.awayTeam}</div>
-                      <div className="text-xs opacity-70">@ {game.homeAbbrev}</div>
-                      {game.status === 'completed' && game.awayScore !== undefined && (
-                        <div className="text-lg font-bold">{game.awayScore}</div>
-                      )}
+              {/* VS Matchup Row */}
+              <div className="flex items-stretch">
+                {/* Away Team */}
+                <button
+                  onClick={() => {
+                    if (!pickable) return
+                    if (pick?.selectedTeam === 'away') onPickRemoval(game.id)
+                    else onPickSelection(game.id, 'away')
+                  }}
+                  disabled={!pickable}
+                  className={`flex-1 flex items-center gap-3 px-4 py-4 transition-all duration-200 group ${
+                    pick?.selectedTeam === 'away'
+                      ? 'team-selected bg-nfl-gold/15'
+                      : 'hover:bg-white/[0.05]'
+                  } ${pickable ? 'cursor-pointer' : 'cursor-default'}`}
+                >
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-black text-sm transition-all ${
+                    pick?.selectedTeam === 'away'
+                      ? 'bg-nfl-gold text-nfl-dark shadow-md shadow-nfl-gold/30'
+                      : 'bg-white/[0.08] text-white/70 group-hover:bg-white/[0.12] group-hover:text-white'
+                  }`}>
+                    {pick?.selectedTeam === 'away' ? <Check className="w-5 h-5" /> : game.awayAbbrev}
+                  </div>
+                  <div className="flex-1 text-left">
+                    <div className={`font-bold text-sm ${pick?.selectedTeam === 'away' ? 'text-nfl-gold' : 'text-white'}`}>
+                      {game.awayAbbrev}
                     </div>
-                    {pick?.selectedTeam === 'away' && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute top-2 right-2 w-6 h-6 bg-nfl-gold rounded-full flex items-center justify-center"
-                      >
-                        <Check className="w-4 h-4 text-white" />
-                      </motion.div>
-                    )}
-                  </motion.button>
+                    <div className="text-xs text-white/40 truncate">{game.awayTeam}</div>
+                  </div>
+                  {game.status === 'completed' && game.awayScore !== undefined && (
+                    <div className="text-xl font-black text-white/60">{game.awayScore}</div>
+                  )}
+                </button>
 
-                  {/* Home Team */}
-                  <motion.button
-                    whileHover={isPickable ? { scale: 1.02 } : {}}
-                    whileTap={isPickable ? { scale: 0.98 } : {}}
-                    onClick={() => {
-                      if (!isPickable) return
-                      if (pick?.selectedTeam === 'home') {
-                        onPickRemoval(game.id)
-                      } else {
-                        onPickSelection(game.id, 'home')
-                      }
-                    }}
-                    disabled={!isPickable}
-                    className={`relative p-4 rounded-lg border-2 transition-all ${
-                      pick?.selectedTeam === 'home'
-                        ? 'border-nfl-gold bg-nfl-gold/20 text-white'
-                        : 'border-white/20 bg-white/5 text-white/90 hover:border-white/40 hover:bg-white/10'
-                    } ${!isPickable ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                  >
-                    <div className="flex flex-col items-center space-y-2">
-                      <div className="text-2xl font-bold">{game.homeAbbrev}</div>
-                      <div className="text-sm font-medium">{game.homeTeam}</div>
-                      <div className="text-xs opacity-70">vs {game.awayAbbrev}</div>
-                      {game.status === 'completed' && game.homeScore !== undefined && (
-                        <div className="text-lg font-bold">{game.homeScore}</div>
-                      )}
-                    </div>
-                    {pick?.selectedTeam === 'home' && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute top-2 right-2 w-6 h-6 bg-nfl-gold rounded-full flex items-center justify-center"
-                      >
-                        <Check className="w-4 h-4 text-white" />
-                      </motion.div>
-                    )}
-                  </motion.button>
+                {/* VS Divider */}
+                <div className="flex items-center px-1">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black ${
+                    pick ? 'bg-nfl-gold/20 text-nfl-gold vs-glow' : 'bg-white/[0.05] text-white/30'
+                  }`}>
+                    VS
+                  </div>
                 </div>
 
-                {/* Pick Removal Button */}
-                {pick && (
-                  <motion.button
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    onClick={() => onPickRemoval(game.id)}
-                    className="mt-3 w-full flex items-center justify-center space-x-2 py-2 px-4 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors"
-                  >
-                    <X className="w-4 h-4" />
-                    <span>Remove Pick</span>
-                  </motion.button>
-                )}
+                {/* Home Team */}
+                <button
+                  onClick={() => {
+                    if (!pickable) return
+                    if (pick?.selectedTeam === 'home') onPickRemoval(game.id)
+                    else onPickSelection(game.id, 'home')
+                  }}
+                  disabled={!pickable}
+                  className={`flex-1 flex items-center gap-3 px-4 py-4 transition-all duration-200 group flex-row-reverse ${
+                    pick?.selectedTeam === 'home'
+                      ? 'team-selected bg-nfl-gold/15'
+                      : 'hover:bg-white/[0.05]'
+                  } ${pickable ? 'cursor-pointer' : 'cursor-default'}`}
+                >
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-black text-sm transition-all ${
+                    pick?.selectedTeam === 'home'
+                      ? 'bg-nfl-gold text-nfl-dark shadow-md shadow-nfl-gold/30'
+                      : 'bg-white/[0.08] text-white/70 group-hover:bg-white/[0.12] group-hover:text-white'
+                  }`}>
+                    {pick?.selectedTeam === 'home' ? <Check className="w-5 h-5" /> : game.homeAbbrev}
+                  </div>
+                  <div className="flex-1 text-right">
+                    <div className={`font-bold text-sm ${pick?.selectedTeam === 'home' ? 'text-nfl-gold' : 'text-white'}`}>
+                      {game.homeAbbrev}
+                    </div>
+                    <div className="text-xs text-white/40 truncate">{game.homeTeam}</div>
+                  </div>
+                  {game.status === 'completed' && game.homeScore !== undefined && (
+                    <div className="text-xl font-black text-white/60">{game.homeScore}</div>
+                  )}
+                </button>
               </div>
             </motion.div>
           )
         })}
       </div>
 
-      {/* Submit Section */}
-      <div className="space-y-4">
-        {/* Pick Count Display */}
-        <div className="text-center">
-          <div className="inline-flex items-center space-x-4 bg-white/10 backdrop-blur-md rounded-xl px-6 py-4 border border-white/20">
-            <div className="text-white">
-              <span className="text-2xl font-bold text-nfl-gold">{selectedPicks.length}</span>
-              <span className="text-white/70"> / 10 picks selected</span>
-            </div>
-            {selectedPicks.length === 10 && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="text-green-400"
-              >
-                <Check className="w-6 h-6" />
-              </motion.div>
-            )}
-          </div>
+      {/* Empty State */}
+      {games.length === 0 && (
+        <div className="text-center py-16">
+          <div className="text-6xl mb-4">🏈</div>
+          <h3 className="text-xl font-bold text-white mb-2">No Games Yet</h3>
+          <p className="text-white/50">Schedule data will appear when the oracle sets up this week.</p>
         </div>
+      )}
 
-        {/* Status Messages */}
+      {/* Status + Submit */}
+      <div className="space-y-4 pt-2">
         <AnimatePresence>
           {!isConnected && (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="text-center p-4 bg-yellow-500/20 border border-yellow-400/30 rounded-lg"
+              exit={{ opacity: 0, y: -8 }}
+              className="text-center p-4 glass rounded-xl"
             >
-              <p className="text-yellow-300">Please connect your wallet to submit picks</p>
-            </motion.div>
-          )}
-
-          {selectedPicks.length !== 10 && isConnected && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="text-center p-4 bg-blue-500/20 border border-blue-400/30 rounded-lg"
-            >
-              <p className="text-blue-300">
-                Select {10 - selectedPicks.length} more {10 - selectedPicks.length === 1 ? 'team' : 'teams'} to complete your picks
-              </p>
+              <p className="text-amber-300 text-sm font-medium">Connect your wallet to submit picks</p>
             </motion.div>
           )}
 
           {transactionHash && (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center p-4 bg-green-500/20 border border-green-400/30 rounded-lg"
+              className="text-center p-4 bg-green-500/10 border border-green-500/20 rounded-xl"
             >
-              <p className="text-green-300 mb-2">✅ Picks submitted successfully!</p>
+              <p className="text-green-400 font-semibold mb-1">Picks submitted!</p>
               <a
                 href={`https://basescan.org/tx/${transactionHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-300 hover:text-blue-200 underline text-sm"
+                className="text-green-300/70 hover:text-green-300 underline text-sm"
               >
-                View transaction on BaseScan
+                View on BaseScan
               </a>
             </motion.div>
           )}
@@ -295,25 +253,25 @@ export default function GamePicker({
         {/* Submit Button */}
         <div className="text-center">
           <motion.button
-            whileHover={canSubmit ? { scale: 1.05 } : {}}
-            whileTap={canSubmit ? { scale: 0.95 } : {}}
+            whileHover={canSubmit ? { scale: 1.03 } : {}}
+            whileTap={canSubmit ? { scale: 0.97 } : {}}
             onClick={onSubmitPicks}
             disabled={!canSubmit || isSubmitting}
-            className={`px-8 py-4 rounded-2xl font-bold text-lg transition-all ${
+            className={`w-full max-w-md px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 ${
               canSubmit
-                ? 'bg-gradient-to-r from-nfl-gold to-nfl-red text-white hover:shadow-2xl hover:shadow-nfl-gold/25 cursor-pointer transform hover:-translate-y-1'
-                : 'bg-gray-500/50 text-gray-400 cursor-not-allowed'
+                ? 'bg-gradient-to-r from-nfl-gold via-amber-500 to-nfl-gold text-nfl-dark shadow-xl shadow-nfl-gold/20 animate-glow-pulse cursor-pointer'
+                : 'bg-white/[0.06] text-white/30 cursor-not-allowed'
             }`}
           >
             {isSubmitting ? (
-              <div className="flex items-center space-x-3">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>Submitting Picks...</span>
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-5 h-5 border-2 border-nfl-dark/30 border-t-nfl-dark rounded-full animate-spin" />
+                <span>Submitting...</span>
               </div>
             ) : (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center justify-center gap-2">
                 <Zap className="w-5 h-5" />
-                <span>Submit 10 Picks ($2 USDC)</span>
+                <span>Submit Picks &middot; $2 USDC</span>
               </div>
             )}
           </motion.button>

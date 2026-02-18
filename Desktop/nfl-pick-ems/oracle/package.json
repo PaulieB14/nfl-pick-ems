@@ -1,0 +1,16 @@
+{
+  "name": "nfl-pickems-oracle",
+  "version": "1.0.0",
+  "description": "Oracle for NFL Pick Ems — fetches ESPN data and posts results on-chain",
+  "type": "module",
+  "scripts": {
+    "setup-week": "node index.js setup-week",
+    "monitor": "node index.js monitor",
+    "post-results": "node index.js post-results",
+    "status": "node index.js status"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "viem": "^2.34.0"
+  }
+}

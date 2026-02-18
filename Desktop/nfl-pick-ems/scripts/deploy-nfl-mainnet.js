@@ -36,10 +36,10 @@ async function main() {
   // Verify deployment
   console.log("🔍 Verifying deployment...");
   try {
-    const entryFee = await nflPickEms.getEntryFee();
+    const entryFee = await nflPickEms.ENTRY_FEE();
     console.log("✅ Entry fee:", ethers.formatUnits(entryFee, 6), "USDC");
-    
-    const usdcToken = await nflPickEms.usdcToken();
+
+    const usdcToken = await nflPickEms.token();
     console.log("✅ USDC token address:", usdcToken);
     
     const owner = await nflPickEms.owner();
