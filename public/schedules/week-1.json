@@ -1,0 +1,392 @@
+{
+  "weekId": 1,
+  "season": 2025,
+  "gameCount": 16,
+  "lockTime": "2025-09-05T00:20:00.000Z",
+  "games": [
+    {
+      "index": 0,
+      "espnEventId": "401772510",
+      "homeTeam": {
+        "name": "Eagles",
+        "abbreviation": "PHI",
+        "displayName": "Philadelphia Eagles",
+        "score": 24,
+        "winner": true
+      },
+      "awayTeam": {
+        "name": "Cowboys",
+        "abbreviation": "DAL",
+        "displayName": "Dallas Cowboys",
+        "score": 20,
+        "winner": false
+      },
+      "startTime": "2025-09-05T00:20Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 1,
+      "espnEventId": "401772714",
+      "homeTeam": {
+        "name": "Chargers",
+        "abbreviation": "LAC",
+        "displayName": "Los Angeles Chargers",
+        "score": 27,
+        "winner": true
+      },
+      "awayTeam": {
+        "name": "Chiefs",
+        "abbreviation": "KC",
+        "displayName": "Kansas City Chiefs",
+        "score": 21,
+        "winner": false
+      },
+      "startTime": "2025-09-06T00:00Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 2,
+      "espnEventId": "401772718",
+      "homeTeam": {
+        "name": "Saints",
+        "abbreviation": "NO",
+        "displayName": "New Orleans Saints",
+        "score": 13,
+        "winner": false
+      },
+      "awayTeam": {
+        "name": "Cardinals",
+        "abbreviation": "ARI",
+        "displayName": "Arizona Cardinals",
+        "score": 20,
+        "winner": true
+      },
+      "startTime": "2025-09-07T17:00Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 3,
+      "espnEventId": "401772719",
+      "homeTeam": {
+        "name": "Colts",
+        "abbreviation": "IND",
+        "displayName": "Indianapolis Colts",
+        "score": 33,
+        "winner": true
+      },
+      "awayTeam": {
+        "name": "Dolphins",
+        "abbreviation": "MIA",
+        "displayName": "Miami Dolphins",
+        "score": 8,
+        "winner": false
+      },
+      "startTime": "2025-09-07T17:00Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 4,
+      "espnEventId": "401772720",
+      "homeTeam": {
+        "name": "Patriots",
+        "abbreviation": "NE",
+        "displayName": "New England Patriots",
+        "score": 13,
+        "winner": false
+      },
+      "awayTeam": {
+        "name": "Raiders",
+        "abbreviation": "LV",
+        "displayName": "Las Vegas Raiders",
+        "score": 20,
+        "winner": true
+      },
+      "startTime": "2025-09-07T17:00Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 5,
+      "espnEventId": "401772721",
+      "homeTeam": {
+        "name": "Jets",
+        "abbreviation": "NYJ",
+        "displayName": "New York Jets",
+        "score": 32,
+        "winner": false
+      },
+      "awayTeam": {
+        "name": "Steelers",
+        "abbreviation": "PIT",
+        "displayName": "Pittsburgh Steelers",
+        "score": 34,
+        "winner": true
+      },
+      "startTime": "2025-09-07T17:00Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 6,
+      "espnEventId": "401772827",
+      "homeTeam": {
+        "name": "Commanders",
+        "abbreviation": "WSH",
+        "displayName": "Washington Commanders",
+        "score": 21,
+        "winner": true
+      },
+      "awayTeam": {
+        "name": "Giants",
+        "abbreviation": "NYG",
+        "displayName": "New York Giants",
+        "score": 6,
+        "winner": false
+      },
+      "startTime": "2025-09-07T17:00Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 7,
+      "espnEventId": "401772828",
+      "homeTeam": {
+        "name": "Jaguars",
+        "abbreviation": "JAX",
+        "displayName": "Jacksonville Jaguars",
+        "score": 26,
+        "winner": true
+      },
+      "awayTeam": {
+        "name": "Panthers",
+        "abbreviation": "CAR",
+        "displayName": "Carolina Panthers",
+        "score": 10,
+        "winner": false
+      },
+      "startTime": "2025-09-07T17:00Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 8,
+      "espnEventId": "401772829",
+      "homeTeam": {
+        "name": "Browns",
+        "abbreviation": "CLE",
+        "displayName": "Cleveland Browns",
+        "score": 16,
+        "winner": false
+      },
+      "awayTeam": {
+        "name": "Bengals",
+        "abbreviation": "CIN",
+        "displayName": "Cincinnati Bengals",
+        "score": 17,
+        "winner": true
+      },
+      "startTime": "2025-09-07T17:00Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 9,
+      "espnEventId": "401772830",
+      "homeTeam": {
+        "name": "Falcons",
+        "abbreviation": "ATL",
+        "displayName": "Atlanta Falcons",
+        "score": 20,
+        "winner": false
+      },
+      "awayTeam": {
+        "name": "Buccaneers",
+        "abbreviation": "TB",
+        "displayName": "Tampa Bay Buccaneers",
+        "score": 23,
+        "winner": true
+      },
+      "startTime": "2025-09-07T17:00Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 10,
+      "espnEventId": "401772831",
+      "homeTeam": {
+        "name": "Seahawks",
+        "abbreviation": "SEA",
+        "displayName": "Seattle Seahawks",
+        "score": 13,
+        "winner": false
+      },
+      "awayTeam": {
+        "name": "49ers",
+        "abbreviation": "SF",
+        "displayName": "San Francisco 49ers",
+        "score": 17,
+        "winner": true
+      },
+      "startTime": "2025-09-07T20:05Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 11,
+      "espnEventId": "401772832",
+      "homeTeam": {
+        "name": "Broncos",
+        "abbreviation": "DEN",
+        "displayName": "Denver Broncos",
+        "score": 20,
+        "winner": true
+      },
+      "awayTeam": {
+        "name": "Titans",
+        "abbreviation": "TEN",
+        "displayName": "Tennessee Titans",
+        "score": 12,
+        "winner": false
+      },
+      "startTime": "2025-09-07T20:05Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 12,
+      "espnEventId": "401772722",
+      "homeTeam": {
+        "name": "Packers",
+        "abbreviation": "GB",
+        "displayName": "Green Bay Packers",
+        "score": 27,
+        "winner": true
+      },
+      "awayTeam": {
+        "name": "Lions",
+        "abbreviation": "DET",
+        "displayName": "Detroit Lions",
+        "score": 13,
+        "winner": false
+      },
+      "startTime": "2025-09-07T20:25Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 13,
+      "espnEventId": "401772723",
+      "homeTeam": {
+        "name": "Rams",
+        "abbreviation": "LAR",
+        "displayName": "Los Angeles Rams",
+        "score": 14,
+        "winner": true
+      },
+      "awayTeam": {
+        "name": "Texans",
+        "abbreviation": "HOU",
+        "displayName": "Houston Texans",
+        "score": 9,
+        "winner": false
+      },
+      "startTime": "2025-09-07T20:25Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 14,
+      "espnEventId": "401772918",
+      "homeTeam": {
+        "name": "Bills",
+        "abbreviation": "BUF",
+        "displayName": "Buffalo Bills",
+        "score": 41,
+        "winner": true
+      },
+      "awayTeam": {
+        "name": "Ravens",
+        "abbreviation": "BAL",
+        "displayName": "Baltimore Ravens",
+        "score": 40,
+        "winner": false
+      },
+      "startTime": "2025-09-08T00:20Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    },
+    {
+      "index": 15,
+      "espnEventId": "401772810",
+      "homeTeam": {
+        "name": "Bears",
+        "abbreviation": "CHI",
+        "displayName": "Chicago Bears",
+        "score": 24,
+        "winner": false
+      },
+      "awayTeam": {
+        "name": "Vikings",
+        "abbreviation": "MIN",
+        "displayName": "Minnesota Vikings",
+        "score": 27,
+        "winner": true
+      },
+      "startTime": "2025-09-09T00:15Z",
+      "status": {
+        "state": "post",
+        "completed": true,
+        "description": "Final"
+      }
+    }
+  ]
+}
